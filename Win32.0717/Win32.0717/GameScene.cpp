@@ -13,7 +13,7 @@ size_t CGameScene::diffuculty;
 USHORT GetRectZone(int circleX, int circleY, int rectX, int rectY)
 {
 	int xZone = (circleX < rectX - 50) ? 0 :
-		(circleX < rectX + 50) ? 2 : 1;
+		(circleX > rectX + 50) ? 2 : 1;
 	int yZone = (circleY < rectY - 50) ? 0 :
 		(circleY > rectY + 50) ? 2 : 1;
 	return xZone + 3 * yZone;
@@ -24,7 +24,7 @@ bool CollisionCircleRect(CObject * bullet, CObject * enemy)
 	bool collisionDectected = false;
 	USHORT nZone = GetRectZone(bullet->x, bullet->y, enemy->x, enemy->y);
 	float halfWidth = (enemy->points[1].x - enemy->points[0].x) * 0.5;
-	float halfHeight = (enemy->points[1].y - enemy->points[2].y) * 0.5;
+	float halfHeight = (enemy->points[2].y - enemy->points[1].y) * 0.5;
 
 	switch(nZone)
 	{
@@ -233,18 +233,20 @@ void CGameScene::BulletUpdate(HWND hWnd, UINT uMsg, UINT_PTR timerID, DWORD dwTi
 		}
 		else
 		{
-			CObject * bullet = *it;
-			for (auto enemyIt = enemyObjects.begin(); enemyIt != enemyObjects.end();)
+			bool collision = false;
+			for (auto enemyIt = enemyObjects.begin(); enemyIt != enemyObjects.end(); enemyIt++)
 			{
-				if (CollisionCircleRect(*it, *enemyIt))
+				if ((collision = CollisionCircleRect(*it, *enemyIt)))
 				{
 					(*it)->isDead = true;
 					deadBulletPool.push(*it);
 					it = bulletObjects.erase(it);
+					deadEnemyPool.push(*enemyIt);
+					enemyObjects.erase(enemyIt);
 					break;
 				}
 			}
-			if(bullet->isDead != true)
+			if(collision == false)
 				it++;
 		}
 	}
