@@ -16,7 +16,6 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
-bool needPaint = false;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -152,24 +151,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 	}
 	break;
-	case WM_TIMER :
+	case WM_TIMER:
 	{
 		switch (wParam)
 		{
-		case TimerID::frameTimer :
-			if (needPaint == true)
-			{
-				InvalidateRect(hWnd, NULL, true);
-				needPaint = false;
-			}
+		case TimerID::frameTimer:
+			InvalidateRect(hWnd, NULL, true);
 			break;
 		}
 	}
 	break;
-	case WM_CHAR :
+	case WM_CHAR:
 	{
 		singleton->sceneManager.Update(message, wParam, lParam);
-		needPaint = true;
 	}
 	break;
 	case WM_PAINT:

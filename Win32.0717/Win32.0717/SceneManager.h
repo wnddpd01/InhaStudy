@@ -1,6 +1,7 @@
 #pragma once
 #include "StartScene.h"
 #include "GameScene.h"
+
 class CSceneManager
 {
 public:
@@ -34,19 +35,6 @@ public:
 		m_scene->Render(hdc);
 	}
 
-	void SceneChange(SceneState nextScene)
-	{
-		switch (nextScene)
-		{
-		case SceneState::start:
-			break;
-		case SceneState::ingame:
-			if (m_gameScene == nullptr)
-				m_gameScene = new CGameScene;
-			m_gameScene->Init();
-			m_scene = m_gameScene;
-			break;
-		}
-	}
+	void SceneChange(SceneState nextScene);
 };
 

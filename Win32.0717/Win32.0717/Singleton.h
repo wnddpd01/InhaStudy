@@ -3,7 +3,7 @@ class Singleton
 {
 	Singleton()
 	{
-		frame = 60;
+		frame = 24;
 		for (size_t i = 0; i < 360; i++)
 		{
 			radian[i] = i * 3.1415978 / 180;

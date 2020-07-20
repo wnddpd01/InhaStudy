@@ -26,7 +26,7 @@ enum class SceneState : size_t
 
 enum TimerID : UINT_PTR
 {
-	frameTimer
+	frameTimer, updateGameTimer, enemyCreateTimer, timeTimer
 };
 // TODO: reference additional headers your program requires here
 
