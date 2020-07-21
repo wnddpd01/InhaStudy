@@ -23,6 +23,7 @@ void CSceneManager::SceneChange(SceneState nextScene)
 	case SceneState::quit :
 		m_scene->Free();
 		PostQuitMessage(0);
+		return;
 		break;
 	}
 	m_scene->Init();

@@ -34,6 +34,5 @@ public:
 	void Update(UINT message, WPARAM wParam, LPARAM lParam);
 	void Render(HDC hdc);
 	void Free(void);
-
 };
 
