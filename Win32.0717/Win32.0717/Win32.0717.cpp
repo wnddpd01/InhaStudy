@@ -130,6 +130,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		singleton->idMenuFont = CreateFont(48, 0, 0, 0, 0, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"빙그레체");
 		singleton->idFont = CreateFont(36, 0, 0, 0, 0, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"DX영화자막 M");
 		singleton->idSmallFont = CreateFont(24, 0, 0, 0, 0, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"DX영화자막 M");
+		singleton->lightBlueBrush = CreateSolidBrush(RGB(200, 200, 255));
+		singleton->BlueBrush = CreateSolidBrush(RGB(102, 178, 255));
+		singleton->lightPinkBrush = CreateSolidBrush(RGB(255, 204, 229));
+		singleton->darkGreenBrush = CreateSolidBrush(RGB(0, 102, 0));
+		singleton->darkGreyBrush = CreateSolidBrush(RGB(64, 64, 64));
+		singleton->darkRedBrush = CreateSolidBrush(RGB(255, 102, 102));
 		singleton->sceneManager = new CSceneManager;
 		singleton->hWnd = hWnd;
 		SetTimer(hWnd, TimerID::frameTimer, 1000 / singleton->frame, NULL);
@@ -168,6 +174,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	break;
 	case WM_CHAR:
+	{
+		singleton->sceneManager->Update(message, wParam, lParam);
+	}
+	break;
+	case WM_KEYDOWN :
+	{
+		singleton->sceneManager->Update(message, wParam, lParam);
+	}
+	break;
+	case WM_KEYUP :
 	{
 		singleton->sceneManager->Update(message, wParam, lParam);
 	}

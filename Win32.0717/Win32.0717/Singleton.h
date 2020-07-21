@@ -19,6 +19,12 @@ public:
 	HFONT idMenuFont;
 	HFONT idFont;
 	HFONT idSmallFont;
+	HBRUSH lightBlueBrush;
+	HBRUSH BlueBrush;
+	HBRUSH lightPinkBrush;
+	HBRUSH darkGreenBrush;
+	HBRUSH darkGreyBrush;
+	HBRUSH darkRedBrush;
 	ULONG score;
 	HWND hWnd;
 	size_t frame;

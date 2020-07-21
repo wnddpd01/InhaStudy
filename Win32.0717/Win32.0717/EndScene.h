@@ -9,7 +9,7 @@ typedef struct PlayerRank
 	ULONG score;
 	std::wstring toString()
 	{
-		static wchar_t wchar[20];
+		wchar_t wchar[32];
 		wsprintf(wchar, L"%-3d. %-10s %4d", rank, playerName, score);
 		std::wstring ret(wchar);
 		return ret;
@@ -34,5 +34,7 @@ public:
 	void Update(UINT message, WPARAM wParam, LPARAM lParam);
 	void Render(HDC hdc);
 	void Free(void);
+
+	void PlayerRankDraw(HDC& hdc, RECT& rect);
 };
 

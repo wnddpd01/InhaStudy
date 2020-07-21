@@ -7,6 +7,9 @@ std::list<CObject *> CGameScene::bulletObjects;
 std::list<Enemy *> CGameScene::enemyObjects;
 std::stack<CObject *> CGameScene::deadBulletPool;
 std::stack<Enemy *> CGameScene::deadEnemyPool;
+
+POINT CGameScene::circleXY;
+Cannon* CGameScene::cannon;
 size_t CGameScene::leftHealth;
 ULONG CGameScene::time;
 ULONG CGameScene::lastEnemyCreateTime;
@@ -139,8 +142,11 @@ void CGameScene::Init(void)
 	SetTimer(singleton->hWnd, TimerID::enemyCreateTimer, 1000 / 30, this->EnemyCreate);
 	lastEnemyCreateTime = 0;
 	time = 0;
-	diffuculty = 6;
+	diffuculty = 1;
 	leftHealth = 6;
+	cannon->curAngle = 0;
+	cannon->destAngle = 0;
+	cannon->Rotate(0);
 	for (size_t i = 0; i < 6; i++)
 	{
 		healthObjects[i]->isDead = false;
@@ -149,39 +155,60 @@ void CGameScene::Init(void)
 
 void CGameScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 {
+	static bool spaceUp = true;
 	switch (message)
 	{
-	case WM_CHAR :
+	case WM_KEYDOWN :
 	{
 		if (wParam == 97 || wParam == VK_LEFT)
 		{
-			CannonRotate(-5);
+			if (cannon->destAngle == cannon->curAngle || cannon->moveAngle == 2)
+			{
+				if(cannon->destAngle > -70)
+					cannon->destAngle -= 20;
+				cannon->moveAngle = -2;
+			}
 		}
 		else if (wParam == 100 || wParam == VK_RIGHT)
 		{
-			CannonRotate(5);
+			if (cannon->destAngle == cannon->curAngle || cannon->moveAngle == -2)
+			{
+				if(cannon->destAngle < 70)
+					cannon->destAngle += 20;
+				cannon->moveAngle = 2;
+			}
 		}
 		else if (wParam == VK_SPACE)
 		{
-			CObject* bullet;
-			if (deadBulletPool.size() == 0)
+			if (spaceUp == true)
 			{
-				bullet = new CObject;
-				bullet->objType = ObjectType::Bullet;
-				bullet->points = nullptr;
+				spaceUp = false;
+				CObject* bullet;
+				if (deadBulletPool.size() == 0)
+				{
+					bullet = new CObject;
+					bullet->objType = ObjectType::Bullet;
+					bullet->points = nullptr;
+				}
+				else
+				{
+					bullet = deadBulletPool.top();
+					deadBulletPool.pop();
+					bullet->isDead = false;
+				}
+				bullet->x = (cannon->points[1].x - cannon->points[0].x) * 0.5 + cannon->points[0].x;
+				bullet->y = (cannon->points[1].y - cannon->points[0].y) * 0.5 + cannon->points[0].y;
+				bullet->spdX = (cannon->points[0].x - cannon->points[3].x) * 0.15;
+				bullet->spdY = (cannon->points[0].y - cannon->points[3].y) * 0.15;
+				bulletObjects.push_back(bullet);
 			}
-			else
-			{
-				bullet = deadBulletPool.top();
-				deadBulletPool.pop();
-				bullet->isDead = false;
-			}
-			bullet->x = (cannon->points[1].x - cannon->points[0].x) * 0.5 + cannon->points[0].x;
-			bullet->y = (cannon->points[1].y - cannon->points[0].y) * 0.5 + cannon->points[0].y;
-			bullet->spdX = (cannon->points[0].x - cannon->points[3].x) * 0.15;
-			bullet->spdY = (cannon->points[0].y - cannon->points[3].y) * 0.15;
-			bulletObjects.push_back(bullet);
 		}
+	}
+	break;
+	case WM_KEYUP : 
+	{
+		if (wParam == VK_SPACE)
+			spaceUp = true;
 	}
 	break;
 	}
@@ -189,22 +216,28 @@ void CGameScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 
 void CGameScene::Render(HDC hdc)
 {
+	HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, singleton->darkGreenBrush);
 	Ellipse(hdc, circleXY.x - 60, circleXY.y - 60, circleXY.x + 60, circleXY.y + 60);
 
 	Polygon(hdc, cannon->points, 4);
+
+	SelectObject(hdc, singleton->BlueBrush);
 	for (size_t i = 0; i < 6; i++)
 	{
 		if(healthObjects[i]->isDead == false)
 			Polygon(hdc, healthObjects[i]->points, 4);
 	}
+	SelectObject(hdc, singleton->darkGreyBrush);
 	for (CObject* object : bulletObjects)
 	{
 		Ellipse(hdc, object->x - 10, object->y - 10, object->x + 10, object->y + 10);
 	}
+	SelectObject(hdc, singleton->darkRedBrush);
 	for (CObject * object : enemyObjects)
 	{
 		Polygon(hdc, object->points, 4);
 	}
+	SelectObject(hdc, oldBrush);
 
 	HFONT oldFont = (HFONT)SelectObject(hdc, singleton->idSmallFont);
 	Rectangle(hdc, nameRect.left, nameRect.top, nameRect.right, nameRect.bottom);
@@ -217,7 +250,9 @@ void CGameScene::Render(HDC hdc)
 	DrawText(hdc, wsTime.c_str(), wsTime.size(), &timeRect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 
 	Rectangle(hdc, scoreRect.left, scoreRect.top, scoreRect.right, scoreRect.bottom);
-	DrawText(hdc, std::to_wstring(singleton->score).c_str(), 8, &scoreRect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+	wchar_t score[10];
+	wsprintf(score, L"%d", singleton->score);
+	DrawText(hdc, _itow(singleton->score, score, 10), wcslen(score), &scoreRect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 	SelectObject(hdc, oldFont);
 }
 
@@ -245,6 +280,8 @@ void CGameScene::Free(void)
 
 void CGameScene::BulletUpdate(HWND hWnd, UINT uMsg, UINT_PTR timerID, DWORD dwTime)
 {
+	if (cannon->curAngle != cannon->destAngle)
+		cannon->Rotate(cannon->moveAngle);
 	for (auto it = bulletObjects.begin(); it != bulletObjects.end();)
 	{
 		(*it)->x += (*it)->spdX;
@@ -362,12 +399,10 @@ void CGameScene::EnemyCreate(HWND, UINT, UINT_PTR, DWORD)
 	}
 }
 
-void CGameScene::CannonRotate(SHORT angle)
+void Cannon::Rotate(SHORT angle)
 {
-	if (abs(cannon->curAngle + angle) > 78)
-		return;
-	cannon->curAngle += angle;
-	SHORT _angle = cannon->curAngle;
+	this->curAngle += angle;
+	SHORT _angle = this->curAngle;
 	if (_angle < 0)
 		_angle += 360;
 	else if (_angle > 359)
@@ -377,9 +412,9 @@ void CGameScene::CannonRotate(SHORT angle)
 	double xTmp = 0, yTmp = 0;
 	for (size_t i = 0; i < 4; i++)
 	{
-		xTmp = _cos * double(cannon->cPoints[i].x - circleXY.x) - _sin * double(cannon->cPoints[i].y - circleXY.y);
-		yTmp = _sin * double(cannon->cPoints[i].x - circleXY.x) + _cos * double(cannon->cPoints[i].y - circleXY.y);
-		cannon->points[i].x = xTmp + circleXY.x;
-		cannon->points[i].y = yTmp + circleXY.y;
+		xTmp = _cos * double(this->cPoints[i].x - CGameScene::circleXY.x) - _sin * double(this->cPoints[i].y - CGameScene::circleXY.y);
+		yTmp = _sin * double(this->cPoints[i].x - CGameScene::circleXY.x) + _cos * double(this->cPoints[i].y - CGameScene::circleXY.y);
+		this->points[i].x = xTmp + CGameScene::circleXY.x;
+		this->points[i].y = yTmp + CGameScene::circleXY.y;
 	}
 }

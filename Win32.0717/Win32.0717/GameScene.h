@@ -34,6 +34,9 @@ class Cannon : public CObject
 public :
 	POINT cPoints[4];
 	SHORT curAngle;
+	SHORT destAngle;
+	SHORT moveAngle;
+	void Rotate(SHORT angle);
 };
 
 class Enemy : public CObject
@@ -53,8 +56,8 @@ public:
 	RECT nameRect;
 	RECT timeRect;
 	RECT scoreRect;
-	POINT circleXY;
-	Cannon* cannon;
+	static POINT circleXY;
+	static Cannon* cannon;
 	static CObject * healthObjects[6];
 	static std::list<CObject *> bulletObjects;
 	static std::list<Enemy *> enemyObjects;
@@ -70,6 +73,5 @@ public:
 	static void CALLBACK BulletUpdate(HWND, UINT, UINT_PTR, DWORD);
 	static void CALLBACK TimeUpdate(HWND, UINT, UINT_PTR, DWORD);
 	static void CALLBACK EnemyCreate(HWND, UINT, UINT_PTR, DWORD);
-	void CannonRotate(SHORT angle);
 };
 

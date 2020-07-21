@@ -80,12 +80,7 @@ void CEndScene::Render(HDC hdc)
 	{
 		if (ranks[i] == lastPlayerRank)
 		{
-			HBRUSH playerRect = CreateSolidBrush(RGB(200, 200, 255));
-			HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, playerRect);
-			Rectangle(hdc, rankRect[i].left - 10, rankRect[i].top, rankRect[i].right + 10, rankRect[i].bottom);
-			DrawText(hdc, ranks[i]->toString().c_str(), 20, &rankRect[i], DT_VCENTER | DT_LEFT | DT_SINGLELINE);
-			SelectObject(hdc, oldBrush);
-			DeleteObject(playerRect);
+			PlayerRankDraw(hdc, rankRect[i]);
 			continue;
 		}
 		Rectangle(hdc, rankRect[i].left - 10, rankRect[i].top, rankRect[i].right + 10, rankRect[i].bottom);
@@ -93,12 +88,7 @@ void CEndScene::Render(HDC hdc)
 	}
 	if (lastPlayerRank->rank > 5)
 	{
-		HBRUSH playerRect = CreateSolidBrush(RGB(200, 200, 255));
-		HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, playerRect);
-		Rectangle(hdc, rankRect[5].left - 10, rankRect[5].top, rankRect[5].right + 10, rankRect[5].bottom);
-		DrawText(hdc, lastPlayerRank->toString().c_str(), 20, &rankRect[5], DT_VCENTER | DT_LEFT | DT_SINGLELINE);
-		SelectObject(hdc, oldBrush);
-		DeleteObject(playerRect);
+		PlayerRankDraw(hdc, rankRect[5]);
 	}
 
 	Rectangle(hdc, gameReplayRect.left, gameReplayRect.top, gameReplayRect.right, gameReplayRect.bottom);
@@ -113,4 +103,12 @@ void CEndScene::Free(void)
 	for (PlayerRank * pr : ranks)
 		delete pr;
 	ranks.clear();
+}
+
+void CEndScene::PlayerRankDraw(HDC& hdc, RECT& rect)
+{
+	HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, singleton->lightBlueBrush);
+	Rectangle(hdc, rect.left - 10, rect.top, rect.right + 10, rect.bottom);
+	DrawText(hdc, lastPlayerRank->toString().c_str(), 20, &rect, DT_VCENTER | DT_LEFT | DT_SINGLELINE);
+	SelectObject(hdc, oldBrush);
 }
