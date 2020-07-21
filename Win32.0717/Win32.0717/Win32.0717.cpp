@@ -106,7 +106,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
-
 	return TRUE;
 }
 
@@ -131,6 +130,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		singleton->idMenuFont = CreateFont(48, 0, 0, 0, 0, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"빙그레체");
 		singleton->idFont = CreateFont(36, 0, 0, 0, 0, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"DX영화자막 M");
 		singleton->idSmallFont = CreateFont(24, 0, 0, 0, 0, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"DX영화자막 M");
+		singleton->sceneManager = new CSceneManager;
+		singleton->hWnd = hWnd;
 		SetTimer(hWnd, TimerID::frameTimer, 1000 / singleton->frame, NULL);
 	}
 	break;
@@ -161,17 +162,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 	}
 	break;
+	case WM_LBUTTONDOWN :
+	{
+		singleton->sceneManager->Update(message, wParam, lParam);
+	}
+	break;
 	case WM_CHAR:
 	{
-		singleton->sceneManager.Update(message, wParam, lParam);
+		singleton->sceneManager->Update(message, wParam, lParam);
 	}
 	break;
 	case WM_PAINT:
 	{
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hWnd, &ps);
+		SetBkMode(hdc, TRANSPARENT);
 		// TODO: Add any drawing code that uses hdc here...
-		singleton->sceneManager.Render(hdc);
+		singleton->sceneManager->Render(hdc);
 		EndPaint(hWnd, &ps);
 	}
 	break;

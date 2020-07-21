@@ -1,16 +1,20 @@
 #pragma once
 #include "StartScene.h"
 #include "GameScene.h"
-
+#include "EndScene.h"
 class CSceneManager
 {
 public:
 	CScene * m_scene;
 	CStartScene * m_startScene;
 	CGameScene * m_gameScene;
+	CEndScene * m_endScene;
 	SceneState m_curState;
 	CSceneManager()
 	{
+		m_gameScene = nullptr;
+		m_endScene = nullptr;
+		m_scene = nullptr;
 		Init();
 	}
 
@@ -36,5 +40,6 @@ public:
 	}
 
 	void SceneChange(SceneState nextScene);
+
 };
 

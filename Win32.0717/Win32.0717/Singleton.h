@@ -12,14 +12,15 @@ class Singleton
 		}
 	}
 public:
-	const LPCWSTR title = L"강진 지키기";
+	const std::wstring title = L"강진 지키기";
 	std::wstring name = L"";
-	CSceneManager sceneManager;
+	CSceneManager * sceneManager;
 	HFONT titleFont;
 	HFONT idMenuFont;
 	HFONT idFont;
 	HFONT idSmallFont;
 	ULONG score;
+	HWND hWnd;
 	size_t frame;
 	double radian[360];
 	double sinArray[360];

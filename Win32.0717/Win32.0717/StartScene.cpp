@@ -19,6 +19,8 @@ CStartScene::~CStartScene()
 
 void CStartScene::Init()
 {
+	singleton->name = L"";
+	singleton->score = 0;
 }
 
 void CStartScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
@@ -33,7 +35,7 @@ void CStartScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 		else if (wParam == VK_RETURN)
 		{
 			if (singleton->name.size() > 0)
-				singleton->sceneManager.SceneChange(SceneState::ingame);
+				singleton->sceneManager->SceneChange(SceneState::ingame);
 		}
 		else if (wParam == VK_SPACE)
 		{
@@ -50,7 +52,7 @@ void CStartScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 void CStartScene::Render(HDC hdc)
 {
 	HFONT oldFont = (HFONT)SelectObject(hdc, singleton->titleFont);
-	DrawText(hdc, singleton->title, _tcslen(singleton->title), &titleRect, DT_TOP | DT_CENTER | DT_SINGLELINE);
+	DrawText(hdc, singleton->title.c_str(), singleton->title.size(), &titleRect, DT_TOP | DT_CENTER | DT_SINGLELINE);
 
 	Rectangle(hdc, idMenuRect.left, idMenuRect.top, idMenuRect.right, idMenuRect.bottom);
 	(HFONT)SelectObject(hdc, singleton->idMenuFont);

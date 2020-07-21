@@ -21,7 +21,7 @@
 
 enum class SceneState : size_t
 {
-	start, ingame, end
+	start, ingame, end, quit
 };
 
 enum TimerID : UINT_PTR

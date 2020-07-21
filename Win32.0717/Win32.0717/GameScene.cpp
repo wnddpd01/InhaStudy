@@ -2,10 +2,12 @@
 #include "GameScene.h"
 
 extern Singleton * singleton;
+CObject * CGameScene::healthObjects[6];
 std::list<CObject *> CGameScene::bulletObjects;
-std::list<CObject *> CGameScene::enemyObjects;
+std::list<Enemy *> CGameScene::enemyObjects;
 std::stack<CObject *> CGameScene::deadBulletPool;
-std::stack<CObject *> CGameScene::deadEnemyPool;
+std::stack<Enemy *> CGameScene::deadEnemyPool;
+size_t CGameScene::leftHealth;
 ULONG CGameScene::time;
 ULONG CGameScene::lastEnemyCreateTime;
 size_t CGameScene::diffuculty;
@@ -19,7 +21,7 @@ USHORT GetRectZone(int circleX, int circleY, int rectX, int rectY)
 	return xZone + 3 * yZone;
 }
 
-bool CollisionCircleRect(CObject * bullet, CObject * enemy)
+bool CollisionCircleRect(CObject * bullet, Enemy * enemy)
 {
 	bool collisionDectected = false;
 	USHORT nZone = GetRectZone(bullet->x, bullet->y, enemy->x, enemy->y);
@@ -117,7 +119,7 @@ CGameScene::CGameScene()
 		bullet->objType = ObjectType::Bullet;
 		bullet->isDead = true;
 		deadBulletPool.push(bullet);
-		CObject* enemy = new CObject;
+		Enemy * enemy = new Enemy;
 		enemy->objType = ObjectType::Enemy;
 		enemy->isDead = true;
 		enemy->points = new POINT[4];
@@ -132,12 +134,17 @@ CGameScene::~CGameScene()
 
 void CGameScene::Init(void)
 {
-	SetTimer(NULL, TimerID::updateGameTimer, 1000 / 30, this->BulletUpdate);
-	SetTimer(NULL, TimerID::timeTimer, 100, this->TimeUpdate);
-	SetTimer(NULL, TimerID::enemyCreateTimer, 1000 / 30, this->EnemyCreate);
+	SetTimer(singleton->hWnd, TimerID::updateGameTimer, 1000 / 30, this->BulletUpdate);
+	SetTimer(singleton->hWnd, TimerID::timeTimer, 100, this->TimeUpdate);
+	SetTimer(singleton->hWnd, TimerID::enemyCreateTimer, 1000 / 30, this->EnemyCreate);
 	lastEnemyCreateTime = 0;
 	time = 0;
-	diffuculty = 1;
+	diffuculty = 6;
+	leftHealth = 6;
+	for (size_t i = 0; i < 6; i++)
+	{
+		healthObjects[i]->isDead = false;
+	}
 }
 
 void CGameScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
@@ -187,7 +194,8 @@ void CGameScene::Render(HDC hdc)
 	Polygon(hdc, cannon->points, 4);
 	for (size_t i = 0; i < 6; i++)
 	{
-		Polygon(hdc, healthObjects[i]->points, 4);
+		if(healthObjects[i]->isDead == false)
+			Polygon(hdc, healthObjects[i]->points, 4);
 	}
 	for (CObject* object : bulletObjects)
 	{
@@ -209,14 +217,30 @@ void CGameScene::Render(HDC hdc)
 	DrawText(hdc, wsTime.c_str(), wsTime.size(), &timeRect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 
 	Rectangle(hdc, scoreRect.left, scoreRect.top, scoreRect.right, scoreRect.bottom);
+	DrawText(hdc, std::to_wstring(singleton->score).c_str(), 8, &scoreRect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 	SelectObject(hdc, oldFont);
 }
 
 void CGameScene::Free(void)
 {
-	KillTimer(NULL, TimerID::enemyCreateTimer);
-	KillTimer(NULL, TimerID::timeTimer);
-	KillTimer(NULL, TimerID::updateGameTimer);
+	while (!KillTimer(singleton->hWnd, TimerID::updateGameTimer));
+	while (!KillTimer(singleton->hWnd, TimerID::enemyCreateTimer));
+	while (!KillTimer(singleton->hWnd, TimerID::timeTimer));
+
+	while (enemyObjects.size() > 0)
+	{
+		Enemy * enemy = enemyObjects.back();
+		enemyObjects.pop_back();
+		enemy->isDead = true;
+		deadEnemyPool.push(enemy);
+	}
+	while (bulletObjects.size() > 0)
+	{
+		CObject * bullet = bulletObjects.back();
+		bulletObjects.pop_back();
+		bullet->isDead = true;
+		deadBulletPool.push(bullet);
+	}
 }
 
 void CGameScene::BulletUpdate(HWND hWnd, UINT uMsg, UINT_PTR timerID, DWORD dwTime)
@@ -234,7 +258,7 @@ void CGameScene::BulletUpdate(HWND hWnd, UINT uMsg, UINT_PTR timerID, DWORD dwTi
 		else
 		{
 			bool collision = false;
-			for (auto enemyIt = enemyObjects.begin(); enemyIt != enemyObjects.end(); enemyIt++)
+			for (auto enemyIt = enemyObjects.begin(); enemyIt != enemyObjects.end();)
 			{
 				if ((collision = CollisionCircleRect(*it, *enemyIt)))
 				{
@@ -243,27 +267,58 @@ void CGameScene::BulletUpdate(HWND hWnd, UINT uMsg, UINT_PTR timerID, DWORD dwTi
 					it = bulletObjects.erase(it);
 					deadEnemyPool.push(*enemyIt);
 					enemyObjects.erase(enemyIt);
+					singleton->score += 50;
 					break;
 				}
+				else
+					enemyIt++;
 			}
 			if(collision == false)
 				it++;
 		}
 	}
-	for (auto it = enemyObjects.begin(); it != enemyObjects.end(); )
+	for (auto it = enemyObjects.begin(); it != enemyObjects.end() && leftHealth > 0; )
 	{
 		(*it)->y += (*it)->spdY;
 		for (size_t i = 0; i < 4; i++)
 		{
 			(*it)->points[i].y += (*it)->spdY;
 		}
-		it++;
+		if ((*it)->points[2].y > 910)
+		{
+			(*it)->isDead = true;
+			deadEnemyPool.push(*it);
+			it = enemyObjects.erase(it);
+		}
+		else if ((*it)->points[2].y > 760)
+		{
+			if (healthObjects[(*it)->num]->isDead == false)
+			{
+				healthObjects[(*it)->num]->isDead = true;
+				(*it)->isDead = true;
+				deadEnemyPool.push(*it);
+				it = enemyObjects.erase(it);
+				leftHealth--;
+				if (leftHealth == 0)
+				{
+					singleton->sceneManager->SceneChange(SceneState::end);
+					return;
+				}
+			}
+			else
+			{
+				it++;
+			}
+		}
+		else
+			it++;
 	}
 }
 
 void CGameScene::TimeUpdate(HWND, UINT, UINT_PTR, DWORD)
 {
 	time+= 100;
+	singleton->score++;
 	if (time % 10000 == 0 && diffuculty < 6)
 		diffuculty++;
 }
@@ -279,11 +334,10 @@ void CGameScene::EnemyCreate(HWND, UINT, UINT_PTR, DWORD)
 			size_t num = rand() % 6;
 			while (check[num] == true)
 				num = rand() % 6;
-			check[num] = true;
-			CObject * enemy;
+			Enemy * enemy;
 			if (deadEnemyPool.size() == 0)
 			{
-				enemy = new CObject;
+				enemy = new Enemy;
 				enemy->objType = ObjectType::Enemy;
 				enemy->points = new POINT[4];
 			}
@@ -292,6 +346,8 @@ void CGameScene::EnemyCreate(HWND, UINT, UINT_PTR, DWORD)
 				enemy = deadEnemyPool.top();
 				deadEnemyPool.pop();
 			}
+			check[num] = true;
+			enemy->num = num;
 			enemy->x = 50 + num * 100;
 			enemy->y = 0;
 			enemy->points[0].x = enemy->points[3].x = enemy->x - 50;

@@ -36,11 +36,18 @@ public :
 	SHORT curAngle;
 };
 
+class Enemy : public CObject
+{
+public:
+	size_t num;
+};
+
 class CGameScene :
 	public CScene
 {
 public:
 	static ULONG time;
+	static size_t leftHealth;
 	static ULONG lastEnemyCreateTime;
 	static size_t diffuculty;
 	RECT nameRect;
@@ -48,11 +55,11 @@ public:
 	RECT scoreRect;
 	POINT circleXY;
 	Cannon* cannon;
-	CObject * healthObjects[6];
+	static CObject * healthObjects[6];
 	static std::list<CObject *> bulletObjects;
-	static std::list<CObject *> enemyObjects;
+	static std::list<Enemy *> enemyObjects;
 	static std::stack<CObject *> deadBulletPool;
-	static std::stack<CObject *> deadEnemyPool;
+	static std::stack<Enemy *> deadEnemyPool;
 	CGameScene();
 	~CGameScene();
 
