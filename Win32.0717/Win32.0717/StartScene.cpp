@@ -21,6 +21,7 @@ void CStartScene::Init()
 {
 	singleton->name = L"";
 	singleton->score = 0;
+	enterSelected = false;
 }
 
 void CStartScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
@@ -31,6 +32,8 @@ void CStartScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (singleton->name.size() > 0)
 				singleton->name.pop_back();
+			else
+				enterSelected = false;
 		}
 		else if (wParam == VK_RETURN)
 		{
@@ -46,6 +49,20 @@ void CStartScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 			if (singleton->name.size() < 8)
 				singleton->name += wParam;
 		}
+	}
+	else if (message == WM_MOUSEMOVE)
+	{
+		if (PtInRect(&enterRect, { LOWORD(lParam) , HIWORD(lParam) }) && singleton->name.size())
+		{
+			enterSelected = true;
+		}
+		else
+			enterSelected = false;
+	}
+	else if (message == WM_LBUTTONDOWN)
+	{
+		if(enterSelected)
+			singleton->sceneManager->SceneChange(SceneState::ingame);
 	}
 }
 
@@ -64,6 +81,8 @@ void CStartScene::Render(HDC hdc)
 
 	if (singleton->name.size() == 0)
 		SetTextColor(hdc, RGB(212, 212, 212));
+	else if(enterSelected == true)
+		SelectObject(hdc, singleton->lightPinkBrush);
 	Rectangle(hdc, enterRect.left, enterRect.top, enterRect.right, enterRect.bottom);
 	(HFONT)SelectObject(hdc, singleton->idMenuFont);
 	DrawText(hdc, L"»Æ¿Œ", 2, &enterRect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);

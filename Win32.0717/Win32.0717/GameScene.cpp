@@ -5,6 +5,7 @@ extern Singleton * singleton;
 CObject * CGameScene::healthObjects[6];
 std::list<CObject *> CGameScene::bulletObjects;
 std::list<Enemy *> CGameScene::enemyObjects;
+std::list<Enemy *> CGameScene::enemyEffectObjects;
 std::stack<CObject *> CGameScene::deadBulletPool;
 std::stack<Enemy *> CGameScene::deadEnemyPool;
 
@@ -101,7 +102,7 @@ CGameScene::CGameScene()
 		healthBox->objType = ObjectType::Health;
 		healthBox->spdX = healthBox->spdY = 0;
 		healthBox->x = 50 + i * 100;
-		healthBox->y = 810;
+		healthBox->y = healthBox->spdY = 810;
 		healthBox->points = new POINT[4];
 
 		leftX = healthBox->x - 50;
@@ -147,9 +148,22 @@ void CGameScene::Init(void)
 	cannon->curAngle = 0;
 	cannon->destAngle = 0;
 	cannon->Rotate(0);
+
+	unsigned short leftX;
+	unsigned short rightX;
+	unsigned short upY;
+	unsigned short downY;
+
 	for (size_t i = 0; i < 6; i++)
 	{
 		healthObjects[i]->isDead = false;
+		healthObjects[i]->y = healthObjects[i]->spdY = 810;
+
+		upY = healthObjects[i]->y - 50;
+		downY = healthObjects[i]->y + 50;
+
+		healthObjects[i]->points[0].y = healthObjects[i]->points[1].y = upY;
+		healthObjects[i]->points[2].y = healthObjects[i]->points[3].y = downY;
 	}
 }
 
@@ -160,7 +174,7 @@ void CGameScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_KEYDOWN :
 	{
-		if (wParam == 97 || wParam == VK_LEFT)
+		if (wParam == VK_LEFT)
 		{
 			if (cannon->destAngle == cannon->curAngle || cannon->moveAngle == 2)
 			{
@@ -169,7 +183,7 @@ void CGameScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 				cannon->moveAngle = -2;
 			}
 		}
-		else if (wParam == 100 || wParam == VK_RIGHT)
+		else if (wParam == VK_RIGHT)
 		{
 			if (cannon->destAngle == cannon->curAngle || cannon->moveAngle == -2)
 			{
@@ -237,6 +251,10 @@ void CGameScene::Render(HDC hdc)
 	{
 		Polygon(hdc, object->points, 4);
 	}
+	for (CObject * object : enemyEffectObjects)
+	{
+		Polygon(hdc, object->points, 4);
+	}
 	SelectObject(hdc, oldBrush);
 
 	HFONT oldFont = (HFONT)SelectObject(hdc, singleton->idSmallFont);
@@ -280,8 +298,48 @@ void CGameScene::Free(void)
 
 void CGameScene::BulletUpdate(HWND hWnd, UINT uMsg, UINT_PTR timerID, DWORD dwTime)
 {
+	for (size_t i = 0; i < 6; i++)
+	{
+		if (healthObjects[i]->isDead)
+			continue;
+		if (healthObjects[i]->y > 910)
+		{
+			healthObjects[i]->isDead = true;
+			leftHealth--;
+			if (leftHealth == 0)
+			{
+				singleton->sceneManager->SceneChange(SceneState::end);
+				return;
+			}
+		}
+		else if (healthObjects[i]->y != healthObjects[i]->spdY)
+		{
+			healthObjects[i]->y += 1;
+			for (size_t j = 0; j < 4; j++)
+			{
+				healthObjects[i]->points[j].y += 1;
+			}
+		}
+	}
 	if (cannon->curAngle != cannon->destAngle)
 		cannon->Rotate(cannon->moveAngle);
+
+	for (auto it = enemyEffectObjects.begin(); it != enemyEffectObjects.end();)
+	{
+		double _sin = singleton->sinArray[long((*it)->spdX)];
+		double _cos = singleton->cosArray[long((*it)->spdX)];
+
+		double xTmp = 0, yTmp = 0;
+		for (size_t i = 0; i < 4; i++)
+		{
+			xTmp = _cos * double((*it)->points[i].x - (*it)->x) - _sin * double((*it)->points[i].y - (*it)->y);
+			yTmp = _sin * double((*it)->points[i].x - (*it)->x) + _cos * double((*it)->points[i].y - (*it)->y);
+			(*it)->points[i].x = xTmp + (*it)->x;
+			(*it)->points[i].y = yTmp + (*it)->y;
+		}
+		it++;
+	}
+
 	for (auto it = bulletObjects.begin(); it != bulletObjects.end();)
 	{
 		(*it)->x += (*it)->spdX;
@@ -302,7 +360,16 @@ void CGameScene::BulletUpdate(HWND hWnd, UINT uMsg, UINT_PTR timerID, DWORD dwTi
 					(*it)->isDead = true;
 					deadBulletPool.push(*it);
 					it = bulletObjects.erase(it);
-					deadEnemyPool.push(*enemyIt);
+
+  					(*enemyIt)->spdY = 25;
+					(*enemyIt)->spdX = 1;
+					/*(*enemyIt)->x += ((*enemyIt)->points[1].x - (*enemyIt)->x) / 2;
+					(*enemyIt)->y -= ((*enemyIt)->points[2].y - (*enemyIt)->y) / 2;*/
+					(*enemyIt)->points[0].x = (*enemyIt)->points[3].x = (*enemyIt)->points[0].x + ((*enemyIt)->points[1].x - (*enemyIt)->points[0].x) / 2;
+					(*enemyIt)->points[2].y = (*enemyIt)->points[3].y = (*enemyIt)->points[2].y - ((*enemyIt)->points[2].y - (*enemyIt)->points[0].y) / 2;;
+
+
+					enemyEffectObjects.push_back(*enemyIt);
 					enemyObjects.erase(enemyIt);
 					singleton->score += 50;
 					break;
@@ -314,6 +381,7 @@ void CGameScene::BulletUpdate(HWND hWnd, UINT uMsg, UINT_PTR timerID, DWORD dwTi
 				it++;
 		}
 	}
+
 	for (auto it = enemyObjects.begin(); it != enemyObjects.end() && leftHealth > 0; )
 	{
 		(*it)->y += (*it)->spdY;
@@ -321,26 +389,26 @@ void CGameScene::BulletUpdate(HWND hWnd, UINT uMsg, UINT_PTR timerID, DWORD dwTi
 		{
 			(*it)->points[i].y += (*it)->spdY;
 		}
-		if ((*it)->points[2].y > 910)
+		if ((*it)->points[2].y > 960)
 		{
 			(*it)->isDead = true;
 			deadEnemyPool.push(*it);
 			it = enemyObjects.erase(it);
 		}
-		else if ((*it)->points[2].y > 760)
+		
+		else if ((*it)->points[2].y > healthObjects[(*it)->num]->points[0].y)
 		{
 			if (healthObjects[(*it)->num]->isDead == false)
 			{
-				healthObjects[(*it)->num]->isDead = true;
+				healthObjects[(*it)->num]->spdY += 21;
+				healthObjects[(*it)->num]->y += 5;
+				for (size_t i = 0; i < 4; i++)
+				{
+					healthObjects[(*it)->num]->points[i].y += 5;
+				}
 				(*it)->isDead = true;
 				deadEnemyPool.push(*it);
 				it = enemyObjects.erase(it);
-				leftHealth--;
-				if (leftHealth == 0)
-				{
-					singleton->sceneManager->SceneChange(SceneState::end);
-					return;
-				}
 			}
 			else
 			{
@@ -350,6 +418,7 @@ void CGameScene::BulletUpdate(HWND hWnd, UINT uMsg, UINT_PTR timerID, DWORD dwTi
 		else
 			it++;
 	}
+	
 }
 
 void CGameScene::TimeUpdate(HWND, UINT, UINT_PTR, DWORD)

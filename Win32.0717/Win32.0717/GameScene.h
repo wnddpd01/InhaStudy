@@ -61,6 +61,7 @@ public:
 	static CObject * healthObjects[6];
 	static std::list<CObject *> bulletObjects;
 	static std::list<Enemy *> enemyObjects;
+	static std::list<Enemy *> enemyEffectObjects;
 	static std::stack<CObject *> deadBulletPool;
 	static std::stack<Enemy *> deadEnemyPool;
 	CGameScene();

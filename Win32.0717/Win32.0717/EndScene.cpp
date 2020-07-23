@@ -46,6 +46,7 @@ void CEndScene::Init(void)
 		pr->rank = rank++;
 		fwrite(pr, sizeof(PlayerRank), 1, rankFile);
 	}
+	selectedMenu = EndMenu::null;
 	fclose(rankFile);
 }
 
@@ -67,6 +68,46 @@ void CEndScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 		}
 	}
 	break;
+	case WM_MOUSEMOVE :
+	{
+		int mouseX = LOWORD(lParam);
+		int mouseY = HIWORD(lParam);
+		if (mouseX > gameReplayRect.left && mouseX < gameReplayRect.right && mouseY > gameReplayRect.top && mouseY < gameReplayRect.bottom)
+		{
+			selectedMenu = EndMenu::replay;
+		}
+		else if (mouseX > gameQuitRect.left && mouseX < gameQuitRect.right && mouseY > gameQuitRect.top && mouseY < gameQuitRect.bottom)
+		{
+			selectedMenu = EndMenu::quit;
+		}
+		else
+		{
+			selectedMenu = EndMenu::null;
+		}
+	}
+	break;
+	case WM_KEYDOWN :
+	{
+		switch (wParam)
+		{
+		case VK_LEFT:
+		case VK_RIGHT:
+			if (selectedMenu == EndMenu::quit)
+				selectedMenu = EndMenu::replay;
+			else
+				selectedMenu = EndMenu::quit;
+			break;
+		case VK_RETURN :
+			if (selectedMenu == EndMenu::replay)
+				singleton->sceneManager->SceneChange(SceneState::start);
+			else if (selectedMenu == EndMenu::quit)
+				singleton->sceneManager->SceneChange(SceneState::quit);
+			break;
+		default:
+			break;
+		}
+	}
+	break;
 	}
 }
 
@@ -84,7 +125,7 @@ void CEndScene::Render(HDC hdc)
 			continue;
 		}
 		Rectangle(hdc, rankRect[i].left - 10, rankRect[i].top, rankRect[i].right + 10, rankRect[i].bottom);
-		DrawText(hdc, ranks[i]->toString().c_str() , 20, &rankRect[i], DT_VCENTER | DT_LEFT | DT_SINGLELINE);
+		DrawText(hdc, ranks[i]->toString().c_str() , ranks[i]->toString().size(), &rankRect[i], DT_VCENTER | DT_LEFT | DT_SINGLELINE);
 	}
 	if (lastPlayerRank->rank > 5)
 	{
@@ -95,6 +136,19 @@ void CEndScene::Render(HDC hdc)
 	DrawText(hdc, L"다시하기", 4, &gameReplayRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
 	Rectangle(hdc, gameQuitRect.left, gameQuitRect.top, gameQuitRect.right, gameQuitRect.bottom);
 	DrawText(hdc, L"게임 끝내기", 6, &gameQuitRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+
+	HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, singleton->lightPinkBrush);
+	if (selectedMenu == EndMenu::replay)
+	{
+		Rectangle(hdc, gameReplayRect.left, gameReplayRect.top, gameReplayRect.right, gameReplayRect.bottom);
+		DrawText(hdc, L"다시하기", 4, &gameReplayRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+	}
+	else if (selectedMenu == EndMenu::quit)
+	{
+		Rectangle(hdc, gameQuitRect.left, gameQuitRect.top, gameQuitRect.right, gameQuitRect.bottom);
+		DrawText(hdc, L"게임 끝내기", 6, &gameQuitRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+	}
+	SelectObject(hdc, oldBrush);
 	SelectObject(hdc, oldFont);
 }
 
