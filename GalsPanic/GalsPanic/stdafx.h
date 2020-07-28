@@ -20,4 +20,5 @@
 
 // TODO: reference additional headers your program requires here
 #include "GameManager.h"
+#include "BitMapManager.h"
 #include "InGameScene.h"

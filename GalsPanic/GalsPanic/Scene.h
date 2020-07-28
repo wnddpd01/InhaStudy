@@ -12,10 +12,8 @@ public:
 	{
 	}
 
-	virtual void SceneInit() = 0;
-	virtual void SceneUpdate() = 0;
-	virtual void SceneRender() = 0;
-	virtual void SceneFree() = 0;
+	virtual void RegisterSceneClass(WNDCLASSEX* wcex) = 0;
+	virtual void CreateSceneWindow(HWND hWndMain, RECT& rectViewMain) = 0;
 	//virtual LRESULT CALLBACK SceneWndProc(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam) = 0;
 };
 

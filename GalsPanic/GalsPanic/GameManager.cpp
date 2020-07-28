@@ -1,41 +1,29 @@
 #include "stdafx.h"
 #include "GameManager.h"
+#include "resource.h"
 
 extern HINSTANCE hInst;
 
 GameManager::GameManager()
 {
 	inGameScene = new InGameScene;
-	bitMapGangjunCharacter = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_));
+	curScene = inGameScene;
 }
-
-void GameManager::RegisterInGameSceneWindow()
-{
-	wcex->lpfnWndProc = inGameScene->SceneWndProc;
-	wcex->lpszMenuName = NULL;
-	wcex->lpszClassName = L"InGameSceneClass";
-	RegisterClassExW(wcex);
-}
-
-void GameManager::CreateIngameSceneWindow()
-{
-	inGameScene->SceneHWnd = CreateWindow(L"InGameSceneClass", L"InGameSceneWindow", NULL, 0, 0, rectViewMain.right, rectViewMain.bottom, *hWndMain, NULL, hInst, NULL);
-}
-
-
 
 void GameManager::RegisterSceneWindow(WNDCLASSEXW * wcex)
 {
-	this->wcex = wcex;
-	RegisterInGameSceneWindow();
+	inGameScene->RegisterSceneClass(wcex);
 }
 
 void GameManager::CreateSceneWindow(HWND & hWndMain)
 {
 	this->hWndMain = &hWndMain;
-	GetClientRect(hWndMain, &(this->rectViewMain));
-	CreateIngameSceneWindow();
+	GetClientRect(hWndMain, &(this->rectViewMain)); 
+	inGameScene->CreateSceneWindow(hWndMain, rectViewMain);
+	ShowWindow(inGameScene->SceneHWnd, SW_HIDE);
+	ShowWindow(inGameScene->SceneHWnd, SW_SHOW);
 }
+
 
 
 GameManager::~GameManager()

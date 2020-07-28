@@ -51,7 +51,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
     }
-
     return (int) msg.wParam;
 }
 
@@ -130,7 +129,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
 	case WM_CREATE :
 		{
-			gameManager->CreateSceneWindow(hWnd);
+        gameManager->CreateSceneWindow(hWnd);
 		}
 		break;
     case WM_COMMAND:

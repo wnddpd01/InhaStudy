@@ -1,4 +1,5 @@
 #pragma once
+
 class Scene;
 class InGameScene;
 
@@ -6,12 +7,8 @@ class GameManager
 {
 	WNDCLASSEXW *wcex;
 	HWND *hWndMain;
-	RECT rectViewMain;
 
 	GameManager();
-
-	void RegisterInGameSceneWindow();
-	void CreateIngameSceneWindow();
 public:
 	static GameManager * getInstance()
 	{
@@ -21,7 +18,7 @@ public:
 
 	Scene * curScene;
 	InGameScene * inGameScene;
-	HBITMAP bitMapGangjunCharacter;
+	RECT rectViewMain;
 
 	void RegisterSceneWindow(WNDCLASSEXW *wcex);
 	void CreateSceneWindow(HWND &hWndMain);

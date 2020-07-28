@@ -1,18 +1,22 @@
 #pragma once
 #include "Scene.h"
+
 class InGameScene :
 	public Scene
 {
 public:
-	HBITMAP * InGameBitmap;
+	HDC InGameSceneHDC;
+	PAINTSTRUCT InGameScenePaintStruct;
+	HBITMAP * InGameSceneBackHBit;
+	BITMAP InGameSceneBackBit;
 
 	InGameScene();
 	~InGameScene();
 
-	void SceneInit();
-	void SceneUpdate();
-	void SceneRender();
-	void SceneFree();
-	static LRESULT CALLBACK SceneWndProc(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam);
+	void CreateSceneWindow(HWND hWndMain, RECT &rectViewMain);
+	void RegisterSceneClass(WNDCLASSEX* wcex);
+
+	LRESULT CALLBACK InGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
+	static LRESULT CALLBACK staticInGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
 };
 
