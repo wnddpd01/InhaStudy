@@ -247,11 +247,11 @@ void CGameScene::Render(HDC hdc)
 		Ellipse(hdc, object->x - 10, object->y - 10, object->x + 10, object->y + 10);
 	}
 	SelectObject(hdc, singleton->darkRedBrush);
-	for (CObject * object : enemyObjects)
+	for (Enemy * object : enemyEffectObjects)
 	{
-		Polygon(hdc, object->points, 4);
+		Polygon(hdc, object->drawPoint, 4);
 	}
-	for (CObject * object : enemyEffectObjects)
+	for (CObject * object : enemyObjects)
 	{
 		Polygon(hdc, object->points, 4);
 	}
@@ -326,18 +326,36 @@ void CGameScene::BulletUpdate(HWND hWnd, UINT uMsg, UINT_PTR timerID, DWORD dwTi
 
 	for (auto it = enemyEffectObjects.begin(); it != enemyEffectObjects.end();)
 	{
-		double _sin = singleton->sinArray[long((*it)->spdX)];
-		double _cos = singleton->cosArray[long((*it)->spdX)];
-
-		double xTmp = 0, yTmp = 0;
-		for (size_t i = 0; i < 4; i++)
+		double _sin = singleton->sinArray[int((*it)->spdY)];
+		double _cos = singleton->cosArray[int((*it)->spdY)];
+		(*it)->spdY += (*it)->spdX;
+		if ((*it)->spdY < 0)
+			(*it)->spdY += 360;
+		else if ((*it)->spdY > 359)
+			(*it)->spdY -= 360;
+		(*it)->spdX *= 1.2;
+		if ((*it)->points[0].x < (*it)->points[1].x)
 		{
-			xTmp = _cos * double((*it)->points[i].x - (*it)->x) - _sin * double((*it)->points[i].y - (*it)->y);
-			yTmp = _sin * double((*it)->points[i].x - (*it)->x) + _cos * double((*it)->points[i].y - (*it)->y);
-			(*it)->points[i].x = xTmp + (*it)->x;
-			(*it)->points[i].y = yTmp + (*it)->y;
+			double xTmp = 0, yTmp = 0; 
+			for (size_t i = 0; i < 4; i++)
+			{
+				xTmp = _cos * double((*it)->points[i].x - (*it)->x) - _sin * double((*it)->points[i].y - (*it)->y);
+				yTmp = _sin * double((*it)->points[i].x - (*it)->x) + _cos * double((*it)->points[i].y - (*it)->y); 
+
+				((*it)->drawPoint)[i].x = xTmp + (*it)->x;
+				((*it)->drawPoint)[i].y = yTmp + (*it)->y;
+			}
+			(*it)->points[3].x += 3;
+			(*it)->points[3].y -= 3;
+			(*it)->points[0].x += 3;
+			(*it)->points[2].y -= 3;
+			it++;
 		}
-		it++;
+		else
+		{
+			deadEnemyPool.push(*it);
+			it = enemyEffectObjects.erase(it);
+		}
 	}
 
 	for (auto it = bulletObjects.begin(); it != bulletObjects.end();)
@@ -361,15 +379,68 @@ void CGameScene::BulletUpdate(HWND hWnd, UINT uMsg, UINT_PTR timerID, DWORD dwTi
 					deadBulletPool.push(*it);
 					it = bulletObjects.erase(it);
 
-  					(*enemyIt)->spdY = 25;
-					(*enemyIt)->spdX = 1;
-					/*(*enemyIt)->x += ((*enemyIt)->points[1].x - (*enemyIt)->x) / 2;
-					(*enemyIt)->y -= ((*enemyIt)->points[2].y - (*enemyIt)->y) / 2;*/
-					(*enemyIt)->points[0].x = (*enemyIt)->points[3].x = (*enemyIt)->points[0].x + ((*enemyIt)->points[1].x - (*enemyIt)->points[0].x) / 2;
-					(*enemyIt)->points[2].y = (*enemyIt)->points[3].y = (*enemyIt)->points[2].y - ((*enemyIt)->points[2].y - (*enemyIt)->points[0].y) / 2;;
+					Enemy * effect;
+					Enemy * effect2;
+					if (deadEnemyPool.size() > 0)
+					{
+						effect = deadEnemyPool.top(); deadEnemyPool.pop();
+					}
+					else
+					{
+						effect = new Enemy;
+						effect->isDead = true;
+						effect->objType = ObjectType::Enemy;
+						effect->points = new POINT[4];
+					}
+					if (deadEnemyPool.size() > 0)
+					{
+						effect2 = deadEnemyPool.top(); deadEnemyPool.pop();
+					}
+					else
+					{
+						effect2 = new Enemy;
+						effect2->isDead = true;
+						effect2->objType = ObjectType::Enemy;
+						effect2->points = new POINT[4];
+					}
+					effect2->x = effect->x = (*enemyIt)->x;
+					effect2->y = effect->y = (*enemyIt)->y;
+					size_t effectRand = rand() % 2;
+					if (effectRand > 0)
+					{
+						(*enemyIt)->spdX = 10;
+					}
+					else
+					{
+						(*enemyIt)->spdX = -10;
+					}
+					effect->spdY = (*enemyIt)->spdY + 120;
+					effect2->spdY = effect->spdY + 120;
+					effect2->spdX = effect->spdX = (*enemyIt)->spdX;
+					double _sin = singleton->sinArray[120];
+					double _cos = singleton->cosArray[120];
+					double xTmp;
+					double yTmp;
+					(*enemyIt)->points[0].x = (*enemyIt)->points[3].x = (*enemyIt)->x;
+					(*enemyIt)->points[2].y = (*enemyIt)->points[3].y = (*enemyIt)->y;
+					for (size_t i = 0; i < 4; i++)
+					{
+						effect2->points[i].x = effect->points[i].x = (*enemyIt)->drawPoint[i].x = (*enemyIt)->points[i].x;
+						effect2->points[i].y = effect->points[i].y = (*enemyIt)->drawPoint[i].y = (*enemyIt)->points[i].y;
 
+						xTmp = _cos * double((*enemyIt)->points[i].x - (*enemyIt)->x) - _sin * double((*enemyIt)->points[i].y - (*enemyIt)->y);
+						yTmp = _sin * double((*enemyIt)->points[i].x - (*enemyIt)->x) + _cos * double((*enemyIt)->points[i].y - (*enemyIt)->y);
+						effect->drawPoint[i].x = xTmp + (*enemyIt)->x;
+						effect->drawPoint[i].y = yTmp + (*enemyIt)->y;
 
+						xTmp = _cos * double(effect->points[i].x - (*enemyIt)->x) - _sin * double(effect->points[i].y - (*enemyIt)->y);
+						yTmp = _sin * double(effect->points[i].x - (*enemyIt)->x) + _cos * double(effect->points[i].y - (*enemyIt)->y);
+						effect2->drawPoint[i].x = xTmp + (*enemyIt)->x;
+						effect2->drawPoint[i].y = yTmp + (*enemyIt)->y;
+					}
 					enemyEffectObjects.push_back(*enemyIt);
+					enemyEffectObjects.push_back(effect);
+					enemyEffectObjects.push_back(effect2);
 					enemyObjects.erase(enemyIt);
 					singleton->score += 50;
 					break;
@@ -381,6 +452,8 @@ void CGameScene::BulletUpdate(HWND hWnd, UINT uMsg, UINT_PTR timerID, DWORD dwTi
 				it++;
 		}
 	}
+
+	
 
 	for (auto it = enemyObjects.begin(); it != enemyObjects.end() && leftHealth > 0; )
 	{
@@ -418,7 +491,7 @@ void CGameScene::BulletUpdate(HWND hWnd, UINT uMsg, UINT_PTR timerID, DWORD dwTi
 		else
 			it++;
 	}
-	
+
 }
 
 void CGameScene::TimeUpdate(HWND, UINT, UINT_PTR, DWORD)

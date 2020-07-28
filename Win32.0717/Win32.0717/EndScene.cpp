@@ -163,6 +163,6 @@ void CEndScene::PlayerRankDraw(HDC& hdc, RECT& rect)
 {
 	HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, singleton->lightBlueBrush);
 	Rectangle(hdc, rect.left - 10, rect.top, rect.right + 10, rect.bottom);
-	DrawText(hdc, lastPlayerRank->toString().c_str(), 20, &rect, DT_VCENTER | DT_LEFT | DT_SINGLELINE);
+	DrawText(hdc, lastPlayerRank->toString().c_str(), 31, &rect, DT_VCENTER | DT_LEFT | DT_SINGLELINE);
 	SelectObject(hdc, oldBrush);
 }

@@ -43,6 +43,11 @@ class Enemy : public CObject
 {
 public:
 	size_t num;
+	POINT drawPoint[4];
+	Enemy()
+	{
+		num = 255;
+	}
 };
 
 class CGameScene :

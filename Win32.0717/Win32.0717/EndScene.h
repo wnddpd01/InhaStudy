@@ -15,7 +15,7 @@ typedef struct PlayerRank
 	std::wstring toString()
 	{
 		wchar_t wchar[32];
-		wsprintf(wchar, L"%-3d. %-10s %-8d", rank, playerName, score);
+		wsprintf(wchar, L"%-3d. %-16s %8d", rank, playerName, score);
 		std::wstring ret(wchar);
 		return ret;
 	}
