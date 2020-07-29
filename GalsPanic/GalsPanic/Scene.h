@@ -1,9 +1,10 @@
 #pragma once
+#pragma comment (lib, "Msimg32.lib")
 class Scene
 {
 public:
 	HWND SceneHWnd;
-
+	RECT SceneWindowRect;
 	Scene()
 	{
 	}
