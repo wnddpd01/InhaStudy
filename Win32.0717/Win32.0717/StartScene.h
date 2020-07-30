@@ -5,6 +5,7 @@ class CStartScene :
 	public CScene
 {
 public:
+	bool enterSelected;
 	RECT titleRect;
 	RECT idMenuRect;
 	RECT idRect;

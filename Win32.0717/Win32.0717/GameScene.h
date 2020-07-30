@@ -43,6 +43,11 @@ class Enemy : public CObject
 {
 public:
 	size_t num;
+	POINT drawPoint[4];
+	Enemy()
+	{
+		num = 255;
+	}
 };
 
 class CGameScene :
@@ -61,6 +66,7 @@ public:
 	static CObject * healthObjects[6];
 	static std::list<CObject *> bulletObjects;
 	static std::list<Enemy *> enemyObjects;
+	static std::list<Enemy *> enemyEffectObjects;
 	static std::stack<CObject *> deadBulletPool;
 	static std::stack<Enemy *> deadEnemyPool;
 	CGameScene();

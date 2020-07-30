@@ -173,6 +173,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		singleton->sceneManager->Update(message, wParam, lParam);
 	}
 	break;
+	case WM_MOUSEMOVE:
+	{
+		singleton->sceneManager->Update(message, wParam, lParam);
+	}
+	break;
 	case WM_CHAR:
 	{
 		singleton->sceneManager->Update(message, wParam, lParam);
