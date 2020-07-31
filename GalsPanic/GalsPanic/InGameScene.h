@@ -1,11 +1,11 @@
 #pragma once
 #include "Scene.h"
 #include <vector>
+class Player;
 
-struct CPolygon
+enum class PointInPolygon
 {
-	size_t vertexCount;
-	POINT *points;
+	inLine = 0, inPoly, outOfPoly
 };
 
 class InGameScene :
@@ -13,19 +13,26 @@ class InGameScene :
 {
 public:
 	HDC InGameSceneHDC;
+	HDC InGameShadeHDC;
 	PAINTSTRUCT InGameScenePaintStruct;
 	HBRUSH shadeScreenColorBrush;
 	HBRUSH shadeScreenTransparentBrush;
 	HBITMAP * InGameSceneBackHBit;
 	BITMAP InGameSceneBackBit;
 	COLORREF TransparentRGB;
+	Player * player;
 	std::vector<CPolygon *> polygonVector;
+	CPolygon * transperentCPoly;
+	//std::vector<HRGN *> hRgnVector;
+	//static HRGN transparentRgn;
 
 	InGameScene();
 	~InGameScene();
 
 	void CreateSceneWindow(HWND hWndMain, RECT &rectViewMain);
 	void RegisterSceneClass(WNDCLASSEX* wcex);
+	void SceneInit();
+
 	void DrawBackGroundBit();
 	void DrawShadeScreen();
 	void DrawTransparentPoly(const HDC hMemShadeDC);
