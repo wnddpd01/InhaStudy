@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameManager.h"
+#include "InGameScene.h"
 #include "resource.h"
 
 extern HINSTANCE hInst;
@@ -20,8 +21,6 @@ void GameManager::CreateSceneWindow(HWND & hWndMain)
 	this->hWndMain = &hWndMain;
 	GetClientRect(hWndMain, &(this->rectViewMain)); 
 	inGameScene->CreateSceneWindow(hWndMain, rectViewMain);
-	ShowWindow(inGameScene->SceneHWnd, SW_HIDE);
-	ShowWindow(inGameScene->SceneHWnd, SW_SHOW);
 }
 
 

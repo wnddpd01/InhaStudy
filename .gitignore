@@ -348,5 +348,10 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+<<<<<<< HEAD
 GalsPanic/GalsPanic/GalsPanic.vcxproj
 GalsPanic/GalsPanic/GalsPanic.vcxproj.filters
+=======
+Win32.0717/Win32.0717/rankFile.txt
+GalsPanic/GalsPanic/GalsPanic.vcxproj
+>>>>>>> origin/master
