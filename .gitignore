@@ -348,3 +348,5 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+GalsPanic/GalsPanic/GalsPanic.vcxproj
+GalsPanic/GalsPanic/GalsPanic.vcxproj.filters
