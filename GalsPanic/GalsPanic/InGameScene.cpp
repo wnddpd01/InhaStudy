@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "InGameScene.h"
 #include "Player.h"
-
+#include <string>
 extern HINSTANCE hInst;
 extern RECT rectViewMain;
 
@@ -84,7 +84,6 @@ void InGameScene::DrawShadeScreen()
 		MoveToEx(InGameSceneHDC, player->playerFootprint.points.back().x, player->playerFootprint.points.back().y, NULL);
 		LineTo(InGameSceneHDC, player->playerPos.x, player->playerPos.y);
 	}
-
 	player->PlayerDraw(InGameSceneHDC);
 	//SelectObject(InGameShadeHDC, oldBitmap);
 	//SelectObject(InGameShadeHDC, oldBrush);
@@ -99,8 +98,19 @@ void InGameScene::DrawTransparentPoly(const HDC hMemShadeDC)
 		Polygon(hMemShadeDC, cPoly->points, cPoly->vertexCount);
 	}*/
 	Polygon(hMemShadeDC, &(transperentCPoly->points[0]), transperentCPoly->points.size());
+
+	SelectObject(hMemShadeDC, oldBrush);
+	
+
+	int i = 0;
+	for(POINT cp : transperentCPoly->points)
+	{
+		RECT rect = { cp.x - 5, cp.y - 5, cp.x + 5, cp.y + 5};
+		DrawText(hMemShadeDC, std::to_wstring(i).c_str(), 2 ,&rect, DT_CENTER || DT_VCENTER);
+		i++;
+	}
 	//Polyline(hMemShadeDC, transperentCPoly->points, transperentCPoly->vertexCount);
-	//SelectObject(hMemShadeDC, oldBrush);
+	SelectObject(hMemShadeDC, oldBrush);
 }
 
 void InGameScene::ClearPolygonVector()
@@ -181,11 +191,12 @@ LRESULT CALLBACK InGameScene::staticInGameSceneWndProc(HWND hwnd, UINT iMsg, WPA
 	return DefWindowProc(hwnd, iMsg, wParam, lParam);
 }
 
-int CPolygon::isInLine(POINT & p)
+int CPolygon::isInLine(POINT & p, size_t vertexCount)
 {
-	size_t vertexCount = this->points.size();
+	if(vertexCount == 0)
+		vertexCount = this->points.size();
 	for (int i = 0; i < vertexCount; i++) {
-		int j = (i + 1) % vertexCount;
+		int j = (i + 1) % this->points.size();
 		
 		LONG left, right;
 		LONG up, down;

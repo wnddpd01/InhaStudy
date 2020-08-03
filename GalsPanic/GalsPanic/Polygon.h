@@ -14,7 +14,7 @@ public:
 			this->points.push_back(points[i]);
 		}
 	}
-	int isInLine(POINT & p);
+	int isInLine(POINT & p, size_t vertexCount = 0);
 	bool isInPoly(POINT & p);
 	double getArea()
 	{

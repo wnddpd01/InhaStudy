@@ -42,9 +42,16 @@ void Player::PlayerMove(WPARAM moveDir, CPolygon ** transparentPoly, const HDC i
 	default:
 		break;
 	}
+
+	if (this->isInFootPrint(tempPoint) == true)
+	{
+		return;
+	}
+
 	int lineNum = 0;
 	static int startLineNum;
 	static int endLineNum;
+
 	if ((lineNum = (*transparentPoly)->isInLine(tempPoint)) != -1)
 	{
 		if (drawMode == true)
@@ -61,60 +68,72 @@ void Player::PlayerMove(WPARAM moveDir, CPolygon ** transparentPoly, const HDC i
 			if (playerFootprint.getArea() < 0)
 			{
 				std::reverse(playerFootprint.points.begin(), playerFootprint.points.end());
-				int temp = startLineNum;
-				startLineNum = endLineNum;
-				endLineNum = temp;
+				std::swap(startLineNum, endLineNum);
 			}
 
 			CPolygon * temp1 = new CPolygon(&playerFootprint.points[0], playerFootprint.points.size());
 			CPolygon * temp2 = new CPolygon(&playerFootprint.points[0], playerFootprint.points.size());
 
 			int lineSearch = endLineNum;
-			while (lineSearch != startLineNum)
+			int destLineNum = startLineNum;
+			while (lineSearch != destLineNum)
 			{
-				temp1->points.push_back(((*transparentPoly)->points[lineSearch]));
+				if (isEqualPoint((*transparentPoly)->points[lineSearch], playerFootprint.points[0]) || isEqualPoint((*transparentPoly)->points[lineSearch], playerFootprint.points.back()))
+				{
+
+				}
+				else
+				{
+					temp1->points.push_back(((*transparentPoly)->points[lineSearch]));
+				}
 				lineSearch--;
 				if (lineSearch < 0)
 					lineSearch = (*transparentPoly)->points.size() - 1;
 			}
 
 			lineSearch = ++endLineNum % (*transparentPoly)->points.size();
-
+			destLineNum = (startLineNum + 1) % (*transparentPoly)->points.size();
 			do 
 			{
-				temp2->points.push_back(((*transparentPoly)->points[lineSearch]));
+				if (isEqualPoint((*transparentPoly)->points[lineSearch], playerFootprint.points[0]) || isEqualPoint((*transparentPoly)->points[lineSearch] , playerFootprint.points.back()))
+				{
+
+				}
+				else
+				{
+					temp2->points.push_back(((*transparentPoly)->points[lineSearch]));
+				}
 				lineSearch++;
 				if (lineSearch == (*transparentPoly)->points.size())
 					lineSearch = 0;
-			} while ((lineSearch != (startLineNum + 1) % (*transparentPoly)->points.size()));
+			} while (lineSearch != destLineNum);
 
-			playerFootprint.points.clear();
 
 			double ret2 = temp2->getArea();
 			double ret  = temp1->getArea();
+			CPolygon* selected;
 			if (fabs(ret2) > fabs(ret))
 			{
-				if (ret2 < 0)
-					std::reverse(temp2->points.begin(), temp2->points.end());
-				*transparentPoly = temp2;
+				selected = temp2;
 				delete temp1;
 			}
 			else
 			{
-				if (ret < 0)
-					std::reverse(temp1->points.begin(), temp1->points.end());
-				*transparentPoly = temp1;
+				selected = temp1;
 				delete temp2;
 			}
+			delete *transparentPoly;
+			*transparentPoly = selected;
+			playerFootprint.points.clear();
 		}
 		else
 		{
 			startLineNum = lineNum;
 		}
 		setPlayerPos(tempPoint);
-		return;
 	}
-	if ((*transparentPoly)->isInPoly(tempPoint) == false)
+
+	else if ((*transparentPoly)->isInPoly(tempPoint) == false)
 	{
 		if (drawMode == false)
 		{
@@ -127,6 +146,13 @@ void Player::PlayerMove(WPARAM moveDir, CPolygon ** transparentPoly, const HDC i
 		}
 		setPlayerPos(tempPoint);
 	}
+}
+
+bool Player::isInFootPrint(POINT &p)
+{
+	if (playerFootprint.points.size() == 0)
+		return false;
+	return this->playerFootprint.isInLine(p, this->playerFootprint.points.size() - 1) != -1;
 }
 
 RECT Player::getPlayerRect()
