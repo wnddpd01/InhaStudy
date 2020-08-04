@@ -12,17 +12,19 @@ class InGameScene :
 	public Scene
 {
 public:
-	HDC InGameSceneHDC;
-	HDC InGameShadeHDC;
+	HDC InGameSceneFrontHDC;
+	HDC InGameSceneBackHDC; 
 	PAINTSTRUCT InGameScenePaintStruct;
 	HBRUSH shadeScreenColorBrush;
 	HBRUSH shadeScreenTransparentBrush;
+	HBRUSH playerBrush;
 	HBITMAP * InGameSceneBackHBit;
 	BITMAP InGameSceneBackBit;
 	COLORREF TransparentRGB;
 	Player * player;
 	std::vector<CPolygon *> polygonVector;
 	CPolygon * transperentCPoly;
+	bool needDrawBackGroud = true;
 	//std::vector<HRGN *> hRgnVector;
 	//static HRGN transparentRgn;
 
@@ -36,6 +38,7 @@ public:
 	void DrawBackGroundBit();
 	void DrawShadeScreen();
 	void DrawTransparentPoly(const HDC hMemShadeDC);
+	void DrawPlayer();
 	void ClearPolygonVector();
 
 	LRESULT CALLBACK InGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);

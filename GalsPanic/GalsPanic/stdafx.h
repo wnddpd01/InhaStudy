@@ -22,3 +22,39 @@
 #include "GameManager.h"
 #include "BitMapManager.h"
 #include "Polygon.h"
+
+#define WINDOW_WIDTH 1024
+#define WINDOW_HEIGHT 768
+
+inline bool isEqualPoint(const POINT& p1, const POINT& p2)
+{
+	if (p1.x == p2.x && p1.y == p2.y)
+		return true;
+	return false;
+}
+
+inline int getPointDirection(const POINT& p1, const POINT& p2)
+{
+	if (p2.x - p1.x == 0)
+	{
+		if (p2.y - p1.y > 0)
+			return VK_DOWN;
+		else if (p2.y - p1.y < 0)
+			return VK_UP;
+	}
+	else if (p2.y - p1.y == 0)
+	{
+		if (p2.x - p1.x > 0)
+			return VK_RIGHT;
+		else if (p2.x - p1.x < 0)
+			return VK_LEFT;
+	}
+	return 0;
+}
+
+inline bool BoundaryCheck(const POINT& p)
+{
+	if (p.x < 10 || p.x > WINDOW_WIDTH || p.y < 10 || p.y > WINDOW_HEIGHT)
+		return false;
+	return true;
+}

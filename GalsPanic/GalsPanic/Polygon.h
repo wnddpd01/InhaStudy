@@ -1,11 +1,11 @@
 #pragma once
 #include <vector>
 
-struct CPolygon
+class CPolygon
 {
-	std::vector<POINT> points;
 
 public:
+	std::vector<POINT> points;
 	CPolygon() {}
 	CPolygon(POINT points[], size_t vertexCount)
 	{
@@ -14,22 +14,10 @@ public:
 			this->points.push_back(points[i]);
 		}
 	}
-	int isInLine(POINT & p, size_t vertexCount = 0);
+	int isInLine(POINT& p, size_t vertexCount = 0);
+	bool isInBetweenTwoPoint(const POINT& p, const POINT& startP, const POINT& endP);
 	bool isInPoly(POINT & p);
-	double getArea()
-	{
-		double area = 0.0;
-
-		size_t vertexCount = points.size();
-
-		for (int i = 0; i < vertexCount; ++i)
-		{
-			int j = (i + 1) % vertexCount;
-			area += 0.5 * (points[i].x * points[j].y - points[j].x * points[i].y);
-		}
-
-		return area;
-	}
+	double getArea();
 	~CPolygon()
 	{
 		points.clear();
