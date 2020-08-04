@@ -9,8 +9,6 @@ int CPolygon::isInLine(POINT& p, size_t vertexCount)
 		int j = (i + 1) % this->points.size();
 		if (isInBetweenTwoPoint(p, points[i], points[j]) == true)
 		{
-			if (i == 0 && isEqualPoint(points[i], p))
-				return vertexCount - 1;
 			return i;
 		}
 	}
@@ -46,6 +44,24 @@ bool CPolygon::isInBetweenTwoPoint(const POINT& p, const POINT& startP, const PO
 
 	if (p.x >= left && p.x <= right && p.y >= up && p.y <= down)
 		return true;
+	/*if (startP.y == endP.y)
+	{
+		if (startP.y != p.y)
+			return false;
+		if (startP.x == p.x)
+			return true;
+		if (p.x > startP.x != p.x >= endP.x)
+			return true;
+	}
+	else
+	{
+		if (startP.x != p.x)
+			return false;
+		if (startP.y == p.y)
+			return true;
+		if (p.y > startP.y != p.y >= endP.y)
+			return true;
+	}*/
 	return false;
 }
 

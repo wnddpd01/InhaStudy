@@ -88,29 +88,28 @@ void Player::PlayerMove(WPARAM moveDir, CPolygon ** transparentPoly)
 				footprintOrderSort(&startLineNum, &endLineNum);
 			}
 
-			CPolygon * temp1 = new CPolygon(&playerFootprint.points[0], playerFootprint.points.size());
-			CPolygon * temp2 = new CPolygon(&playerFootprint.points[0], playerFootprint.points.size());
+			CPolygon* selected;
+			CPolygon* temp1 = new CPolygon(&playerFootprint.points[0], playerFootprint.points.size());
+			CPolygon* temp2 = new CPolygon(&playerFootprint.points[0], playerFootprint.points.size());
 
 			ULONG lineSearch = endLineNum;
 			ULONG destLineNum = startLineNum;
-			while (lineSearch != destLineNum)
-			{
-				if (isEqualPoint((*transparentPoly)->points[lineSearch], playerFootprint.points[0]) || isEqualPoint((*transparentPoly)->points[lineSearch], playerFootprint.points.back()))
-				{
+			//while (lineSearch != destLineNum)
+			//{
+			//	if (isEqualPoint((*transparentPoly)->points[lineSearch], playerFootprint.points[0]) || isEqualPoint((*transparentPoly)->points[lineSearch], playerFootprint.points.back()))
+			//	{
 
-				}
-				else
-				{
-					temp1->points.push_back(((*transparentPoly)->points[lineSearch]));
-				}
-				if (lineSearch == 0)
-					lineSearch = (*transparentPoly)->points.size();
-				lineSearch--;
-			}
+			//	}
+			//	else
+			//	{
+			//		temp1->points.push_back(((*transparentPoly)->points[lineSearch]));
+			//	}
+			//	if (lineSearch == 0)
+			//		lineSearch = (*transparentPoly)->points.size();
+			//	lineSearch--;
+			//}
 
-			lineSearch = endLineNum + 1;
-			lineSearch %= (*transparentPoly)->points.size();
-			if (endLineNum == startLineNum)
+			/*if (endLineNum == startLineNum)
 			{
 				if (isEqualPoint((*transparentPoly)->points[lineSearch], playerFootprint.points[0]) || isEqualPoint((*transparentPoly)->points[lineSearch], playerFootprint.points.back()))
 				{
@@ -122,27 +121,19 @@ void Player::PlayerMove(WPARAM moveDir, CPolygon ** transparentPoly)
 				}
 				lineSearch++;
 			}
-			lineSearch %= (*transparentPoly)->points.size();
+			lineSearch %= (*transparentPoly)->points.size();*/
+			lineSearch = (endLineNum + 1) % (*transparentPoly)->points.size();
 			destLineNum = (startLineNum + 1) % (*transparentPoly)->points.size();
-			while (lineSearch != destLineNum)
+			do
 			{
-				if (isEqualPoint((*transparentPoly)->points[lineSearch], playerFootprint.points[0]) || isEqualPoint((*transparentPoly)->points[lineSearch] , playerFootprint.points.back()))
-				{
-
-				}
-				else
-				{
-					temp2->points.push_back(((*transparentPoly)->points[lineSearch]));
-				}
+				temp2->points.push_back(((*transparentPoly)->points[lineSearch]));
 				lineSearch++;
 				if (lineSearch == (*transparentPoly)->points.size())
 					lineSearch = 0;
-			} 
-
+			} while (lineSearch != destLineNum);
 
 			double ret2 = temp2->getArea();
-			double ret  = temp1->getArea();
-			CPolygon* selected;
+			double ret = temp1->getArea();
 			if (fabs(ret2) > fabs(ret))
 			{
 				selected = temp2;
@@ -157,7 +148,7 @@ void Player::PlayerMove(WPARAM moveDir, CPolygon ** transparentPoly)
 					std::reverse(selected->points.begin(), selected->points.end());
 				delete temp2;
 			}
-			delete *transparentPoly;
+			delete* transparentPoly;
 			*transparentPoly = selected;
 			playerFootprint.points.clear();
 			startLineNum = (*transparentPoly)->isInLine(tempPoint);
