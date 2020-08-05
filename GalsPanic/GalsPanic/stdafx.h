@@ -52,9 +52,15 @@ inline int getPointDirection(const POINT& p1, const POINT& p2)
 	return 0;
 }
 
+inline double getPointDistance(const POINT& p1, const POINT& p2)
+{
+	return sqrt(pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2));
+}
+
 inline bool BoundaryCheck(const POINT& p)
 {
-	if (p.x < 10 || p.x > WINDOW_WIDTH || p.y < 10 || p.y > WINDOW_HEIGHT)
+	if (p.x < 8 || p.x > WINDOW_WIDTH - 8|| p.y < 8 || p.y > WINDOW_HEIGHT - 8)
 		return false;
 	return true;
 }
+

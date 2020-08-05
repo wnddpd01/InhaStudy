@@ -12,13 +12,13 @@ InGameScene::InGameScene()
 	shadeScreenColorBrush = CreateSolidBrush(RGB(180, 140, 240));
 	shadeScreenTransparentBrush = CreateSolidBrush(TransparentRGB);
 	playerBrush = CreateSolidBrush(RGB(255, 0, 0));
-	POINT initPolygonPoints[4] = { {100, 100}, {200, 100}, {200, 200}, {100, 200} };
+	POINT initPolygonPoints[4] = { {96, 96 }, {192, 96}, {192, 192}, {96, 192} };
 	//polygonVector.push_back(new CPolygon(initPolygonPoints, 4));
 	InGameSceneBackHDC = NULL;
 	transperentCPoly = new CPolygon(initPolygonPoints, 4);
 
 	player = new Player;
-	player->setPlayerPos({ 100, 100 });
+	player->setPlayerPos({ 96, 96});
 }
 
 
@@ -65,6 +65,19 @@ void InGameScene::DrawShadeScreen()
 	HBRUSH oldBrush = (HBRUSH)SelectObject(InGameSceneShadeHDC, shadeScreenColorBrush);
 
 	Rectangle(InGameSceneShadeHDC, 0, 0, InGameSceneBackBit.bmWidth, InGameSceneBackBit.bmHeight);
+	DrawFootprint(InGameSceneShadeHDC);
+	DrawTransparentPoly(InGameSceneShadeHDC);
+	//BitBlt(InGameSceneHDC, 0, 0, InGameSceneBackBit.bmWidth, InGameSceneBackBit.bmHeight, hMemShadeDC, 0, 0, SRCCOPY);
+	TransparentBlt(InGameSceneBackHDC, 0, 0, InGameSceneBackBit.bmWidth, InGameSceneBackBit.bmHeight, InGameSceneShadeHDC, 0, 0, InGameSceneBackBit.bmWidth, InGameSceneBackBit.bmHeight, TransparentRGB);
+
+	DeleteObject(ShadeScreen);
+	DeleteDC(InGameSceneShadeHDC);
+	//SelectObject(InGameShadeHDC, oldBitmap);
+	//SelectObject(InGameShadeHDC, oldBrush);
+}
+
+void InGameScene::DrawFootprint(HDC InGameSceneShadeHDC)
+{
 	if (player->playerFootprint.points.size() > 0)
 	{
 		size_t footPrintSize = player->playerFootprint.points.size();
@@ -76,14 +89,6 @@ void InGameScene::DrawShadeScreen()
 		MoveToEx(InGameSceneShadeHDC, player->playerFootprint.points.back().x, player->playerFootprint.points.back().y, NULL);
 		LineTo(InGameSceneShadeHDC, player->playerPos.x, player->playerPos.y);
 	}
-	DrawTransparentPoly(InGameSceneShadeHDC);
-	//BitBlt(InGameSceneHDC, 0, 0, InGameSceneBackBit.bmWidth, InGameSceneBackBit.bmHeight, hMemShadeDC, 0, 0, SRCCOPY);
-	TransparentBlt(InGameSceneBackHDC, 0, 0, InGameSceneBackBit.bmWidth, InGameSceneBackBit.bmHeight, InGameSceneShadeHDC, 0, 0, InGameSceneBackBit.bmWidth, InGameSceneBackBit.bmHeight, TransparentRGB);
-
-	DeleteObject(ShadeScreen);
-	DeleteDC(InGameSceneShadeHDC);
-	//SelectObject(InGameShadeHDC, oldBitmap);
-	//SelectObject(InGameShadeHDC, oldBrush);
 }
 
 void InGameScene::DrawTransparentPoly(const HDC hMemShadeDC)
@@ -105,7 +110,17 @@ void InGameScene::DrawTransparentPoly(const HDC hMemShadeDC)
 void InGameScene::DrawPlayer()
 {
 	HBRUSH oldBrush = (HBRUSH)SelectObject(InGameSceneBackHDC, playerBrush);
-	Ellipse(InGameSceneBackHDC, player->playerPos.x - 10, player->playerPos.y - 10, player->playerPos.x + 10, player->playerPos.y + 10);
+	static char drawBigger = 1;
+	static char drawCount = 0;
+	static char addSize = 1;
+	static char playerSize = 10;
+	Ellipse(InGameSceneBackHDC, player->playerPos.x - (playerSize + (addSize * drawBigger)), player->playerPos.y - (playerSize + (addSize * drawBigger)), player->playerPos.x + (playerSize + (addSize * drawBigger)), player->playerPos.y + (playerSize + (addSize * drawBigger)));
+	drawCount++;
+	if (drawCount == 2)
+	{
+		drawCount = 0;
+		drawBigger *= -1;
+	}
 	SelectObject(InGameSceneBackHDC, oldBrush);
 }
 
@@ -156,10 +171,7 @@ LRESULT CALLBACK InGameScene::InGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wP
 		case VK_RIGHT :
 		case VK_UP :
 		case VK_DOWN :
-			double prevArea = transperentCPoly->getArea();
 			player->PlayerMove(wParam, &transperentCPoly);
-			if (prevArea != transperentCPoly->getArea())
-				needDrawBackGroud = true;
 			break;
  		}
 	}

@@ -37,6 +37,7 @@ public:
 
 	void DrawBackGroundBit();
 	void DrawShadeScreen();
+	void DrawFootprint(HDC InGameSceneShadeHDC);
 	void DrawTransparentPoly(const HDC hMemShadeDC);
 	void DrawPlayer();
 	void ClearPolygonVector();

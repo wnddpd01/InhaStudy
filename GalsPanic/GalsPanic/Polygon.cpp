@@ -67,8 +67,19 @@ bool CPolygon::isInBetweenTwoPoint(const POINT& p, const POINT& startP, const PO
 
 bool CPolygon::isInPoly(POINT& p)
 {
-	HRGN hrgn = CreatePolygonRgn(&(this->points[0]), points.size(), WINDING);
-	return PtInRegion(hrgn, p.x, p.y);
+	/*HRGN hrgn = CreatePolygonRgn(&(this->points[0]), points.size(), WINDING);
+	return PtInRegion(hrgn, p.x, p.y);*/
+	int crosses = 0;
+	size_t vertexCount = this->points.size();
+	for (int i = 0; i < vertexCount; i++) {
+		int j = (i + 1) % vertexCount;
+		if ((points[i].y > p.y) != (points[j].y > p.y)) {
+			double atX = (points[j].x - points[i].x)*(p.y - points[i].y) / (points[j].y - points[i].y) + points[i].x;
+			if (p.x < atX)
+				crosses++;
+		}
+	}
+	return crosses % 2 > 0;
 }
 
 double CPolygon::getArea()

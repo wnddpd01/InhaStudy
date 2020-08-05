@@ -15,9 +15,10 @@ Player::~Player()
 
 void Player::PlayerMove(WPARAM moveDir, CPolygon ** transparentPoly)
 {
-	static UCHAR speed = 10;
+	static UCHAR speed = 8;
 	static bool drawMode = false;
 	static WPARAM prevMoveDir = NULL;
+
 	POINT tempPoint = { playerPos.x , playerPos.y };
 	switch (moveDir)
 	{
@@ -40,11 +41,25 @@ void Player::PlayerMove(WPARAM moveDir, CPolygon ** transparentPoly)
 	if (BoundaryCheck(tempPoint) == false)
 		return;
 
+	int lineNum =0;
+	static ULONG startLineNum = 0;
+	static ULONG endLineNum = 0;
+
 	if (drawMode == true)
 	{
 		if (isInFootPrint(tempPoint))
 		{
-			if (abs(getPointDirection(playerFootprint.points.back(), playerPos) - int(moveDir)) == 2)
+			if (isEqualPoint(tempPoint, playerFootprint.points.front()))
+			{
+				if (playerFootprint.points.size() == 1)
+				{
+					playerFootprint.points.pop_back();
+					setPlayerPos(tempPoint);
+					drawMode = false;
+					return;
+				}
+			}
+			else if (abs(getPointDirection(playerFootprint.points.back(), playerPos) - int(moveDir)) == 2)
 			{
 				if (isEqualPoint(tempPoint, playerFootprint.points.back()))
 				{
@@ -54,16 +69,21 @@ void Player::PlayerMove(WPARAM moveDir, CPolygon ** transparentPoly)
 					else
 						prevMoveDir = VK_UP + direction;
 					playerFootprint.points.pop_back();
+					if (playerFootprint.points.size() == 0)
+					{
+						drawMode = false;
+						setPlayerPos(tempPoint);
+						return;
+					}
 				}
 			}
 			else
 			{
 				return;
 			}
-		}	
-		else if (prevMoveDir != moveDir)
+		}
+		else if (prevMoveDir != moveDir && abs(getPointDirection(playerFootprint.points.back(), tempPoint) - int(moveDir)) != 2)
 		{
-			if (abs(getPointDirection(playerFootprint.points.back(), tempPoint) - int(moveDir)) != 2)
 			{
 				playerFootprint.points.push_back(playerPos);
 				prevMoveDir = moveDir;
@@ -71,21 +91,50 @@ void Player::PlayerMove(WPARAM moveDir, CPolygon ** transparentPoly)
 		}
 	}
 
-	int lineNum = 0;
-	static ULONG startLineNum = 0;
-	static ULONG endLineNum;
-
 	if ((lineNum = (*transparentPoly)->isInLine(tempPoint)) != -1)
 	{
+		if (drawMode == false)
+		{
+			POINT tempOnePixelPoint = { playerPos.x, playerPos.y};	
+			switch (moveDir)
+			{
+			case VK_RIGHT:
+				tempOnePixelPoint.x += 1;
+				break;
+			case VK_LEFT:
+				tempOnePixelPoint.x -= 1;
+				break;
+			case VK_DOWN:
+				tempOnePixelPoint.y += 1;
+				break;
+			case VK_UP:
+				tempOnePixelPoint.y -= 1;
+				break;
+			default:
+				break;
+			}
+			if ((*transparentPoly)->isInLine(tempOnePixelPoint) == -1 && (*transparentPoly)->isInPoly(tempOnePixelPoint) == false)
+			{
+				playerFootprint.points.push_back(playerPos);
+				drawMode = true;
+			}
+			else
+			{
+				startLineNum = lineNum;
+			}
+		}
 		if (drawMode == true)
 		{
 			drawMode = false;
 			endLineNum = lineNum;
 			playerFootprint.points.push_back(tempPoint);
-			double footprintArea = playerFootprint.getArea();
-			if (footprintArea < 0)
+			if (startLineNum == endLineNum)
 			{
-				footprintOrderSort(&startLineNum, &endLineNum);
+				if (playerFootprint.getArea() < 0 || getPointDistance((*transparentPoly)->points[startLineNum], playerFootprint.points.front())
+					> getPointDistance((*transparentPoly)->points[startLineNum], playerFootprint.points.back()))
+				{
+					footprintOrderSort(&startLineNum, &endLineNum);
+				}
 			}
 
 			CPolygon* selected;
@@ -94,43 +143,33 @@ void Player::PlayerMove(WPARAM moveDir, CPolygon ** transparentPoly)
 
 			ULONG lineSearch = endLineNum;
 			ULONG destLineNum = startLineNum;
-			//while (lineSearch != destLineNum)
-			//{
-			//	if (isEqualPoint((*transparentPoly)->points[lineSearch], playerFootprint.points[0]) || isEqualPoint((*transparentPoly)->points[lineSearch], playerFootprint.points.back()))
-			//	{
-
-			//	}
-			//	else
-			//	{
-			//		temp1->points.push_back(((*transparentPoly)->points[lineSearch]));
-			//	}
-			//	if (lineSearch == 0)
-			//		lineSearch = (*transparentPoly)->points.size();
-			//	lineSearch--;
-			//}
-
-			/*if (endLineNum == startLineNum)
+			while (lineSearch != destLineNum)
 			{
-				if (isEqualPoint((*transparentPoly)->points[lineSearch], playerFootprint.points[0]) || isEqualPoint((*transparentPoly)->points[lineSearch], playerFootprint.points.back()))
-				{
-
-				}
-				else
-				{
-					temp2->points.push_back(((*transparentPoly)->points[lineSearch]));
-				}
-				lineSearch++;
+				temp1->points.push_back(((*transparentPoly)->points[lineSearch]));
+				if (lineSearch == 0)
+					lineSearch = (*transparentPoly)->points.size();
+				lineSearch--;
 			}
-			lineSearch %= (*transparentPoly)->points.size();*/
+
 			lineSearch = (endLineNum + 1) % (*transparentPoly)->points.size();
 			destLineNum = (startLineNum + 1) % (*transparentPoly)->points.size();
-			do
+
+			if (endLineNum == startLineNum)
+			{
+				if(getPointDistance((*transparentPoly)->points[startLineNum], playerFootprint.points.front()) 
+					< getPointDistance((*transparentPoly)->points[startLineNum], playerFootprint.points.back()))
+				{
+					temp2->points.push_back(((*transparentPoly)->points[lineSearch]));
+					lineSearch = (lineSearch + 1) % (*transparentPoly)->points.size();
+				}
+			}
+			while (lineSearch != destLineNum)
 			{
 				temp2->points.push_back(((*transparentPoly)->points[lineSearch]));
 				lineSearch++;
 				if (lineSearch == (*transparentPoly)->points.size())
 					lineSearch = 0;
-			} while (lineSearch != destLineNum);
+			} 
 
 			double ret2 = temp2->getArea();
 			double ret = temp1->getArea();
@@ -152,10 +191,6 @@ void Player::PlayerMove(WPARAM moveDir, CPolygon ** transparentPoly)
 			*transparentPoly = selected;
 			playerFootprint.points.clear();
 			startLineNum = (*transparentPoly)->isInLine(tempPoint);
-		}
-		else
-		{
-			startLineNum = lineNum;
 		}
 		setPlayerPos(tempPoint);
 	}
