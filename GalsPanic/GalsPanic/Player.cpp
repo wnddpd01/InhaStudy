@@ -47,7 +47,7 @@ WPARAM Player::PlayerMove(WPARAM moveDir, CPolygon ** transparentPoly)
 	int lineNum =0;
 	if ((lineNum = (*transparentPoly)->isInLine(tempPoint)) != -1)
 	{
-		MoveInLine(lineNum, tempPoint);
+		MoveToLine(lineNum, tempPoint);
 		if (NeedDrawNewPoly())
 		{
 			if (playerFootprint.getArea() < 0)
@@ -239,7 +239,7 @@ WPARAM Player::PlayerMove(WPARAM moveDir, CPolygon ** transparentPoly)
 	//}
 }
 
-void Player::MoveInLine(int & lineNum, POINT & tempPoint)
+void Player::MoveToLine(int & lineNum, POINT & tempPoint)
 {
 	if (drawMode == false)
 	{

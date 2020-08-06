@@ -85,36 +85,33 @@ bool CPolygon::isInPoly(POINT& p)
 
 void CPolygon::MergePolygon(std::vector<POINT> & newPolygon)
 {
-	if (CheckMergePolygonCorrectly(newPolygon))
+	if (CheckPolygonMergedCorrectly(newPolygon))
 	{
-		MakeMergedPolygon(newPolygon);
+		MergePolygonEnd(newPolygon);
 		return;
 	}
 
 	ULONG startLineNum = isInLine(newPolygon.front());
 	ULONG endLineNum = isInLine(newPolygon.back());
-	int searchPointNum = (endLineNum + 1) % this->points.size();
-	while (searchPointNum != startLineNum)
+
+	std::vector<POINT> mergedPolygon(newPolygon);
+
+	MakeMergedPolygon(mergedPolygon, startLineNum, endLineNum);
+
+	if (CheckPolygonMergedCorrectly(mergedPolygon) == false)
 	{
-		newPolygon.push_back(this->points[searchPointNum]);
-		searchPointNum++;
-		if (searchPointNum == this->points.size())
-			searchPointNum = 0;
+		mergedPolygon.clear();
+		std::reverse(newPolygon.begin(), newPolygon.end());
+		mergedPolygon = newPolygon;
+		std::swap(startLineNum, endLineNum);
+		MakeMergedPolygon(mergedPolygon, startLineNum, endLineNum);
 	}
 
-	if (newPolygon.front() != this->points[startLineNum])
-	{
-		newPolygon.push_back(this->points[startLineNum]);
-	}
-
-	if (CheckMergePolygonCorrectly(newPolygon))
-	{
-		MakeMergedPolygon(newPolygon);
-		return;
-	}
+	MergePolygonEnd(mergedPolygon);
+	return;
 }
 
-bool CPolygon::CheckMergePolygonCorrectly(std::vector<POINT>& newPolygon)
+bool CPolygon::CheckPolygonMergedCorrectly(std::vector<POINT>& newPolygon)
 {
 	CPolygon temp;
 	temp.points = newPolygon;
@@ -126,10 +123,27 @@ bool CPolygon::CheckMergePolygonCorrectly(std::vector<POINT>& newPolygon)
 	return true;
 }
 
-void CPolygon::MakeMergedPolygon(std::vector<POINT>& newPolygon)
+void CPolygon::MakeMergedPolygon(std::vector<POINT>& mergedPolygon, const ULONG & startLineNum, const ULONG & endLineNum)
+{
+	int searchPointNum = (endLineNum + 1) % this->points.size();
+	while (searchPointNum != startLineNum)
+	{
+		mergedPolygon.push_back(this->points[searchPointNum]);
+		searchPointNum++;
+		if (searchPointNum == this->points.size())
+			searchPointNum = 0;
+	}
+
+	if (mergedPolygon.front() != this->points[startLineNum])
+	{
+		mergedPolygon.push_back(this->points[startLineNum]);
+	}
+}
+
+void CPolygon::MergePolygonEnd(std::vector<POINT>& mergedPolygon)
 {
 	this->points.clear();
-	this->points.insert(this->points.begin(), newPolygon.begin(), newPolygon.end());
+	this->points.insert(this->points.begin(), mergedPolygon.begin(), mergedPolygon.end());
 }
 
 double CPolygon::getArea()

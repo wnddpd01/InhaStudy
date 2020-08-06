@@ -16,7 +16,7 @@ public:
 	~Player();
 
 	WPARAM PlayerMove(WPARAM moveDir, CPolygon ** transparentPoly);
-	void MoveInLine(int &lineNum,POINT &tempPoint);
+	void MoveToLine(int &lineNum,POINT &tempPoint);
 	bool NeedDrawNewPoly();
 	void MoveOutOfPoly(POINT & tempPoint);
 	void footprintOrderSort();
