@@ -17,6 +17,9 @@ public:
 	int isInLine(POINT& p, size_t vertexCount = 0);
 	bool isInBetweenTwoPoint(const POINT& p, const POINT& startP, const POINT& endP);
 	bool isInPoly(POINT & p);
+	void MergePolygon(std::vector<POINT> & newPolygon);
+	bool CheckMergePolygonCorrectly(std::vector<POINT> & newPolygon);
+	void MakeMergedPolygon(std::vector<POINT> & newPolygon);
 	double getArea();
 	~CPolygon()
 	{

@@ -64,3 +64,17 @@ inline bool BoundaryCheck(const POINT& p)
 	return true;
 }
 
+inline bool operator==(POINT &p1, POINT&p2)
+{
+	if (p1.x == p2.x && p1.y == p2.y)
+		return true;
+	return false;
+}
+
+
+inline bool operator!=(POINT &p1, POINT&p2)
+{
+	if (p1.x != p2.x || p1.y != p2.y)
+		return true;
+	return false;
+}

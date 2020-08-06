@@ -13,7 +13,6 @@ InGameScene::InGameScene()
 	shadeScreenTransparentBrush = CreateSolidBrush(TransparentRGB);
 	playerBrush = CreateSolidBrush(RGB(255, 0, 0));
 	POINT initPolygonPoints[4] = { {96, 96 }, {192, 96}, {192, 192}, {96, 192} };
-	//polygonVector.push_back(new CPolygon(initPolygonPoints, 4));
 	InGameSceneBackHDC = NULL;
 	transperentCPoly = new CPolygon(initPolygonPoints, 4);
 
@@ -45,7 +44,6 @@ void InGameScene::RegisterSceneClass(WNDCLASSEX* wcex)
 
 void InGameScene::SceneInit()
 {
-	ClearPolygonVector();
 }
 
 void InGameScene::DrawBackGroundBit()
@@ -124,13 +122,6 @@ void InGameScene::DrawPlayer()
 	SelectObject(InGameSceneBackHDC, oldBrush);
 }
 
-void InGameScene::ClearPolygonVector()
-{
-	while(polygonVector.size() > 1)
-	{ 
-	}
-}
-
 
 LRESULT CALLBACK InGameScene::InGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -171,7 +162,11 @@ LRESULT CALLBACK InGameScene::InGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wP
 		case VK_RIGHT :
 		case VK_UP :
 		case VK_DOWN :
-			player->PlayerMove(wParam, &transperentCPoly);
+			if ((player->PlayerMove(wParam, &transperentCPoly)) == EVENT_DRAW_NEW_TR_POLYGON)
+			{
+				transperentCPoly->MergePolygon(player->playerFootprint.points);
+				player->playerFootprint.points.clear();
+			}
 			break;
  		}
 	}
