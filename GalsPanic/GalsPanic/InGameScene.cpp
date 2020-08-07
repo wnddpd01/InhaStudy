@@ -18,6 +18,7 @@ InGameScene::InGameScene()
 
 	player = new Player;
 	player->setPlayerPos({ 96, 96});
+	player->playerDestPos = player->playerPos;
 }
 
 
@@ -111,10 +112,10 @@ void InGameScene::DrawPlayer()
 	static char drawBigger = 1;
 	static char drawCount = 0;
 	static char addSize = 1;
-	static char playerSize = 10;
+	static char playerSize = 6;
 	Ellipse(InGameSceneBackHDC, player->playerPos.x - (playerSize + (addSize * drawBigger)), player->playerPos.y - (playerSize + (addSize * drawBigger)), player->playerPos.x + (playerSize + (addSize * drawBigger)), player->playerPos.y + (playerSize + (addSize * drawBigger)));
 	drawCount++;
-	if (drawCount == 2)
+	if (drawCount == 8)
 	{
 		drawCount = 0;
 		drawBigger *= -1;
@@ -162,11 +163,7 @@ LRESULT CALLBACK InGameScene::InGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wP
 		case VK_RIGHT :
 		case VK_UP :
 		case VK_DOWN :
-			if ((player->PlayerMove(wParam, &transperentCPoly)) == EVENT_DRAW_NEW_TR_POLYGON)
-			{
-				transperentCPoly->MergePolygon(player->playerFootprint.points);
-				player->playerFootprint.points.clear();
-			}
+		
 			break;
  		}
 	}
@@ -177,6 +174,21 @@ LRESULT CALLBACK InGameScene::InGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wP
 	break;
 	case WM_TIMER :
 	{
+		WPARAM dir = NULL;
+		if (GetKeyState(VK_RIGHT) & 0x8000)
+			dir = VK_RIGHT;
+		else if (GetKeyState(VK_LEFT) & 0x8000)
+			dir = VK_LEFT;
+		else if (GetKeyState(VK_UP) & 0x8000)
+			dir = VK_UP;
+		else if (GetKeyState(VK_DOWN) & 0x8000)
+			dir = VK_DOWN;
+
+		if ((player->PlayerMove(dir, &transperentCPoly)) == EVENT_DRAW_NEW_TR_POLYGON)
+		{
+			transperentCPoly->MergePolygon(player->playerFootprint.points);
+			player->playerFootprint.points.clear();
+		}
 		InvalidateRect(this->SceneHWnd, NULL, true);
 	}
 	break;

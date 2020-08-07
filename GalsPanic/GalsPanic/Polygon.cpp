@@ -73,6 +73,8 @@ bool CPolygon::isInPoly(POINT& p)
 	size_t vertexCount = this->points.size();
 	for (int i = 0; i < vertexCount; i++) {
 		int j = (i + 1) % vertexCount;
+		if (isInBetweenTwoPoint(p, points[i], points[j]) == true)
+			return false;
 		if ((points[i].y > p.y) != (points[j].y > p.y)) 
 		{
 			double atX = (points[j].x - points[i].x)*(p.y - points[i].y) / (points[j].y - points[i].y) + points[i].x;
@@ -85,14 +87,15 @@ bool CPolygon::isInPoly(POINT& p)
 
 void CPolygon::MergePolygon(std::vector<POINT> & newPolygon)
 {
-	if (CheckPolygonMergedCorrectly(newPolygon))
+	ULONG startLineNum = isInLine(newPolygon.front());
+	ULONG endLineNum = isInLine(newPolygon.back());
+
+	if (startLineNum == endLineNum && CheckPolygonMergedCorrectly(newPolygon))
 	{
 		MergePolygonEnd(newPolygon);
 		return;
 	}
 
-	ULONG startLineNum = isInLine(newPolygon.front());
-	ULONG endLineNum = isInLine(newPolygon.back());
 
 	std::vector<POINT> mergedPolygon(newPolygon);
 
@@ -102,8 +105,8 @@ void CPolygon::MergePolygon(std::vector<POINT> & newPolygon)
 	{
 		mergedPolygon.clear();
 		std::reverse(newPolygon.begin(), newPolygon.end());
-		mergedPolygon = newPolygon;
 		std::swap(startLineNum, endLineNum);
+		mergedPolygon = newPolygon;
 		MakeMergedPolygon(mergedPolygon, startLineNum, endLineNum);
 	}
 
@@ -115,9 +118,16 @@ bool CPolygon::CheckPolygonMergedCorrectly(std::vector<POINT>& newPolygon)
 {
 	CPolygon temp;
 	temp.points = newPolygon;
-	for (POINT myPt : this->points)
+	size_t vertexCount = points.size();
+	for (size_t i = 0; i < vertexCount; i++)
 	{
-		if (temp.isInLine(myPt) == -1 && temp.isInPoly(myPt) == false)
+		if (temp.isInLine(points[i]) == -1 && temp.isInPoly(points[i]) == false )
+			return false;
+	}
+	vertexCount = newPolygon.size();
+	for (size_t i = 0; i < vertexCount; i++)
+	{
+		if (getLineSlope(temp.points[i], temp.points[(i + 1) % vertexCount]) != 0)
 			return false;
 	}
 	return true;

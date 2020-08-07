@@ -26,13 +26,6 @@
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 768
 
-inline bool isEqualPoint(const POINT& p1, const POINT& p2)
-{
-	if (p1.x == p2.x && p1.y == p2.y)
-		return true;
-	return false;
-}
-
 inline int getPointDirection(const POINT& p1, const POINT& p2)
 {
 	if (p2.x - p1.x == 0)
@@ -57,6 +50,14 @@ inline double getPointDistance(const POINT& p1, const POINT& p2)
 	return sqrt(pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2));
 }
 
+inline double getLineSlope(const POINT& p1, const POINT& p2)
+{
+	if (p2.x == p1.x)
+		return 0;
+	return double(p2.y - p1.y) / double(p2.x - p1.x);
+}
+
+
 inline bool BoundaryCheck(const POINT& p)
 {
 	if (p.x < 8 || p.x > WINDOW_WIDTH - 8|| p.y < 8 || p.y > WINDOW_HEIGHT - 8)
@@ -77,4 +78,27 @@ inline bool operator!=(POINT &p1, POINT&p2)
 	if (p1.x != p2.x || p1.y != p2.y)
 		return true;
 	return false;
+}
+
+inline POINT MakeNextPointWithDir(const POINT &p, const WPARAM moveDir, const ULONG & distance)
+{
+	POINT movedPoint = { p.x, p.y };
+	switch (moveDir)
+	{
+	case VK_RIGHT:
+		movedPoint.x += distance;
+		break;
+	case VK_LEFT:
+		movedPoint.x -= distance;
+		break;
+	case VK_DOWN:
+		movedPoint.y += distance;
+		break;
+	case VK_UP:
+		movedPoint.y -= distance;
+		break;
+	default:
+		break;
+	}
+	return movedPoint;
 }
