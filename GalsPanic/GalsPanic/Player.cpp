@@ -20,6 +20,8 @@ WPARAM Player::PlayerMove(WPARAM moveDir, CPolygon ** transparentPoly)
 {
 	if (moveDir == NULL)
 		return EVENT_NO_EVENT;
+	else if (moveDir == 'R' && playerFootprint.points.size() > 0)
+		moveDir = getPointDirection(playerPos, playerFootprint.points.back());
 	static UCHAR speed = 2;
 
 	POINT tempPoint = MakeNextPointWithDir(playerPos, moveDir, speed);

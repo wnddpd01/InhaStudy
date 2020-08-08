@@ -12,7 +12,7 @@ public:
 	bool drawMode;
 	CPolygon playerFootprint;
 	Player();
-	~Player();
+	virtual ~Player();
 
 	WPARAM PlayerMove(WPARAM dir, CPolygon ** transparentPoly);
 	void MoveToLine(POINT &tempPoint);

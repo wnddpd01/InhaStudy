@@ -13,6 +13,11 @@ enum class PointInPolygon
 	inLine = 0, inPoly, outOfPoly
 };
 
+typedef enum TimerName
+{
+	
+};
+
 class InGameScene :
 	public Scene
 {
@@ -33,7 +38,7 @@ public:
 	//static HRGN transparentRgn;
 
 	InGameScene();
-	~InGameScene();
+	virtual ~InGameScene();
 
 	void CreateSceneWindow(HWND hWndMain, RECT &rectViewMain);
 	void RegisterSceneClass(WNDCLASSEX* wcex);
@@ -44,6 +49,7 @@ public:
 	void DrawFootprint(HDC InGameSceneShadeHDC);
 	void DrawTransparentPoly(const HDC hMemShadeDC);
 	void DrawPlayer();
+	void DrawUI();
 
 	LRESULT CALLBACK InGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK staticInGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);

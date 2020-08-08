@@ -22,7 +22,7 @@ public:
 	void MakeMergedPolygon(std::vector<POINT> & mergedPolygon, const ULONG& startLineNum, const ULONG& endLineNum);
 	void MergePolygonEnd(std::vector<POINT>& mergedPolygon);
 	double getArea();
-	~CPolygon()
+	virtual ~CPolygon()
 	{
 		points.clear();
 	}

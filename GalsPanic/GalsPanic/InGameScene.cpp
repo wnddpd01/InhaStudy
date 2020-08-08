@@ -29,7 +29,7 @@ InGameScene::~InGameScene()
 
 void InGameScene::CreateSceneWindow(HWND hWndMain, RECT& rectViewMain)
 {
-	InGameSceneBackHBit = &BitMapManager::getInstance()->bitMapMountain;
+	InGameSceneBackHBit = &BitMapManager::getInstance()->bitMapForMee;
 	GetObject(*InGameSceneBackHBit, sizeof(BITMAP), &InGameSceneBackBit);
 	this->SceneHWnd = CreateWindowW(L"InGameSceneClass", L"InGameSceneWindow", WS_CHILD | WS_VISIBLE | WS_OVERLAPPED, rectViewMain.right * 0.5 - InGameSceneBackBit.bmWidth * 0.5, 0, InGameSceneBackBit.bmWidth, InGameSceneBackBit.bmHeight, hWndMain, NULL, hInst, this);
 	SetFocus(this->SceneHWnd);
@@ -123,9 +123,15 @@ void InGameScene::DrawPlayer()
 	SelectObject(InGameSceneBackHDC, oldBrush);
 }
 
+void InGameScene::DrawUI()
+{
+
+}
+
 
 LRESULT CALLBACK InGameScene::InGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
+	static WPARAM dir = NULL;
 	switch (iMsg)
 	{
 	case WM_NCCREATE :
@@ -136,12 +142,13 @@ LRESULT CALLBACK InGameScene::InGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wP
 	break;
 	case WM_CREATE :
 	{
-		SetTimer(hwnd, 2, 1000 / 30, NULL);
+		SetTimer(hwnd, TimerID_SceneDraw, 1000 / 75, NULL);
+		SetTimer(hwnd, TimerID_SceneUpdate, 1000 / 60, NULL);	
 	}
 	break;
 	case WM_PAINT:
 	{
-		InGameSceneFrontHDC = BeginPaint(SceneHWnd, &InGameScenePaintStruct);
+		InGameSceneFrontHDC = BeginPaint(SceneHWnd, &InGameScenePaintStruct); 
 		if (InGameSceneBackHDC == NULL)
 		{
 			InGameSceneBackHDC = CreateCompatibleDC(InGameSceneFrontHDC);
@@ -151,6 +158,7 @@ LRESULT CALLBACK InGameScene::InGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wP
 		DrawBackGroundBit();
 		DrawShadeScreen();
 		DrawPlayer();
+		DrawUI();
 		BitBlt(InGameSceneFrontHDC, 0, 0, InGameSceneBackBit.bmWidth, InGameSceneBackBit.bmHeight, InGameSceneBackHDC, 0, 0, SRCCOPY);
 		EndPaint(SceneHWnd, &InGameScenePaintStruct);
 	}
@@ -174,22 +182,21 @@ LRESULT CALLBACK InGameScene::InGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wP
 	break;
 	case WM_TIMER :
 	{
-		WPARAM dir = NULL;
-		if (GetKeyState(VK_RIGHT) & 0x8000)
-			dir = VK_RIGHT;
-		else if (GetKeyState(VK_LEFT) & 0x8000)
-			dir = VK_LEFT;
-		else if (GetKeyState(VK_UP) & 0x8000)
-			dir = VK_UP;
-		else if (GetKeyState(VK_DOWN) & 0x8000)
-			dir = VK_DOWN;
-
-		if ((player->PlayerMove(dir, &transperentCPoly)) == EVENT_DRAW_NEW_TR_POLYGON)
+		switch (wParam)
 		{
-			transperentCPoly->MergePolygon(player->playerFootprint.points);
-			player->playerFootprint.points.clear();
+		case TimerID_SceneDraw :
+			InvalidateRect(this->SceneHWnd, NULL, true);
+			break;
+		case TimerID_SceneUpdate:
+			setDir(&dir);
+			if ((player->PlayerMove(dir, &transperentCPoly)) == EVENT_DRAW_NEW_TR_POLYGON)
+			{
+				transperentCPoly->MergePolygon(player->playerFootprint.points);
+				player->playerFootprint.points.clear();
+			}
+			dir = NULL;
+			break;
 		}
-		InvalidateRect(this->SceneHWnd, NULL, true);
 	}
 	break;
 	case WM_SETFOCUS :

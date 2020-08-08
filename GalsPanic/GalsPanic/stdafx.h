@@ -26,6 +26,11 @@
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 768
 
+typedef enum TimerID
+{
+	TimerID_SceneDraw = 0, TimerID_SceneUpdate
+};
+
 inline int getPointDirection(const POINT& p1, const POINT& p2)
 {
 	if (p2.x - p1.x == 0)
@@ -101,4 +106,18 @@ inline POINT MakeNextPointWithDir(const POINT &p, const WPARAM moveDir, const UL
 		break;
 	}
 	return movedPoint;
+}
+
+inline void setDir(WPARAM * dir)
+{
+	if (GetKeyState(VK_RIGHT) & 0x8000)
+		*dir = VK_RIGHT;
+	if (GetKeyState(VK_LEFT) & 0x8000)
+		*dir = VK_LEFT;
+	if (GetKeyState(VK_UP) & 0x8000)
+		*dir = VK_UP;
+	if (GetKeyState(VK_DOWN) & 0x8000)
+		*dir = VK_DOWN;
+	if (GetKeyState('R') & 0x8000)
+		*dir = 'R';
 }
