@@ -7,15 +7,11 @@
 #define EVENT_PLAYER_CANT_MOVE 101
 
 class Player;
+class Monster;
 
 enum class PointInPolygon
 {
 	inLine = 0, inPoly, outOfPoly
-};
-
-typedef enum TimerName
-{
-	
 };
 
 class InGameScene :
@@ -34,6 +30,7 @@ public:
 	Player * player;
 	CPolygon * transperentCPoly;
 	bool needDrawBackGroud = true;
+	std::vector <Monster *> aliveMonster;
 	//std::vector<HRGN *> hRgnVector;
 	//static HRGN transparentRgn;
 
@@ -49,6 +46,7 @@ public:
 	void DrawFootprint(HDC InGameSceneShadeHDC);
 	void DrawTransparentPoly(const HDC hMemShadeDC);
 	void DrawPlayer();
+	void DrawEnemy();
 	void DrawUI();
 
 	LRESULT CALLBACK InGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "InGameScene.h"
 #include "Player.h"
+#include "Monster.h"
 #include <string>
 extern HINSTANCE hInst;
 extern RECT rectViewMain;
@@ -19,6 +20,8 @@ InGameScene::InGameScene()
 	player = new Player;
 	player->setPlayerPos({ 96, 96});
 	player->playerDestPos = player->playerPos;
+
+	aliveMonster.push_back(new Monster);
 }
 
 
@@ -113,7 +116,7 @@ void InGameScene::DrawPlayer()
 	static char drawCount = 0;
 	static char addSize = 1;
 	static char playerSize = 6;
-	Ellipse(InGameSceneBackHDC, player->playerPos.x - (playerSize + (addSize * drawBigger)), player->playerPos.y - (playerSize + (addSize * drawBigger)), player->playerPos.x + (playerSize + (addSize * drawBigger)), player->playerPos.y + (playerSize + (addSize * drawBigger)));
+	Rectangle(InGameSceneBackHDC, player->playerPos.x - (playerSize + (addSize * drawBigger)), player->playerPos.y - (playerSize + (addSize * drawBigger)), player->playerPos.x + (playerSize + (addSize * drawBigger)), player->playerPos.y + (playerSize + (addSize * drawBigger)));
 	drawCount++;
 	if (drawCount == 8)
 	{
@@ -121,6 +124,14 @@ void InGameScene::DrawPlayer()
 		drawBigger *= -1;
 	}
 	SelectObject(InGameSceneBackHDC, oldBrush);
+}
+
+void InGameScene::DrawEnemy()
+{
+	for (Monster * monster : aliveMonster)
+	{
+		Ellipse(InGameSceneBackHDC, monster->pos.x - monster->size, monster->pos.y - monster->size, monster->pos.x + monster->size, monster->pos.y + monster->size);
+	}
 }
 
 void InGameScene::DrawUI()
@@ -157,6 +168,7 @@ LRESULT CALLBACK InGameScene::InGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wP
 		}
 		DrawBackGroundBit();
 		DrawShadeScreen();
+		DrawEnemy();
 		DrawPlayer();
 		DrawUI();
 		BitBlt(InGameSceneFrontHDC, 0, 0, InGameSceneBackBit.bmWidth, InGameSceneBackBit.bmHeight, InGameSceneBackHDC, 0, 0, SRCCOPY);
@@ -195,6 +207,10 @@ LRESULT CALLBACK InGameScene::InGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wP
 				player->playerFootprint.points.clear();
 			}
 			dir = NULL;
+			for (Monster * monster : aliveMonster)
+			{
+				monster->Move();
+			}
 			break;
 		}
 	}
