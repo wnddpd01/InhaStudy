@@ -3,12 +3,19 @@
 
 #include "stdafx.h"
 #include "Win32OmokClient.h"
+
 #define MAX_LOADSTRING 100
 #define BOARD_WIDTH 768
 #define BOARD_HEIGHT 768
 #define BOARD_WHITE_SPACE 42
 #define BOARD_ONE_SPACE_LENGTH 38
 #define CHATROOM_WIDTH 200
+
+struct Stone
+{
+	POINTS point;
+	StoneType stoneType;
+};
 // Global Variables:
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
@@ -24,7 +31,7 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 void SetCrossPoint();
 void DrawBoard(HDC hdc);
 void DrawChatRoom(HDC hdc);
-
+void DrawStone(HDC hdc, const Stone& stone);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -135,7 +142,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static WSADATA wsaData;
 	static SOCKET server;
 	static SOCKADDR_IN addr = { 0 };
-	static std::vector<char *> chatLog;
+	static vector<char *> chatLog;
+	static vector<Stone> stones;
 	static HBRUSH charRectBrush = CreateSolidBrush(RGB(40, 170, 220));
 	static MyPacket myPacket;
 	switch (message)
@@ -175,11 +183,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				strcpy(newChat, myPacket.getMsg());
 				chatLog.push_back(newChat);
 			}
-			else if (myPacket.getPacketNumber() == PACKET_GAME)
+			else if (myPacket.getPacketNumber() == PACKET_POINT)
 			{
-
+				POINTS pts = myPacket.getPOINTS();
+				recv(server, (char*)myPacket.getPacketData(), sizeof(MyPacketData), NULL);
+				if (myPacket.getPacketNumber() != PACKET_STONE)
+				{
+					return 0;
+				}
+				StoneType stoneType = myPacket.getStoneType();
+				Stone stone;
+				stone.point = pts;
+				stone.stoneType = stoneType;
+				stones.push_back(stone);
+				/*PAINTSTRUCT ps;
+				HDC hdc = BeginPaint(hWnd, &ps);
+				DrawStone(hdc, stone);
+				EndPaint(hWnd, &ps);*/
 			}
-			InvalidateRect(hWnd, NULL, TRUE);
+			InvalidateRect(hWnd, NULL, FALSE);
 		}
 		break;
 		}
@@ -198,6 +220,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hWnd, &ps);
 		// TODO: Add any drawing code that uses hdc here...
+		if (stones.size() > 0)
+			DrawStone(hdc, stones.back());
 		EndPaint(hWnd, &ps);
 	}
 	break;
@@ -213,7 +237,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				if (PtInRect(&crossPoint[i][j], pt))
 				{
-					myPacket.setPacketNumber(PACKET_GAME);
+					myPacket.setPacketNumber(PACKET_POINT);
 					POINTS xy = { j, i };
 					myPacket.setMsg(&xy);
 					send(server, (char *)myPacket.getPacketData(), sizeof(MyPacketData), NULL);
@@ -282,3 +306,21 @@ void DrawBoard(HDC hdc)
 #endif // DEBUG
 
 }
+
+void DrawStone(HDC hdc, const Stone & stone)
+{
+	static HBRUSH blackBrush = CreateSolidBrush(RGB(0, 0, 0));
+	static HBRUSH whiteBrush = CreateSolidBrush(RGB(255, 255, 255));
+	HBRUSH oldBrush;
+	if (stone.stoneType == StoneType::Black)
+		oldBrush = (HBRUSH)SelectObject(hdc, blackBrush);
+	else if (stone.stoneType == StoneType::White)
+		oldBrush = (HBRUSH)SelectObject(hdc, whiteBrush);
+
+	Circle(hdc, stone.point.x * BOARD_ONE_SPACE_LENGTH + BOARD_WHITE_SPACE,
+		stone.point.y * BOARD_ONE_SPACE_LENGTH + BOARD_WHITE_SPACE,
+		10);
+
+	SelectObject(hdc, oldBrush);
+}
+

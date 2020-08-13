@@ -10,11 +10,18 @@
 #endif
 #endif
 
-#define PACKET_NULL 0
-#define PACKET_CHAT 1
-#define PACKET_GAME 2
-#define PACKET_ERROR 999
-#define MAX_PACKET_MSG_SIZE 1024
+enum class StoneType : char
+{
+	Empty = 0, Black, White
+};
+
+#define PACKET_NULL		0
+#define PACKET_CHAT		1
+#define PACKET_MAP		2
+#define PACKET_POINT	3
+#define PACKET_STONE	4
+#define PACKET_ERROR	999
+#define MAX_PACKET_MSG_SIZE 512
 
 #define BLACK_STONE 0
 #define WHITE_STONE 1
@@ -42,9 +49,8 @@ public:
 
 	void setMsg(char *msg);
 	void setMsg(POINTS *pt);
-	void setMsg(POINTS *pt, BYTE stoneColor);
 	const char *getMsg();
 	POINTS getPOINTS();
-	BYTE getStoneColor();
+	StoneType getStoneType();
 };
 

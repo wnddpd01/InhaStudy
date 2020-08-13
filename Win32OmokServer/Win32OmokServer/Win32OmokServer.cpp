@@ -6,10 +6,17 @@
 
 #define MAX_LOADSTRING 100
 
+enum class PlayerType
+{
+	GameSpector = 0, GamePlayer_Black, GamePlayer_White
+};
+
 // Global Variables:
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
+RECT RectClientCnt = { 300, 0, 400, 50 };
+StoneType Board[19][19];
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -25,7 +32,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
 	// TODO: Place code here.
-
+	memset(Board, 0, sizeof(Board));
 	// Initialize global strings
 	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
 	LoadStringW(hInstance, IDC_WIN32OMOKSERVER, szWindowClass, MAX_LOADSTRING);
@@ -125,10 +132,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	using namespace std;
 	static WSADATA wsaData;
 	static SOCKET server;
-	static vector<SOCKET> clientList;
-	static SOCKET player[2];
+	//static vector<SOCKET> clientList;
+	static map<SOCKET, PlayerType> clientList;
+	static BYTE playerCnt = 0;
 	static bool playerFull = false;
-	static bool playerTurn = 0;
 	static vector<string> logs;
 	static SOCKADDR_IN addr = { 0 }, c_addr;
 	static char msg[1024];
@@ -136,8 +143,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case WM_CREATE:
-		player[0] = -1;
-		player[1] = -1;
 		WSAStartup(MAKEWORD(2, 2), &wsaData);
 		server = socket(AF_INET, SOCK_STREAM, NULL);
 		addr.sin_family = AF_INET;
@@ -173,39 +178,69 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			send(newClient, (char*)myPacket.getPacketData(), sizeof(MyPacketData), NULL);
 
 			WSAAsyncSelect(newClient, hWnd, WM_ASYNC, FD_READ | FD_CLOSE);
-			if (playerFull == false)
+
+			PlayerType newClientType; 
+			myPacket.clear();
+			myPacket.setPacketNumber(PACKET_CHAT);
+			if (playerCnt == 0)
 			{
-				for (size_t i = 0; i < 2; i++)
-				{
-					if (player[i] == -1)
-					{
-						player[i] = newClient;
-						if (player[1] != -1)
-							playerFull = true;
-					}
-				}
+				newClientType = PlayerType::GamePlayer_Black;
+				sprintf(msg, "You Are Player And Your Stone is Black");
+				myPacket.setMsg(msg);
+				send(newClient, (char*)myPacket.getPacketData(), sizeof(MyPacketData), NULL);
 			}
-			clientList.push_back(newClient);
+			else if (playerCnt == 1)
+			{
+				newClientType = PlayerType::GamePlayer_White;
+				sprintf(msg, "You Are Player And Your Stone is White");
+				myPacket.setMsg(msg);
+				send(newClient, (char*)myPacket.getPacketData(), sizeof(MyPacketData), NULL);
+			}
+			else
+				newClientType = PlayerType::GameSpector;
+			clientList.insert(make_pair(newClient, newClientType));
 			InvalidateRect(hWnd, NULL, TRUE);
 		}
 		break;
 		case FD_READ:
 		{
 			recv(wParam, (char*)(myPacket.getPacketData()), sizeof(MyPacketData), 0);
-			string msg(myPacket.getMsg());
-			string log = to_string(wParam) + " send PaketNum : " + to_string(myPacket.getPacketNumber()) + " msg : "+ msg;
+			string strMsg(myPacket.getMsg());
+			string log = to_string(wParam) + " send PaketNum : " + to_string(myPacket.getPacketNumber()) + " msg : "+ strMsg;
 			logs.push_back(log);
-			if (myPacket.getPacketNumber() == PACKET_GAME)
+			if (myPacket.getPacketNumber() == PACKET_POINT)
 			{
-				if (playerFull != false && wParam == player[playerTurn])
+				PlayerType sendPlayer = clientList.find(wParam)->second;
+				if (sendPlayer == PlayerType::GamePlayer_Black || sendPlayer == PlayerType::GamePlayer_White)
 				{
-					POINTS pts = myPacket.getPOINTS();
-					myPacket.clear();
-					for (SOCKET client : clientList)
+					for (auto it = clientList.begin(); it != clientList.end(); it++)
 					{
-						send(client, (char*)myPacket.getPacketData(), sizeof(MyPacketData), 0);
+						send((*it).first, (char*)myPacket.getPacketData(), sizeof(MyPacketData), NULL);
 					}
-					playerTurn = !playerTurn;
+					POINTS pt = myPacket.getPOINTS();
+					myPacket.clear(); 
+					char stoneType = (char)StoneType::Empty;
+					if (sendPlayer == PlayerType::GamePlayer_Black)
+					{
+						Board[pt.y][pt.x] = StoneType::Black;
+						stoneType = (char)StoneType::Black;
+					}
+					else
+					{
+						Board[pt.y][pt.x] = StoneType::White;
+						stoneType = (char)StoneType::White;
+					}
+					myPacket.setMsg(&stoneType);
+					myPacket.setPacketNumber(PACKET_STONE);
+					
+					for (auto it = clientList.begin(); it != clientList.end(); it++)
+					{
+						send((*it).first, (char*)myPacket.getPacketData(), sizeof(MyPacketData), NULL);
+					}
+				}
+				else
+				{
+
 				}
 			}
 			InvalidateRect(hWnd, NULL, TRUE);
@@ -215,20 +250,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			for (auto it = clientList.begin(); it != clientList.end(); it++)
 			{
-				if ((*it) == wParam)
+				if ((*it).first == wParam)
 				{
 					string log = to_string(wParam) + " user Exit";
 					logs.push_back(log);
 					sprintf(msg, "%d %s", wParam, "user exit");
-					for (size_t i = 0; i < 2; i++)
-					{
-						if (player[i] == wParam)
-						{
-							player[i] = -1;
-							playerFull = false;
-						}
-					}
-					closesocket(*it);
+					closesocket((*it).first);
 					clientList.erase(it);
 					break;
 				}
@@ -240,6 +267,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_PAINT:
 	{
+		static char clientCntStr[124];
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hWnd, &ps);
 		// TODO: Add any drawing code that uses hdc here...
@@ -248,6 +276,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			TextOutA(hdc, 20, 370 - i * 20, logs[logSize - i - 1].c_str(), logs[logSize - i - 1].size());
 		}
+		sprintf(clientCntStr, "client count : %d", clientList.size());
+		DrawTextA(hdc, clientCntStr, strlen(clientCntStr), &RectClientCnt, DT_SINGLELINE | DT_VCENTER);
 		EndPaint(hWnd, &ps);
 	}
 	break;

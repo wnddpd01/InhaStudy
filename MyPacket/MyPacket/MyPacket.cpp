@@ -49,13 +49,6 @@ void MyPacket::setMsg(POINTS * pt)
 	itoa(pt->y, &(this->packetData.msg[ptYIdx + 1]), 10);
 }
 
-void MyPacket::setMsg(POINTS * pt, BYTE stoneColor)
-{
-	setMsg(pt);
-	this->packetData.msg[strlen(this->packetData.msg)] = ',';
-	itoa(stoneColor, &this->packetData.msg[strlen(this->packetData.msg)], 10);
-}
-
 const char * MyPacket::getMsg()
 {
 	return this->packetData.msg;
@@ -80,8 +73,8 @@ POINTS MyPacket::getPOINTS()
 	return pt;
 }
 
-BYTE MyPacket::getStoneColor()
+StoneType MyPacket::getStoneType()
 {
-	return packetData.msg[strlen(packetData.msg) - 1];
+	return (StoneType)packetData.msg[0];
 }
 
