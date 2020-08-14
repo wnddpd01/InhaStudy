@@ -23,9 +23,9 @@
 #include <WinSock2.h>
 #include <Windowsx.h>
 #include "BitmapManager.h"
-#include "MyPacket.h"
+#include "../../MyPacket/MyPacket/MyPacket.h"
 #pragma comment(lib, "ws2_32.lib")
-#pragma comment(lib, "MyPacket.lib")
+#pragma comment(lib, "../../MyPacket/Debug/MyPacket.lib")
 #define WM_ASYNC WM_USER + 2
 
 inline BOOL __stdcall Circle(HDC hdc, int x, int y, int r)

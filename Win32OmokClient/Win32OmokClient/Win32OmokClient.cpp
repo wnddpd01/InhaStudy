@@ -11,11 +11,6 @@
 #define BOARD_ONE_SPACE_LENGTH 38
 #define CHATROOM_WIDTH 200
 
-struct Stone
-{
-	POINTS point;
-	StoneType stoneType;
-};
 // Global Variables:
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
@@ -162,7 +157,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		addr.sin_family = AF_INET;
 		addr.sin_port = 20;
-		addr.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
+		addr.sin_addr.S_un.S_addr = inet_addr("165.246.192.66");
 		if (connect(server, (LPSOCKADDR)&addr, sizeof(addr)) == SOCKET_ERROR)
 		{
 			MessageBox(NULL, _T("connect failed"), _T("Error"), MB_OK);
@@ -183,23 +178,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				strcpy(newChat, myPacket.getMsg());
 				chatLog.push_back(newChat);
 			}
-			else if (myPacket.getPacketNumber() == PACKET_POINT)
+			else if (myPacket.getPacketNumber() == PACKET_STONE)
 			{
-				POINTS pts = myPacket.getPOINTS();
-				recv(server, (char*)myPacket.getPacketData(), sizeof(MyPacketData), NULL);
-				if (myPacket.getPacketNumber() != PACKET_STONE)
-				{
-					return 0;
-				}
-				StoneType stoneType = myPacket.getStoneType();
-				Stone stone;
-				stone.point = pts;
-				stone.stoneType = stoneType;
-				stones.push_back(stone);
-				/*PAINTSTRUCT ps;
-				HDC hdc = BeginPaint(hWnd, &ps);
-				DrawStone(hdc, stone);
-				EndPaint(hWnd, &ps);*/
+				Stone stone = myPacket.getStone();
+				stones.push_back(myPacket.getStone());
 			}
 			InvalidateRect(hWnd, NULL, FALSE);
 		}
@@ -237,7 +219,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				if (PtInRect(&crossPoint[i][j], pt))
 				{
-					myPacket.setPacketNumber(PACKET_POINT);
+					myPacket.clear();
+					myPacket.setPacketNumber(PACKET_STONE);
 					POINTS xy = { j, i };
 					myPacket.setMsg(&xy);
 					send(server, (char *)myPacket.getPacketData(), sizeof(MyPacketData), NULL);
@@ -309,17 +292,19 @@ void DrawBoard(HDC hdc)
 
 void DrawStone(HDC hdc, const Stone & stone)
 {
+	if (stone.stoneType == StoneType::Empty)
+		return;
 	static HBRUSH blackBrush = CreateSolidBrush(RGB(0, 0, 0));
 	static HBRUSH whiteBrush = CreateSolidBrush(RGB(255, 255, 255));
-	HBRUSH oldBrush;
+	HBRUSH oldBrush = NULL;
 	if (stone.stoneType == StoneType::Black)
 		oldBrush = (HBRUSH)SelectObject(hdc, blackBrush);
 	else if (stone.stoneType == StoneType::White)
 		oldBrush = (HBRUSH)SelectObject(hdc, whiteBrush);
 
-	Circle(hdc, stone.point.x * BOARD_ONE_SPACE_LENGTH + BOARD_WHITE_SPACE,
-		stone.point.y * BOARD_ONE_SPACE_LENGTH + BOARD_WHITE_SPACE,
-		10);
+	Circle(hdc, stone.pos.x * BOARD_ONE_SPACE_LENGTH + BOARD_WHITE_SPACE,
+		stone.pos.y * BOARD_ONE_SPACE_LENGTH + BOARD_WHITE_SPACE,
+		15);
 
 	SelectObject(hdc, oldBrush);
 }

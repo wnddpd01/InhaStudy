@@ -1,7 +1,5 @@
 #include "MyPacket.h"
 
-
-
 MyPacket::MyPacket()
 {
 	clear();
@@ -47,6 +45,18 @@ void MyPacket::setMsg(POINTS * pt)
 	size_t ptYIdx = strlen(packetData.msg);
 	this->packetData.msg[ptYIdx] = ',';
 	itoa(pt->y, &(this->packetData.msg[ptYIdx + 1]), 10);
+	this->packetData.msg[strlen(packetData.msg)] = ',';
+	this->packetData.msg[strlen(packetData.msg)] = (char)StoneType::Empty;
+}
+
+void MyPacket::setMsg(Stone & stone)
+{
+	itoa(stone.pos.x, this->packetData.msg, 10);
+	size_t ptYIdx = strlen(packetData.msg);
+	this->packetData.msg[ptYIdx] = ',';
+	itoa(stone.pos.y, &(this->packetData.msg[ptYIdx + 1]), 10);
+	this->packetData.msg[strlen(packetData.msg)] = ',';
+	this->packetData.msg[strlen(packetData.msg)] = (char)stone.stoneType;
 }
 
 const char * MyPacket::getMsg()
@@ -54,8 +64,9 @@ const char * MyPacket::getMsg()
 	return this->packetData.msg;
 }
 
-POINTS MyPacket::getPOINTS()
+Stone MyPacket::getStone()
 {
+	Stone stone;
 	size_t commaIdx = 0;
 	size_t msgLen = strlen(packetData.msg);
 	for (size_t i = 0; i < msgLen; i++)
@@ -66,11 +77,14 @@ POINTS MyPacket::getPOINTS()
 			break;
 		}
 	}
-	POINTS pt;
-	pt.y = atoi(&(packetData.msg[commaIdx + 1]));
+	stone.stoneType = (StoneType)packetData.msg[msgLen - 1];
+	packetData.msg[msgLen - 2] = '\0';
+	stone.pos.y = atoi(&(packetData.msg[commaIdx + 1]));
 	packetData.msg[commaIdx] = '\0';
-	pt.x = atoi(packetData.msg);
-	return pt;
+	stone.pos.x = atoi(packetData.msg);
+	packetData.msg[msgLen - 2] = ',';
+	packetData.msg[commaIdx] = ',';
+	return stone;
 }
 
 StoneType MyPacket::getStoneType()

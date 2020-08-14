@@ -23,7 +23,7 @@
 #include <map>
 #include <string>
 #include <WinSock2.h>
-#include "MyPacket.h"
+#include "../../MyPacket/MyPacket/MyPacket.h"
 #pragma comment(lib, "ws2_32.lib")
-#pragma comment(lib, "MyPacket.lib")
+#pragma comment(lib, "../../MyPacket/Debug/MyPacket.lib")
 #define WM_ASYNC WM_USER + 2

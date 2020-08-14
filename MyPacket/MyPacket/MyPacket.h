@@ -10,16 +10,20 @@
 #endif
 #endif
 
-enum class StoneType : char
+enum class MYPACKET StoneType : char
 {
-	Empty = 0, Black, White
+	Empty = '0', Black, White
+};
+
+typedef MYPACKET struct Stone
+{
+	POINTS pos;
+	StoneType stoneType;
 };
 
 #define PACKET_NULL		0
 #define PACKET_CHAT		1
-#define PACKET_MAP		2
-#define PACKET_POINT	3
-#define PACKET_STONE	4
+#define PACKET_STONE	2
 #define PACKET_ERROR	999
 #define MAX_PACKET_MSG_SIZE 512
 
@@ -49,8 +53,9 @@ public:
 
 	void setMsg(char *msg);
 	void setMsg(POINTS *pt);
+	void setMsg(Stone& stone);
 	const char *getMsg();
-	POINTS getPOINTS();
+	Stone getStone();
 	StoneType getStoneType();
 };
 
