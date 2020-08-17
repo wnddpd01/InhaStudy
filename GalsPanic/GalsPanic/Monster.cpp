@@ -26,7 +26,15 @@ void Monster::Move(CPolygon & transparentPoly)
 	}
 	else if (transparentPoly.getDistanceWithPolygon(tempPos) < size)
 	{
-		xSpd *= -1;
+		if (xSpd < 0)
+			tempPos.x -= size;
+		else
+			tempPos.x += size;
+		if (transparentPoly.isInPoly(tempPos) == true)
+			xSpd *= -1;
+		else
+			ySpd *= -1;
+		return;
 	}
 	pos = tempPos;
 }

@@ -165,8 +165,18 @@ double CPolygon::getDistanceWithPolygon(POINT & p)
 	{
 		int j = (i + 1) % vertexCount;
 		double tempDis = getDistancePointAndLine(p, this->points[i], this->points[j]);
-		if (dis < tempDis)
+		if (tempDis < dis)
+		{
+			if (this->points[i].y - this->points[j].y == 0 && this->points[i].x > p.x == this->points[j].x > p.x)
+			{
+				continue;
+			}
+			if (this->points[i].x - this->points[j].x == 0 && this->points[i].y > p.y == this->points[j].y > p.y)
+			{
+				continue;
+			}
 			dis = tempDis;
+		}
 	}
 	return dis;
 }

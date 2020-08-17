@@ -13,15 +13,15 @@ InGameScene::InGameScene()
 	shadeScreenColorBrush = CreateSolidBrush(RGB(180, 140, 240));
 	shadeScreenTransparentBrush = CreateSolidBrush(TransparentRGB);
 	playerBrush = CreateSolidBrush(RGB(255, 0, 0));
-	POINT initPolygonPoints[4] = { {96, 96 }, {192, 96}, {192, 192}, {96, 192} };
 	InGameSceneBackHDC = NULL;
+	POINT initPolygonPoints[4] = { {96, 96 }, {192, 96}, {192, 192}, {96, 192} };
 	transperentCPoly = new CPolygon(initPolygonPoints, 4);
-
 	player = new Player;
-	player->setPlayerPos({ 96, 96});
+	player->setPlayerPos({ 96, 96 });
 	player->playerDestPos = player->playerPos;
 
 	aliveMonster.push_back(new Monster);
+
 }
 
 
@@ -210,6 +210,22 @@ LRESULT CALLBACK InGameScene::InGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wP
 			for (Monster * monster : aliveMonster)
 			{
 				monster->Move(*transperentCPoly);
+				if (player->getDistanceFromFootprint(monster->pos) < monster->size)
+				{
+					delete transperentCPoly;
+					POINT initPolygonPoints[4] = { {96, 96 }, {192, 96}, {192, 192}, {96, 192} };
+					transperentCPoly = new CPolygon(initPolygonPoints, 4);
+
+
+					delete player;
+					player = new Player;
+					player->setPlayerPos({ 96, 96 });
+					player->playerDestPos = player->playerPos;
+
+					delete aliveMonster.back();
+					aliveMonster.pop_back();
+					aliveMonster.push_back(new Monster);
+				}
 			}
 			break;
 		}
