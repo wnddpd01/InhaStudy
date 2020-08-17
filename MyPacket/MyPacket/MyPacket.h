@@ -21,10 +21,11 @@ typedef MYPACKET struct Stone
 	StoneType stoneType;
 };
 
-#define PACKET_NULL		0
-#define PACKET_CHAT		1
-#define PACKET_STONE	2
-#define PACKET_ERROR	999
+#define PACKET_NULL			0
+#define PACKET_CHAT			1
+#define PACKET_STONE		2
+#define PACKET_PLAYERTYPE	3
+#define PACKET_ERROR		999
 #define MAX_PACKET_MSG_SIZE 512
 
 #define BLACK_STONE 0

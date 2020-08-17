@@ -355,3 +355,6 @@ GalsPanic/GalsPanic/GalsPanic.vcxproj.filters
 Win32.0717/Win32.0717/rankFile.txt
 GalsPanic/GalsPanic/GalsPanic.vcxproj
 >>>>>>> origin/master
+Win32OmokClient/Win32OmokClient/Win32OmokClient.vcxproj
+Win32OmokServer/Win32OmokServer/Win32OmokServer.vcxproj
+MyPacket/MyPacket/MyPacket.vcxproj
