@@ -23,4 +23,5 @@ public:
 	RECT getPlayerRect();
 	void setPlayerPos(POINT pos);
 	void setPlayerDestPos(WPARAM dir);
+	double getDistanceFromFootprint(POINT & p);
 };

@@ -130,6 +130,8 @@ bool Player::isInFootPrint(POINT &p)
 	return this->playerFootprint.isInLine(p, this->playerFootprint.points.size() - 1) != -1;
 }
 
+
+
 RECT Player::getPlayerRect()
 {
 	RECT playerRect = { playerPos.x - 30, playerPos.y - 30, playerPos.x + 30, playerPos.y + 30 };
@@ -152,4 +154,31 @@ void Player::setPlayerDestPos(WPARAM dir)
 	{
 		playerDestPos = MakeNextPointWithDir(playerDestPos, dir, 8);
 	}
+}
+
+double Player::getDistanceFromFootprint(POINT& p)
+{
+	double dis = 111111;
+	size_t vertexCount = playerFootprint.points.size();
+
+	for (int i = 0; i < vertexCount; ++i)
+	{
+		int j = i + 1;
+		POINT pt1 = playerFootprint.points[i];
+		POINT pt2 = j < vertexCount ? playerFootprint.points[j] : playerPos;
+		double tempDis = getDistancePointAndLine(p, pt1, pt2);
+		if (tempDis < dis)
+		{
+			if (pt1.y - pt2.y == 0 && pt1.x > p.x == pt2.x > p.x)
+			{
+				continue;
+			}
+			if (pt1.x - pt2.x == 0 && pt1.y > p.y == pt2.y > p.y)
+			{
+				continue;
+			}
+			dis = tempDis;
+		}
+	}
+	return dis;
 }

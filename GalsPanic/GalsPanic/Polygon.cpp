@@ -156,6 +156,31 @@ void CPolygon::MergePolygonEnd(std::vector<POINT>& mergedPolygon)
 	this->points.insert(this->points.begin(), mergedPolygon.begin(), mergedPolygon.end());
 }
 
+double CPolygon::getDistanceWithPolygon(POINT & p)
+{
+	double dis = 111111;
+	size_t vertexCount = points.size();
+
+	for (int i = 0; i < vertexCount; ++i)
+	{
+		int j = (i + 1) % vertexCount;
+		double tempDis = getDistancePointAndLine(p, this->points[i], this->points[j]);
+		if (tempDis < dis)
+		{
+			if (this->points[i].y - this->points[j].y == 0 && this->points[i].x > p.x == this->points[j].x > p.x)
+			{
+				continue;
+			}
+			if (this->points[i].x - this->points[j].x == 0 && this->points[i].y > p.y == this->points[j].y > p.y)
+			{
+				continue;
+			}
+			dis = tempDis;
+		}
+	}
+	return dis;
+}
+
 double CPolygon::getArea()
 {
 	double area = 0.0;
