@@ -209,7 +209,7 @@ LRESULT CALLBACK InGameScene::InGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wP
 			dir = NULL;
 			for (Monster * monster : aliveMonster)
 			{
-				monster->Move();
+				monster->Move(*transperentCPoly);
 			}
 			break;
 		}

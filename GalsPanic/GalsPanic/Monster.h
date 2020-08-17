@@ -8,7 +8,7 @@ public:
 	POINT pos;
 	Monster();
 
-	void Move();
+	void Move(CPolygon & transparentPoly);
 	~Monster();
 };
 

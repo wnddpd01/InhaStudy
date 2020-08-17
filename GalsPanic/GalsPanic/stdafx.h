@@ -62,6 +62,14 @@ inline double getLineSlope(const POINT& p1, const POINT& p2)
 	return double(p2.y - p1.y) / double(p2.x - p1.x);
 }
 
+inline double getDistancePointAndLine(const POINT& p, const POINT& line1, const POINT& line2)
+{
+	double a = line1.y - line2.y; 
+	double b = line2.x - line1.x;
+	double c = line1.x * line2.y - line2.x * line1.y;
+	return abs(a * p.x + b * p.y+ c) / sqrt(a * a + b * b);
+}
+
 
 inline bool BoundaryCheck(const POINT& p)
 {

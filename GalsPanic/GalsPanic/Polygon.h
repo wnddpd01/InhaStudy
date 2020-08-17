@@ -21,6 +21,7 @@ public:
 	bool CheckPolygonMergedCorrectly(std::vector<POINT> & newPolygon);
 	void MakeMergedPolygon(std::vector<POINT> & mergedPolygon, const ULONG& startLineNum, const ULONG& endLineNum);
 	void MergePolygonEnd(std::vector<POINT>& mergedPolygon);
+	double getDistanceWithPolygon(POINT & p);
 	double getArea();
 	virtual ~CPolygon()
 	{
