@@ -225,6 +225,7 @@ LRESULT CALLBACK InGameScene::InGameSceneWndProc(HWND hwnd, UINT iMsg, WPARAM wP
 					delete aliveMonster.back();
 					aliveMonster.pop_back();
 					aliveMonster.push_back(new Monster);
+					break;
 				}
 			}
 			break;
