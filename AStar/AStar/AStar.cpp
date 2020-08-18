@@ -81,6 +81,7 @@ public:
 #pragma region cellOperatorOverride
 	friend bool operator< (const cell& cell1, const cell &cell2)
 	{
+		int a = 0;
 		return cell1.f_val() < cell2.f_val();
 	}
 	friend bool operator> (const cell& cell1, const cell &cell2)
@@ -111,7 +112,7 @@ WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 HWND hwnd;
 
-priority_queue<cell * , vector<cell *>, less<vector<cell *>::value_type>> pq;
+priority_queue<cell * , vector<cell *>, greater<vector<cell *>::value_type>> pq;
 //priority_queue<cell *> pq;
 //priority_queue<cell *, vector<cell *>, cmp> pq;
 // Forward declarations of functions included in this code module:
