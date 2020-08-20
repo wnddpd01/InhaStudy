@@ -14,12 +14,14 @@
 #define CELL_NUM 18
 enum cell_state : char
 {
-	cell_open = 0, cell_calculated ,cell_close, cell_block, cell_start, cell_end
+	cell_open = 0, cell_calculated ,cell_close, cell_block, cell_start, cell_end, cell_path
 };
 
 class cell final
 {
+private:
 	POINT pos_;
+	cell * closest_cell_;
 	cell_state m_cell_state_;
 	size_t f_val_;
 	size_t h_val_;
@@ -35,7 +37,17 @@ public:
 	{
 		this->pos_ = pos;
 	}
-	
+
+	cell* closest_cell() const
+	{
+		return closest_cell_;
+	}
+
+	void set_closest_cell(cell* closest_cell)
+	{
+		closest_cell_ = closest_cell;
+	}
+
 	cell_state m_cell_state() const
 	{
 		return m_cell_state_;
@@ -75,29 +87,30 @@ public:
 	{
 		g_val_ = g_val;
 	}
-
 #pragma endregion
 
 #pragma region cellOperatorOverride
 	friend bool operator< (const cell& cell1, const cell &cell2)
 	{
-		int a = 0;
-		return cell1.f_val() < cell2.f_val();
-	}
-	friend bool operator> (const cell& cell1, const cell &cell2)
-	{
+		if (cell1.f_val() == cell2.f_val())
+			return cell1.h_val() < cell2.h_val();
 		return cell1.f_val() > cell2.f_val();
 	}
 #pragma endregion
 
 	cell()
 	{
-		f_val_ = h_val_ = g_val_ = INF;
-		//pos_ = { INF, INF };
-		m_cell_state_ = cell_open;
+		cell_init();
 	}
 	~cell() = default;
 
+	void cell_init()
+	{
+		f_val_ = h_val_ = g_val_ = INF;
+		//pos_ = { INF, INF };
+		closest_cell_ = NULL;
+		m_cell_state_ = cell_open;
+	}
 };
 using namespace  std;
 //struct cmp {
@@ -112,9 +125,11 @@ WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 HWND hwnd;
 
-priority_queue<cell * , vector<cell *>, greater<vector<cell *>::value_type>> pq;
+//priority_queue<cell * , vector<cell *>, greater<vector<cell *>::value_type>> pq;
 //priority_queue<cell *> pq;
 //priority_queue<cell *, vector<cell *>, cmp> pq;
+//queue<cell *> pq;
+vector<cell> pq;
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
@@ -126,7 +141,8 @@ void DrawBoard(HDC hdc);
 void DrawCell(HDC hdc);
 void TextOutCell(HDC hdc, size_t left, size_t top, cell & cell);
 bool AStarPathFinding(POINT &start_point, POINT& end_point);
-void AStartCalculateNode(POINT &start_point, POINT& end_point, POINT& cur_point);
+void AStarCalculateNode(POINT &start_point, POINT& end_point, POINT& cur_point);
+void AStarPathMaking(POINT& end_point);
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR    lpCmdLine,
@@ -233,12 +249,15 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	static POINT startPoint = { -1,-1 };
+	static POINT endPoint = { -1, -1 };
     switch (message)
     {
 	case WM_CREATE :
 		{
 			MapInit();
-			SetTimer(hWnd, 1, 1000 / 10, NULL);
+			SetTimer(hWnd, 1, 1000 / 30, NULL);
+			SetTimer(hWnd, 2, 1000 / 2, NULL);
 			SetBkMode(GetDC(hWnd), TRANSPARENT);
 		}
 		break;
@@ -268,7 +287,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN:
 		{
 			static bool pointStart = true;
-			static POINT startPoint = {-1,-1};	
 			POINT xy = { LOWORD(lParam), HIWORD(lParam) }; 
 			if (PtInBoard(xy) == true)
 			{
@@ -276,15 +294,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				xy.y = (xy.y - BOARD_WHITE_SPACE) / BOARD_ONE_SPACE_LENGTH;
 				if (pointStart == true)
 				{
-					MapInit();
 					map[xy.y][xy.x].set_m_cell_state(cell_start);
+					map[xy.y][xy.x].set_g_val(0);
 					startPoint = xy;
 				}
 				else
 				{
-					map[xy.y][xy.x].set_m_cell_state(cell_end);
-					AStarPathFinding(startPoint, xy);
-					return 0;
+					static bool restart = false;
+					if (restart == true)
+					{
+						MapInit();
+						restart = !restart;
+					}
+					else
+					{
+						pq.clear();
+						make_heap(pq.begin(), pq.end());
+						pq.push_back(map[startPoint.y][startPoint.x]);
+						map[xy.y][xy.x].set_m_cell_state(cell_end);
+						endPoint = xy;
+						//AStarPathFinding(startPoint, xy);
+						restart = !restart;
+						return 0;
+					}
 				}
 				pointStart = !pointStart;
 			}
@@ -303,7 +335,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_TIMER :
 		{
-			InvalidateRect(hWnd, NULL, FALSE);
+			switch (wParam)
+			{
+			case 1 :
+				InvalidateRect(hWnd, NULL, FALSE);
+				break;
+			case 2 :
+				if (pq.empty() != true)
+					AStarPathFinding(startPoint, endPoint);
+				else
+				{
+					if(map[endPoint.y][endPoint.x].closest_cell() != NULL)
+					{
+						AStarPathMaking(endPoint);
+					}
+				}
+				break;
+			}
 		}
 		break;
     default:
@@ -326,7 +374,7 @@ void MapInit()
 	{
 		for (size_t j = 0; j < CELL_NUM; j++)
 		{
-			map[i][j].set_m_cell_state(cell_open);
+			map[i][j].cell_init();
 			POINT ij = { j, i };
 			map[i][j].set_pos(ij);
 		}
@@ -339,22 +387,7 @@ void DrawBoard(HDC hdc)
 	//static HBRUSH flowerPtBrush = CreateSolidBrush(RGB(0, 0, 0));
 	HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, boardBrush);
 	Rectangle(hdc, 0, 0, BOARD_WIDTH, BOARD_HEIGHT);
-	////SelectObject(hdc, flowerPtBrush);
-	
-	/*for (size_t i = 0; i < 3; i++)
-	{
-		Circle(hdc, BOARD_WHITE_SPACE + (BOARD_ONE_SPACE_LENGTH * 3), BOARD_WHITE_SPACE + (BOARD_ONE_SPACE_LENGTH * 3) + (BOARD_ONE_SPACE_LENGTH * 6) * i, 5);
-		Circle(hdc, BOARD_WHITE_SPACE + (BOARD_ONE_SPACE_LENGTH * 9), BOARD_WHITE_SPACE + (BOARD_ONE_SPACE_LENGTH * 3) + (BOARD_ONE_SPACE_LENGTH * 6) * i, 5);
-		Circle(hdc, BOARD_WHITE_SPACE + (BOARD_ONE_SPACE_LENGTH * 15), BOARD_WHITE_SPACE + (BOARD_ONE_SPACE_LENGTH * 3) + (BOARD_ONE_SPACE_LENGTH * 6) * i, 5);
-	}*/	
-	/*for (size_t i = 0; i < 19; i++)
-	{
-		MoveToEx(hdc, BOARD_WHITE_SPACE, BOARD_WHITE_SPACE + BOARD_ONE_SPACE_LENGTH * i, NULL);
-		LineTo(hdc, 684 + BOARD_WHITE_SPACE, BOARD_WHITE_SPACE + BOARD_ONE_SPACE_LENGTH * i);
-		MoveToEx(hdc, BOARD_WHITE_SPACE + BOARD_ONE_SPACE_LENGTH * i, BOARD_WHITE_SPACE, NULL);
-		LineTo(hdc, BOARD_WHITE_SPACE + BOARD_ONE_SPACE_LENGTH * i, 684 + BOARD_WHITE_SPACE);
-	}*/
-	SelectObject(hdc, boardBrush);
+	SelectObject(hdc, oldBrush);
 }
 
 void DrawCell(HDC hdc)
@@ -365,6 +398,7 @@ void DrawCell(HDC hdc)
 	static HBRUSH BlockBrush = CreateSolidBrush(RGB(160, 160, 160));
 	static HBRUSH StartBrush = CreateSolidBrush(RGB(100, 175, 220));
 	static HBRUSH EndBrush   = CreateSolidBrush(RGB(0, 128, 192));
+	static HBRUSH PathBrush = CreateSolidBrush(RGB(200, 191, 231));
 	static HPEN   CellPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
 	HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, OpenBrush);
 	HPEN oldPen = (HPEN)SelectObject(hdc, CellPen);
@@ -392,6 +426,9 @@ void DrawCell(HDC hdc)
 			case cell_end :
 				SelectObject(hdc, EndBrush);
 				break;
+			case cell_path:
+				SelectObject(hdc, PathBrush);
+				break;
 			}
 			const size_t left = BOARD_WHITE_SPACE + j * BOARD_ONE_SPACE_LENGTH;
 			const size_t top  = BOARD_WHITE_SPACE + i * BOARD_ONE_SPACE_LENGTH;
@@ -409,7 +446,8 @@ void TextOutCell(HDC hdc, size_t left, size_t top, cell & cell)
 	//static HFONT cell_font;
 	RECT gh_val_rect = { left + 1 , top + 1, left + 37, top + 10 };
 	RECT f_val_rect = { gh_val_rect.left, gh_val_rect.bottom + 15, gh_val_rect.right, gh_val_rect.bottom + 29 };
-	char buffer[8];
+	static char buffer[8];
+	
 	if (cell.g_val() == INF)
 	{
 		sprintf(buffer, "INF");
@@ -418,6 +456,7 @@ void TextOutCell(HDC hdc, size_t left, size_t top, cell & cell)
 	{
 		sprintf(buffer, "%-3d", cell.g_val());
 	}
+	
 	if (cell.h_val() == INF)
 	{
 		sprintf(&buffer[3], "INF");
@@ -442,21 +481,19 @@ void TextOutCell(HDC hdc, size_t left, size_t top, cell & cell)
 bool AStarPathFinding(POINT& start_point, POINT& end_point)
 {
 	static POINT cur_point;
-	pq.push(&(map[start_point.y][start_point.x]));
-	static int count = 0;
-	while (count < 30)
-	{
-		cur_point = (*pq.top()).pos();
-		pq.pop();
-		AStartCalculateNode(start_point, end_point, cur_point);
+	//pq.push(&(map[start_point.y][start_point.x]));
+	pop_heap(pq.begin(), pq.end());
+	cur_point = pq.back().pos(); pq.pop_back();
+	//map[cur_point.y][cur_point.x].set_m_cell_state(cell_open);
+	//cur_point = (*pq.front()).pos();
+	//pq.pop();
+	AStarCalculateNode(start_point, end_point, cur_point);
+	if (map[cur_point.y][cur_point.x].m_cell_state() != cell_start)
 		map[cur_point.y][cur_point.x].set_m_cell_state(cell_close);
-		count++;
-	}
-	count = 0;
 	return true;
 }
 
-void AStartCalculateNode(POINT& start_point, POINT& end_point, POINT& cur_point)
+void AStarCalculateNode(POINT& start_point, POINT& end_point, POINT& cur_point)
 {
 	POINT temp_point;
 
@@ -477,14 +514,49 @@ void AStartCalculateNode(POINT& start_point, POINT& end_point, POINT& cur_point)
 			temp_point = { cur_point.x, cur_point.y + 1 };
 			break;
 		}
-		if (temp_point.x < 0 || temp_point.x == CELL_NUM || temp_point.y < 0 || temp_point.y == CELL_NUM || map[temp_point.y][temp_point.x].m_cell_state() != cell_open)
+		if(temp_point == end_point)
+		{
+			map[temp_point.y][temp_point.x].set_closest_cell(&map[cur_point.y][cur_point.x]);
+			map[temp_point.y][temp_point.x].set_m_cell_state(cell_end);
+			pq.clear();
+			break;
+		}
+		if (temp_point.x < 0 || temp_point.x == CELL_NUM || temp_point.y < 0 || temp_point.y == CELL_NUM || map[temp_point.y][temp_point.x].m_cell_state() == cell_close || map[temp_point.y][temp_point.x].m_cell_state() == cell_block || map[temp_point.y][temp_point.x].m_cell_state() == cell_start)
 			continue;
-		size_t g_val = getDistance(start_point, temp_point);
+		size_t g_val = map[cur_point.y][cur_point.x].g_val() + 1;//getDistance(start_point, temp_point);
 		size_t h_val = getDistance(temp_point, end_point);
-		map[temp_point.y][temp_point.x].set_g_val(g_val);
-		map[temp_point.y][temp_point.x].set_h_val(h_val);
-		map[temp_point.y][temp_point.x].set_f_val(g_val + h_val);
-		map[temp_point.y][temp_point.x].set_m_cell_state(cell_calculated);
-		pq.push(&(map[temp_point.y][temp_point.x]));
+		
+		if (map[temp_point.y][temp_point.x].g_val() > g_val)
+			map[temp_point.y][temp_point.x].set_g_val(g_val);
+		else
+			g_val = map[temp_point.y][temp_point.x].g_val();
+		
+		if (map[temp_point.y][temp_point.x].h_val() > h_val)
+			map[temp_point.y][temp_point.x].set_h_val(h_val);
+		else
+			h_val = map[temp_point.y][temp_point.x].h_val();
+		
+		if (map[temp_point.y][temp_point.x].f_val() > g_val + h_val)
+		{
+			map[temp_point.y][temp_point.x].set_f_val(g_val + h_val);
+			map[temp_point.y][temp_point.x].set_closest_cell(&map[cur_point.y][cur_point.x]);
+		}
+		//pq.push(&(map[temp_point.y][temp_point.x]));
+		if (map[temp_point.y][temp_point.x].m_cell_state() != cell_calculated)
+		{
+			map[temp_point.y][temp_point.x].set_m_cell_state(cell_calculated);
+			pq.push_back(map[temp_point.y][temp_point.x]);
+			push_heap(pq.begin(), pq.end());
+		}
+	}
+}
+
+void AStarPathMaking(POINT& end_point)
+{
+	cell * cur_cell = map[end_point.y][end_point.x].closest_cell();
+	while(cur_cell->m_cell_state() != cell_start)
+	{
+		cur_cell->set_m_cell_state(cell_path);
+		cur_cell = cur_cell->closest_cell();
 	}
 }
