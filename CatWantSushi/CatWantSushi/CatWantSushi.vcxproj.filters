@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Game">
+      <UniqueIdentifier>{9f6f9954-ef5f-45e0-8d5b-063d2c4a3cdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{25cd8687-9a5f-4174-93a7-2edecd7acf17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{33ee74bc-22f0-4d06-b0ec-bdc1ec69e213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\StartScene">
+      <UniqueIdentifier>{14cd7c67-efa3-4602-8197-76c7d4731ff7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\SceneManager">
+      <UniqueIdentifier>{718e43f2-0084-412b-817c-18664a3b7e54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\BitmapManager">
+      <UniqueIdentifier>{82c4dc44-cc26-4d6d-87eb-df5c017a11ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{45b25cf4-790e-4484-b428-758047c4df10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Bitmap">
+      <UniqueIdentifier>{4329b7fd-fbf3-4868-952c-d53215478260}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{4c04bfdf-cc76-41e8-b7ee-f3d21a685d4b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="StartScene.cpp">
+      <Filter>Scene\StartScene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Manager\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Window.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="StartScene.h">
+      <Filter>Scene\StartScene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Manager\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapManager.h">
+      <Filter>Manager\BitmapManager</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CatWantSushi.rc">
+      <Filter>Resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="CWSResource\background\StartSceneBackground.bmp">
+      <Filter>Resource\Bitmap</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
