@@ -13,8 +13,8 @@ namespace CWSMapTool
 {
     public partial class Form1 : Form
     {
-        const uint horizontalGridCount = 64;
-        const uint verticalGridCount = 36;
+        const uint horizontalGridCount = 32;
+        const uint verticalGridCount = 18;
         PictureBox selectedTile = null;
         Bitmap bitmap_blank = new Bitmap(@".\Image\Tile\cws_tile_blank.png");
         Dictionary<string, Bitmap> dic_bitmap_tile = new Dictionary<string, Bitmap>();
@@ -69,10 +69,10 @@ namespace CWSMapTool
             foreach(KeyValuePair<string, Bitmap> bitmap in dic_bitmap_tile)
             {
                 PictureBox p_tileBasic = new PictureBox();
-                p_tileBasic.Left = 10 + cnt * tileWidth * 3;
+                p_tileBasic.Left = 10 + cnt * 48;
                 p_tileBasic.Top = 30;
-                p_tileBasic.Width = tileWidth * 3;
-                p_tileBasic.Height = tileHeight * 3;
+                p_tileBasic.Width = 48;
+                p_tileBasic.Height = 48;
                 p_tileBasic.SizeMode = PictureBoxSizeMode.StretchImage;
                 p_tileBasic.Name = bitmap.Key;
                 p_tileBasic.Image = bitmap.Value;

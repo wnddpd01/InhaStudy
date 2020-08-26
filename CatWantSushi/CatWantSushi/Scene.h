@@ -1,12 +1,14 @@
 #pragma once
 #include <vector>
 #include <Windows.h>
+
+#pragma comment (lib, "Msimg32.lib")
 class UI;
 
 class Scene
 {
 protected:
-	std::vector<UI&> scene_UI_;
+	std::vector<UI *> scene_UI_;
 public:
 	Scene() = default;
 

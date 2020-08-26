@@ -17,7 +17,7 @@ public:
 	void render(HDC hdc, const LPRECT paint_rect) override;
 	void free() override;
 
-	void StartBtnClick();
-	void EndBtnClick();
+	static void StartBtnClick();
+	static void EndBtnClick();
 };
 

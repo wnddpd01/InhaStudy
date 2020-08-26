@@ -1,7 +1,7 @@
 #include "Window.h"
 #include "SceneManager.h"
 #include "StartScene.h"
-
+#include "GameOptionManager.h"
 Window* window = NULL;
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -83,9 +83,8 @@ bool Window::init()
 	if (!window)
 		window = this;
 
-	m_uint_window_width_ = 1280;
-	m_uint_window_height_ = 720;
-	m_window_hwnd_ = CreateWindowEx(WS_EX_APPWINDOW, L"CWSWindowClass", L"CatWantSushi", WS_POPUP, GetSystemMetrics(SM_CXSCREEN) / 2 - m_uint_window_width() / 2, GetSystemMetrics(SM_CYSCREEN) / 2 - m_uint_window_height() / 2, m_uint_window_width(), m_uint_window_height(), NULL, NULL, NULL, NULL);
+	auto gameOptionManager = GameOptionManager::GetInstance();
+	m_window_hwnd_ = CreateWindowEx(WS_EX_APPWINDOW, L"CWSWindowClass", L"CatWantSushi", WS_POPUP, GetSystemMetrics(SM_CXSCREEN) / 2 - gameOptionManager->GameWidth / 2, GetSystemMetrics(SM_CYSCREEN) / 2 - gameOptionManager->GameHeight / 2, gameOptionManager->GameWidth, gameOptionManager->GameHeight, NULL, NULL, NULL, NULL);
 
 	if (!m_window_hwnd_)
 		return false;

@@ -28,6 +28,15 @@
     <Filter Include="UI">
       <UniqueIdentifier>{4c04bfdf-cc76-41e8-b7ee-f3d21a685d4b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Manager\GameOptionManager">
+      <UniqueIdentifier>{38afbb59-6b89-4e38-954e-4a9d8887b539}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Bitmap\Button">
+      <UniqueIdentifier>{d99ac78b-ebbc-430f-aa92-0256bcc9e396}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Bitmap\Background">
+      <UniqueIdentifier>{c1c6e852-9c4a-4bed-a37a-6bad2762e014}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -68,6 +77,9 @@
     <ClInclude Include="UI.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="GameOptionManager.h">
+      <Filter>Manager\GameOptionManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CatWantSushi.rc">
@@ -75,8 +87,11 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="CWSResource\UI\StartBtn.bmp">
+      <Filter>Resource\Bitmap\Button</Filter>
+    </Image>
     <Image Include="CWSResource\background\StartSceneBackground.bmp">
-      <Filter>Resource\Bitmap</Filter>
+      <Filter>Resource\Bitmap\Background</Filter>
     </Image>
   </ItemGroup>
 </Project>
