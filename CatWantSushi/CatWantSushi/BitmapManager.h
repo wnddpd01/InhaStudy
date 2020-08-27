@@ -10,6 +10,7 @@ class BitmapManager
 		HINSTANCE hInstance = GetModuleHandle(NULL);
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_START_SCENE_BACKGROUND, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_START_SCENE_BACKGROUND))));
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_START_BTN, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_START_BTN))));
+		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_INGAME_SCENE_BACKGROUND, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_INGAME_SCENE_BACKGROUND))));
 	}
 public:
 	std::map<UINT, HBITMAP> imageMap;
@@ -18,7 +19,7 @@ public:
 		static BitmapManager ins;
 		return &ins;
 	}
-	
+
 	~BitmapManager()
 	{
 	}

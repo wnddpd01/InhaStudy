@@ -2,7 +2,10 @@
 #include "SceneManager.h"
 #include "StartScene.h"
 #include "GameOptionManager.h"
+#include "GlobalValue.h"
 Window* window = NULL;
+
+auto gameOptionManager = GameOptionManager::GetInstance();
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -13,7 +16,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 	{
 		window->on_create();
-		SetTimer(hwnd, TimerRender, 1000 / 30, NULL);
+		SetTimer(hwnd, TimerRender, 1000 / gameOptionManager->Frame, NULL);
 		break;
 	}
 	case WM_DESTROY:
@@ -45,6 +48,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	}
 	case WM_SCENE_CHANGE:
 	{
+		scene_manager.scene_change(wParam);
+		break;
+	}
+	case WM_LBUTTONUP:
+	case WM_MOUSEMOVE:
+	{
+		POINT pt = { LOWORD(lParam), HIWORD(lParam) };
+		scene_manager.mouse_event_handle(msg, pt);
 		break;
 	}
 	default:
@@ -83,7 +94,6 @@ bool Window::init()
 	if (!window)
 		window = this;
 
-	auto gameOptionManager = GameOptionManager::GetInstance();
 	m_window_hwnd_ = CreateWindowEx(WS_EX_APPWINDOW, L"CWSWindowClass", L"CatWantSushi", WS_POPUP, GetSystemMetrics(SM_CXSCREEN) / 2 - gameOptionManager->GameWidth / 2, GetSystemMetrics(SM_CYSCREEN) / 2 - gameOptionManager->GameHeight / 2, gameOptionManager->GameWidth, gameOptionManager->GameHeight, NULL, NULL, NULL, NULL);
 
 	if (!m_window_hwnd_)
@@ -97,7 +107,6 @@ bool Window::init()
 
 	ShowWindow(m_window_hwnd_, SW_SHOW);
 	UpdateWindow(m_window_hwnd_);
-
 
 	m_is_run_ = true;
 	return true;

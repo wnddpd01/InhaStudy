@@ -4,15 +4,17 @@ class GameOptionManager
 {
 	GameOptionManager()
 	{
-		GameWidth = 1600;
-		GameHeight = 900;
+		GameWidth = 1280;
+		GameHeight = 720;
 		HorizontalGridCount = 32;
 		VerticalGridCount = 18;
+		frame_ = 30;
 	}
 	UINT game_width_;
 	UINT game_height_;
 	size_t horizontal_grid_count_;
 	size_t vertical_grid_count_;
+	UCHAR frame_;
 #pragma region GetterAndSetter
 public:
 	UINT game_width() const
@@ -62,6 +64,18 @@ public:
 	}
 
 	__declspec(property(get = vertical_grid_count, put = set_vertical_grid_count)) size_t VerticalGridCount;
+
+	UCHAR frame() const
+	{
+		return frame_;
+	}
+
+	void set_frame(UCHAR frame)
+	{
+		frame_ = frame;
+	}
+
+	__declspec(property(get = frame, put = set_frame)) UCHAR Frame;
 #pragma endregion
 public :
 	static GameOptionManager * GetInstance()

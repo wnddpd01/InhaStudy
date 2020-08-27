@@ -33,6 +33,9 @@ public:
 
 	void render(LPPAINTSTRUCT ps);
 	void scene_change(WPARAM next_scene);
+
+	void mouse_event_handle(WPARAM event_name, POINT & pt);
+	
 	~SceneManager();
 };
 

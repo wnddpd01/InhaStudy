@@ -1,7 +1,6 @@
 #pragma once
 #include <Windows.h>
 
-#define WM_SCENE_CHANGE WM_USER + 1
 #define DEBUG
 
 enum TimerID
@@ -13,8 +12,8 @@ class Window
 {
 private :
 protected:
-	HWND m_window_hwnd_;
 	HWND m_console_hwnd_;
+	HWND m_window_hwnd_;
 	bool m_is_run_;
 protected:
 	virtual void init_wndclassex(WNDCLASSEX &wc);

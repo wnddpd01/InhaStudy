@@ -31,11 +31,29 @@
     <Filter Include="Manager\GameOptionManager">
       <UniqueIdentifier>{38afbb59-6b89-4e38-954e-4a9d8887b539}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource\Bitmap\Button">
-      <UniqueIdentifier>{d99ac78b-ebbc-430f-aa92-0256bcc9e396}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource\Bitmap\Background">
       <UniqueIdentifier>{c1c6e852-9c4a-4bed-a37a-6bad2762e014}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\InGameScene">
+      <UniqueIdentifier>{453c4ce4-b1fe-4c96-903c-64da3aae616f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\SceneRenderer">
+      <UniqueIdentifier>{02c09f61-a56b-41f3-b438-21e942680bf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{9d0b4a61-9312-4f57-8ec5-087f55a63b1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\BaseScene">
+      <UniqueIdentifier>{a8f08084-00b3-444d-9d34-3d6482399da8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Bitmap\UI">
+      <UniqueIdentifier>{73c5ceb3-63ae-4113-a4bf-35596f336e49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Bitmap\UI\Button">
+      <UniqueIdentifier>{d99ac78b-ebbc-430f-aa92-0256bcc9e396}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Bitmap\UI\Image">
+      <UniqueIdentifier>{31817437-b47d-40a2-b92e-75968480a321}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -51,16 +69,19 @@
     <ClCompile Include="SceneManager.cpp">
       <Filter>Manager\SceneManager</Filter>
     </ClCompile>
-    <ClCompile Include="UI.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="InGameScene.cpp">
+      <Filter>Scene\InGameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneRenderer.cpp">
+      <Filter>Scene\SceneRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Scene\BaseScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
       <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="StartScene.h">
       <Filter>Scene\StartScene</Filter>
@@ -80,6 +101,21 @@
     <ClInclude Include="GameOptionManager.h">
       <Filter>Manager\GameOptionManager</Filter>
     </ClInclude>
+    <ClInclude Include="GlobalValue.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameScene.h">
+      <Filter>Scene\InGameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneRenderer.h">
+      <Filter>Scene\SceneRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Scene\BaseScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CatWantSushi.rc">
@@ -88,10 +124,19 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="CWSResource\UI\StartBtn.bmp">
-      <Filter>Resource\Bitmap\Button</Filter>
+      <Filter>Resource\Bitmap\UI\Button</Filter>
     </Image>
     <Image Include="CWSResource\background\StartSceneBackground.bmp">
       <Filter>Resource\Bitmap\Background</Filter>
+    </Image>
+    <Image Include="CWSResource\background\InGameSceneBackground.bmp">
+      <Filter>Resource\Bitmap\Background</Filter>
+    </Image>
+    <Image Include="CWSResource\UI\InGameSceneUICatBlue.bmp">
+      <Filter>Resource\Bitmap\UI\Image</Filter>
+    </Image>
+    <Image Include="CWSResource\UI\InGameSceneUICatYellow.bmp">
+      <Filter>Resource\Bitmap\UI\Image</Filter>
     </Image>
   </ItemGroup>
 </Project>

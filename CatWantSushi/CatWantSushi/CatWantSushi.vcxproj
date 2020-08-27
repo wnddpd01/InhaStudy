@@ -142,18 +142,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="InGameScene.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SceneRenderer.cpp" />
     <ClCompile Include="StartScene.cpp" />
-    <ClCompile Include="UI.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitmapManager.h" />
     <ClInclude Include="GameOptionManager.h" />
+    <ClInclude Include="GlobalValue.h" />
+    <ClInclude Include="InGameScene.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SceneRenderer.h" />
     <ClInclude Include="StartScene.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Window.h" />
@@ -162,9 +168,14 @@
     <ResourceCompile Include="CatWantSushi.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="CWSResource\background\InGameSceneBackground.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="CWSResource\background\StartSceneBackground.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="CWSResource\UI\InGameSceneUICatBlue.bmp" />
+    <Image Include="CWSResource\UI\InGameSceneUICatYellow.bmp" />
     <Image Include="CWSResource\UI\StartBtn.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

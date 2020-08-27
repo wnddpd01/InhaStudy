@@ -4,6 +4,7 @@
 class UI
 {
 	UINT ui_id_;
+	UINT ui_bitmap_id_;
 	RECT ui_rect_;
 #pragma region GetterAndSetter
 public:
@@ -18,6 +19,17 @@ public:
 	}
 
 	__declspec(property(get = ui_id, put = set_ui_id)) UINT UiId;
+	UINT ui_bitmap_id() const
+	{
+		return ui_bitmap_id_;
+	}
+
+	void set_ui_bitmap_id(UINT ui_bitmap_id)
+	{
+		ui_bitmap_id_ = ui_bitmap_id;
+	}
+
+	__declspec(property(get = ui_bitmap_id, put = set_ui_bitmap_id)) UINT UiBitmapId;
 	RECT ui_rect() const
 	{
 		return ui_rect_;
@@ -32,8 +44,9 @@ public:
 #pragma endregion
 
 public:
-	UI(UINT ui_id, RECT ui_rect)
+	UI(UINT ui_id, UINT ui_bitmap_id,RECT ui_rect)
 		: ui_id_(ui_id),
+		  ui_bitmap_id_(ui_bitmap_id),
 		ui_rect_(ui_rect)
 	{
 	}
@@ -44,7 +57,7 @@ public:
 	{
 		return PtInRect(&ui_rect_, pt);
 	}
-	void (*ui_proc)();
+	void (*ui_mouse_click)();
 	void(*ui_on_mouse)();
 };
 
