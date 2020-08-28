@@ -33,10 +33,33 @@ void SceneRenderer::DrawSceneUI(HDC hdc, const LPRECT paint_rect, std::vector<UI
 	HDC backHDC = CreateCompatibleDC(hdc);
 	for (UI * ui : scene_uis)
 	{
-		static BITMAP ui_bitmap;
-		SelectObject(backHDC, bitmap_manager->imageMap.find(ui->UiBitmapId)->second);
-		GetObject(bitmap_manager->imageMap.find(ui->UiBitmapId)->second, sizeof(BITMAP), &ui_bitmap);
-		TransparentBlt(hdc, ui->UiRect.left, ui->UiRect.top, ui->UiRect.right - ui->UiRect.left, ui->UiRect.bottom - ui->UiRect.top, backHDC, 0, 0, ui_bitmap.bmWidth, ui_bitmap.bmHeight, RGB(255, 0, 255));
+		ui->render(hdc, backHDC);
 	}
 	DeleteDC(backHDC);
+}
+
+void SceneRenderer::DrawSceneObeject(HDC hdc, const LPRECT paint_rect, std::vector<Object*> scene_objects)
+{
+	BitmapManager * bitmap_manager = BitmapManager::GetInstance();
+	HDC backHDC = CreateCompatibleDC(hdc);
+	for(Object * object : scene_objects)
+	{
+		object->render(hdc, backHDC);
+	}
+	DeleteDC(backHDC);
+}
+
+void SceneRenderer::DrawGrid(HDC hdc, const LPRECT paint_rect)
+{
+	GameOptionManager * game_option_manager = GameOptionManager::GetInstance();
+	for (size_t i = 0; i < game_option_manager->HorizontalGridCount; i++)
+	{
+		MoveToEx(hdc, i * game_option_manager->GameCellSize, 0, NULL);
+		LineTo(hdc, i * game_option_manager->GameCellSize, game_option_manager->GameHeight);
+	}
+	for (size_t i = 0; i < game_option_manager->VerticalGridCount; i++)
+	{
+		MoveToEx(hdc, 0, i * game_option_manager->GameCellSize, NULL);
+		LineTo(hdc, game_option_manager->GameWidth, i * game_option_manager->GameCellSize);
+	}
 }

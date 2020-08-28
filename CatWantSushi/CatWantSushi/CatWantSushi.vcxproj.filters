@@ -25,9 +25,6 @@
     <Filter Include="Resource\Bitmap">
       <UniqueIdentifier>{4329b7fd-fbf3-4868-952c-d53215478260}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI">
-      <UniqueIdentifier>{4c04bfdf-cc76-41e8-b7ee-f3d21a685d4b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Manager\GameOptionManager">
       <UniqueIdentifier>{38afbb59-6b89-4e38-954e-4a9d8887b539}</UniqueIdentifier>
     </Filter>
@@ -55,6 +52,18 @@
     <Filter Include="Resource\Bitmap\UI\Image">
       <UniqueIdentifier>{31817437-b47d-40a2-b92e-75968480a321}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\UI">
+      <UniqueIdentifier>{4c04bfdf-cc76-41e8-b7ee-f3d21a685d4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Bitmap\Object">
+      <UniqueIdentifier>{fbf460dc-d118-45a6-9441-4b1ae959f7b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\AnimateObject">
+      <UniqueIdentifier>{a876bc32-c468-4176-be90-b56046838c4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Player">
+      <UniqueIdentifier>{2684f9da-d3ba-4e30-bf82-221538c0d359}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -78,6 +87,12 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Scene\BaseScene</Filter>
     </ClCompile>
+    <ClCompile Include="AnimateObject.cpp">
+      <Filter>Object\AnimateObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Object\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -96,7 +111,7 @@
       <Filter>Resource</Filter>
     </ClInclude>
     <ClInclude Include="UI.h">
-      <Filter>UI</Filter>
+      <Filter>Object\UI</Filter>
     </ClInclude>
     <ClInclude Include="GameOptionManager.h">
       <Filter>Manager\GameOptionManager</Filter>
@@ -115,6 +130,12 @@
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimateObject.h">
+      <Filter>Object\AnimateObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Object\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -137,6 +158,15 @@
     </Image>
     <Image Include="CWSResource\UI\InGameSceneUICatYellow.bmp">
       <Filter>Resource\Bitmap\UI\Image</Filter>
+    </Image>
+    <Image Include="CWSResource\Object\Platform.bmp">
+      <Filter>Resource\Bitmap\Object</Filter>
+    </Image>
+    <Image Include="CWSResource\Object\Rail1.bmp">
+      <Filter>Resource\Bitmap\Object</Filter>
+    </Image>
+    <Image Include="CWSResource\Object\Rail2.bmp">
+      <Filter>Resource\Bitmap\Object</Filter>
     </Image>
   </ItemGroup>
 </Project>

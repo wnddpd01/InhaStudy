@@ -3,7 +3,12 @@
 
 enum ingame_scene_ui_id
 {
-	
+};
+
+enum ingame_object_id
+{
+
+	IMAGE_YELLOW_CAT = 0, IMAGE_BLUE_CAT, OBJECT_PLATFORM, ANIMATED_OBJECT_RAIL
 };
 
 class InGameScene :
@@ -11,6 +16,7 @@ class InGameScene :
 {
 protected:
 	void CreateUI() override;
+	void CreateObject() override;
 public:
 	InGameScene();
 	~InGameScene();

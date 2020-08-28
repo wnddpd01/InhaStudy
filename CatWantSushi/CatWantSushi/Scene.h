@@ -4,14 +4,16 @@
 #include "SceneRenderer.h"
 #pragma comment (lib, "Msimg32.lib")
 
+class Object;
 class UI;
-
 class Scene
 {
 protected:
-	std::vector<UI *> scene_UI_;
+	std::vector<Object *> scene_objects_;
+	std::vector<UI *> scene_uis_;
 	static SceneRenderer scene_renderer_;
-	virtual void CreateUI() = 0;
+	virtual void CreateUI(){}
+	virtual void CreateObject(){}
 public:
 	Scene() = default;
 

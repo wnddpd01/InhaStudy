@@ -142,8 +142,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnimateObject.cpp" />
     <ClCompile Include="InGameScene.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneRenderer.cpp" />
@@ -151,11 +153,13 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimateObject.h" />
     <ClInclude Include="BitmapManager.h" />
     <ClInclude Include="GameOptionManager.h" />
     <ClInclude Include="GlobalValue.h" />
     <ClInclude Include="InGameScene.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
@@ -174,9 +178,20 @@
     <Image Include="CWSResource\background\StartSceneBackground.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="CWSResource\UI\InGameSceneUICatBlue.bmp" />
-    <Image Include="CWSResource\UI\InGameSceneUICatYellow.bmp" />
-    <Image Include="CWSResource\UI\StartBtn.bmp" />
+    <Image Include="CWSResource\Object\Platform.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\Object\Rail1.bmp" />
+    <Image Include="CWSResource\Object\Rail2.bmp" />
+    <Image Include="CWSResource\UI\InGameSceneUICatBlue.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\UI\InGameSceneUICatYellow.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\UI\StartBtn.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

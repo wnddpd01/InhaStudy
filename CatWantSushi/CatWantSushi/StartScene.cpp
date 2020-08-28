@@ -34,13 +34,13 @@ void StartScene::DrawUI(HDC hdc, const LPRECT paint_rect)
 void StartScene::CreateUI()
 {
 	GameOptionManager *game_option_manager = GameOptionManager::GetInstance();
-	size_t cellSize = game_option_manager->GameHeight / game_option_manager->VerticalGridCount;
-	LONG startBtnLeft = cellSize * (game_option_manager->HorizontalGridCount / 2 - 2);
-	LONG startBtnTop = cellSize * (game_option_manager->VerticalGridCount / 2 + 3);
-	RECT startBtnRect = { startBtnLeft, startBtnTop, startBtnLeft + cellSize * 4, startBtnTop + cellSize * 2 };
-	UI * startBtn = new UI(BTN_START,BITMAP_START_BTN, startBtnRect);
+	//size_t cellSize = game_option_manager->GameHeight / game_option_manager->VerticalGridCount;
+	LONG startBtnLeft =(game_option_manager->HorizontalGridCount / 2 - 4);
+	LONG startBtnTop = (game_option_manager->VerticalGridCount / 2 + 6);
+	//RECT startBtnRect = { startBtnLeft, startBtnTop, startBtnLeft + cellSize * 4, startBtnTop + cellSize * 2 };
+	UI * startBtn = new UI(BTN_START,BITMAP_START_BTN, startBtnLeft, startBtnTop, 8 , 4);
 	startBtn->ui_mouse_click = StartBtnClick;
-	scene_UI_.push_back(startBtn);
+	scene_uis_.push_back(startBtn);
 }
 
 StartScene::StartScene()
@@ -64,7 +64,8 @@ void StartScene::update()
 void StartScene::render(HDC hdc, const LPRECT paint_rect)
 {
 	scene_renderer_.DrawSceneBackground(hdc, paint_rect, BITMAP_START_SCENE_BACKGROUND);
-	scene_renderer_.DrawSceneUI(hdc, paint_rect, scene_UI_);
+	scene_renderer_.DrawSceneUI(hdc, paint_rect, scene_uis_);
+	scene_renderer_.DrawGrid(hdc, paint_rect);
 }
 
 void StartScene::free()
@@ -73,7 +74,7 @@ void StartScene::free()
 
 void StartScene::mouse_left_up(POINT & pt)
 {
-	for(UI * ui : scene_UI_)
+	for(UI * ui : scene_uis_)
 	{
 		if (ui->PointInUI(pt))
 			ui->ui_mouse_click();

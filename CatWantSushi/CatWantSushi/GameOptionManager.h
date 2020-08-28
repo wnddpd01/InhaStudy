@@ -6,12 +6,14 @@ class GameOptionManager
 	{
 		GameWidth = 1280;
 		GameHeight = 720;
-		HorizontalGridCount = 32;
-		VerticalGridCount = 18;
+		HorizontalGridCount = 64;
+		VerticalGridCount = 36;
+		GameCellSize = GameWidth / HorizontalGridCount;
 		frame_ = 30;
 	}
 	UINT game_width_;
 	UINT game_height_;
+	UINT game_cell_size_;
 	size_t horizontal_grid_count_;
 	size_t vertical_grid_count_;
 	UCHAR frame_;
@@ -40,6 +42,18 @@ public:
 	}
 
 	__declspec(property(get = game_height, put = set_game_height)) UINT GameHeight;
+
+	UINT game_cell_size() const
+	{
+		return game_cell_size_;
+	}
+
+	void set_game_cell_size(UINT game_cell_size)
+	{
+		game_cell_size_ = game_cell_size;
+	}
+
+	__declspec(property(get = game_cell_size, put = set_game_cell_size)) UINT GameCellSize;
 
 	size_t horizontal_grid_count() const
 	{
