@@ -4,8 +4,8 @@ class GameOptionManager
 {
 	GameOptionManager()
 	{
-		GameWidth = 1280;
-		GameHeight = 720;
+		GameWidth = 1920;
+		GameHeight = 1080;
 		HorizontalGridCount = 64;
 		VerticalGridCount = 36;
 		GameCellSize = GameWidth / HorizontalGridCount;

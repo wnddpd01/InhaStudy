@@ -178,6 +178,7 @@
     <Image Include="CWSResource\background\StartSceneBackground.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="CWSResource\cat_blue\CAT_BLUE.bmp" />
     <Image Include="CWSResource\Object\Platform.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>

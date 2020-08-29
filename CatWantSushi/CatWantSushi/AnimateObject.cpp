@@ -3,16 +3,18 @@
 
 void AnimateObject::render(HDC hdc, HDC backHDC)
 {
-	static UINT cnt = 0;
-	cnt += 1;
-	if(cnt == animation_change_frame_count_)
+	current_frame_++;
+	if(current_frame_ == animation_change_frame_count_)
 	{
-		cnt = 0;
-		++current_animaiton_frame_;
-		if (current_animaiton_frame_ == animation_size_)
-			current_animaiton_frame_ = 0;
-		ObjectBitmapId = animation_bitmap_ids_[current_animaiton_frame_];
+		if (current_animation_idx_ < animation_size_)
+		{
+			ObjectBitmapId = animation_bitmap_ids_[current_animation_idx_];
+			++current_animation_idx_;
+		}
+		current_frame_ = 0;
 	}
+	if (current_animation_idx_ == animation_size_ && is_loop_ == TRUE)
+		current_animation_idx_ = 0;
 	Object::render(hdc, backHDC);
 }
 

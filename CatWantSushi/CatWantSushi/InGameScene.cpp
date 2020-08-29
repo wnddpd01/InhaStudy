@@ -5,6 +5,7 @@
 #include "GlobalValue.h"
 #include "UI.h"
 #include "AnimateObject.h"
+#include "Player.h"
 
 extern SceneRenderer scene_renderer_;
 
@@ -25,7 +26,7 @@ void InGameScene::CreateObject()
 
 	LONG blueCatLeft = game_option_manager->HorizontalGridCount - 5;
 	LONG blueCatTop = 0;
-	Object * blueCat = new Object(IMAGE_BLUE_CAT, BITMAP_INGAME_SCENE_UI_CAT_BLUE, blueCatLeft, blueCatTop, 5, 6);
+	Object * blueCat = new Object(IMAGE_BLUE_CAT, BITMAP_INGAME_SCENE_UI_CAT_BLUE, blueCatLeft, blueCatTop, 5, 6, dir_left);
 	scene_objects_.push_back(blueCat);
 
 	LONG railLeft = 0;
@@ -55,7 +56,13 @@ void InGameScene::CreateObject()
 	LONG topPlatFormTop = leftPlatFormTop - 9 - 1;
 	Object * topPlatform = new Object(OBJECT_PLATFORM, BITMAP_OBJECT_PLATFORM, topPlatFormleft, topPlatFormTop, 12, 1);
 	scene_objects_.push_back(topPlatform);
-
+	
+	LONG playerLeft = 0;
+	LONG playerTop = basePlatFormTop - 7;
+	UCHAR * playerAnimationBitmapIds = new UCHAR;
+	*playerAnimationBitmapIds = BITMAP_CAT_BLUE_IDLE;
+	Player * player = new Player(PLAYER_BLUE, BITMAP_CAT_BLUE_IDLE, playerLeft, playerTop, 7, 7, FALSE, 1, 0, 0, playerAnimationBitmapIds);
+	scene_objects_.push_back(player);
 }
 
 InGameScene::InGameScene()

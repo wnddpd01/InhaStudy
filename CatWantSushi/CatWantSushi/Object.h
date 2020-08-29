@@ -7,6 +7,10 @@ struct POINT_UCHAR
 	UCHAR y;
 };
 
+enum direction : BOOL
+{
+	dir_left = 0, dir_right
+};
 class Object
 {
 	UINT object_id_;
@@ -14,7 +18,6 @@ class Object
 	POINT_UCHAR object_pos_;
 	POINT_UCHAR object_width_height_;
 	RECT object_rect_;
-
 	void set_object_rect()
 	{
 		GameOptionManager  * game_option_manager = GameOptionManager::GetInstance();
@@ -86,9 +89,10 @@ public:
 
 	__declspec(property(get = object_rect, put = set_object_rect1)) RECT ObjectRect;
 #pragma endregion
-
+protected:
+	direction direction_;
 public:
-	Object(UINT object_id, UINT object_bitmap_id, const UCHAR &posX, const UCHAR &posY, const UCHAR &width, const UCHAR &height)
+	Object(UINT object_id, UINT object_bitmap_id, const UCHAR &posX, const UCHAR &posY, const UCHAR &width, const UCHAR &height, direction direction = dir_right)
 		: object_id_(object_id),
 		object_bitmap_id_(object_bitmap_id)
 	{
@@ -96,6 +100,7 @@ public:
 		object_pos_.y = posY;
 		object_width_height_.x = width;
 		object_width_height_.y = height;
+		direction_ = direction;
 		set_object_rect();
 	}
 	Object() = default;
@@ -108,9 +113,27 @@ public:
 inline void Object::render(HDC hdc, HDC backHDC)
 {
 	static BITMAP object_bitmap;
-	auto bitmap_manager = BitmapManager::GetInstance();
-	SelectObject(backHDC, bitmap_manager->imageMap.find(ObjectBitmapId)->second);
+	static auto bitmap_manager = BitmapManager::GetInstance();
 	GetObject(bitmap_manager->imageMap.find(ObjectBitmapId)->second, sizeof(BITMAP), &object_bitmap);
-	TransparentBlt(hdc, ObjectRect.left, ObjectRect.top, ObjectRect.right - ObjectRect.left, ObjectRect.bottom - ObjectRect.top, backHDC, 0, 0, object_bitmap.bmWidth, object_bitmap.bmHeight, RGB(255, 0, 255));
+	if (direction_ == dir_right)
+	{
+		SelectObject(backHDC, bitmap_manager->imageMap.find(ObjectBitmapId)->second);
+		TransparentBlt(hdc, ObjectRect.left, ObjectRect.top, ObjectRect.right - ObjectRect.left, ObjectRect.bottom - ObjectRect.top, backHDC, 0, 0, object_bitmap.bmWidth, object_bitmap.bmHeight, RGB(255, 0, 255));
+	}
+	else
+	{
+		HDC reverseHDC = CreateCompatibleDC(backHDC);
+		SelectObject(reverseHDC, bitmap_manager->imageMap.find(ObjectBitmapId)->second);
+		
+		HBITMAP backHBIT = CreateCompatibleBitmap(hdc, object_bitmap.bmWidth, object_bitmap.bmHeight);
+		SelectObject(backHDC, backHBIT);
+		
+		StretchBlt(backHDC, object_bitmap.bmWidth - 1, 0, -object_bitmap.bmWidth, object_bitmap.bmHeight, reverseHDC, 0, 0, object_bitmap.bmWidth, object_bitmap.bmHeight, SRCCOPY);
+		TransparentBlt(hdc, ObjectRect.left, ObjectRect.top, ObjectRect.right - ObjectRect.left, ObjectRect.bottom - ObjectRect.top, backHDC, 0, 0, object_bitmap.bmWidth, object_bitmap.bmHeight, RGB(255, 0, 255));
+		DeleteDC(reverseHDC);
+		DeleteObject(backHBIT);
+	}
+
+
 }
 

@@ -3,12 +3,13 @@
 
 enum ingame_scene_ui_id
 {
+	IMAGE_YELLOW_CAT = 0, IMAGE_BLUE_CAT
 };
 
 enum ingame_object_id
 {
 
-	IMAGE_YELLOW_CAT = 0, IMAGE_BLUE_CAT, OBJECT_PLATFORM, ANIMATED_OBJECT_RAIL
+	OBJECT_PLATFORM = 0, ANIMATED_OBJECT_RAIL, PLAYER_BLUE
 };
 
 enum tile_state : UCHAR

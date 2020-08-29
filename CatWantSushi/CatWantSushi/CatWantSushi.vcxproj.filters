@@ -64,6 +64,9 @@
     <Filter Include="Object\Player">
       <UniqueIdentifier>{2684f9da-d3ba-4e30-bf82-221538c0d359}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource\Bitmap\Player_CatBlue">
+      <UniqueIdentifier>{f9ed4718-a0ce-4319-b491-0c99ee66fc22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -167,6 +170,9 @@
     </Image>
     <Image Include="CWSResource\Object\Rail2.bmp">
       <Filter>Resource\Bitmap\Object</Filter>
+    </Image>
+    <Image Include="CWSResource\cat_blue\CAT_BLUE.bmp">
+      <Filter>Resource\Bitmap\Player_CatBlue</Filter>
     </Image>
   </ItemGroup>
 </Project>

@@ -16,6 +16,7 @@ class BitmapManager
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_OBJECT_PLATFORM, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_OBJECT_PLATFORM))));
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_OBJECT_RAIL_1, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_OBJECT_RAIL_1))));
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_OBJECT_RAIL_2, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_OBJECT_RAIL_2))));
+		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_CAT_BLUE_IDLE, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_CAT_BLUE_IDLE))));
 	}
 public:
 	std::map<UINT, HBITMAP> imageMap;
