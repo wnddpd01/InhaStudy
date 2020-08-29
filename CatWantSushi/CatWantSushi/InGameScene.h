@@ -11,6 +11,11 @@ enum ingame_object_id
 	IMAGE_YELLOW_CAT = 0, IMAGE_BLUE_CAT, OBJECT_PLATFORM, ANIMATED_OBJECT_RAIL
 };
 
+enum tile_state : UCHAR
+{
+	TILE_NULL = 0, TILE_PLATFORM
+};
+
 class InGameScene :
 	public Scene
 {
