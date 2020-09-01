@@ -1,15 +1,25 @@
 #pragma once
+#include <vector>
 #include <Windows.h>
+
+enum shortCut : UCHAR
+{
+	player1_move_left = 0, player1_move_right, player1_jump
+};
+
 class GameOptionManager
 {
 	GameOptionManager()
 	{
-		GameWidth = 1920;
-		GameHeight = 1080;
+		GameWidth = 1600;
+		GameHeight = 900;
 		HorizontalGridCount = 64;
 		VerticalGridCount = 36;
 		GameCellSize = GameWidth / HorizontalGridCount;
-		frame_ = 30;
+		Frame = 60;
+		shortCutKeyList.push_back(VK_LEFT);
+		shortCutKeyList.push_back(VK_RIGHT);
+		shortCutKeyList.push_back(VK_UP);
 	}
 	UINT game_width_;
 	UINT game_height_;
@@ -17,9 +27,10 @@ class GameOptionManager
 	size_t horizontal_grid_count_;
 	size_t vertical_grid_count_;
 	UCHAR frame_;
+
 #pragma region GetterAndSetter
 public:
-	UINT game_width() const
+	UINT get_game_width() const
 	{
 		return game_width_;
 	}
@@ -29,9 +40,9 @@ public:
 		game_width_ = game_width;
 	}
 
-	__declspec(property(get = game_width, put = set_game_width)) UINT GameWidth;
+	__declspec(property(get = get_game_width, put = set_game_width)) UINT GameWidth;
 
-	UINT game_height() const
+	UINT get_game_height() const
 	{
 		return game_height_;
 	}
@@ -41,9 +52,9 @@ public:
 		game_height_ = game_height;
 	}
 
-	__declspec(property(get = game_height, put = set_game_height)) UINT GameHeight;
+	__declspec(property(get = get_game_height, put = set_game_height)) UINT GameHeight;
 
-	UINT game_cell_size() const
+	UINT get_game_cell_size() const
 	{
 		return game_cell_size_;
 	}
@@ -53,9 +64,9 @@ public:
 		game_cell_size_ = game_cell_size;
 	}
 
-	__declspec(property(get = game_cell_size, put = set_game_cell_size)) UINT GameCellSize;
+	__declspec(property(get = get_game_cell_size, put = set_game_cell_size)) UINT GameCellSize;
 
-	size_t horizontal_grid_count() const
+	size_t get_horizontal_grid_count() const
 	{
 		return horizontal_grid_count_;
 	}
@@ -65,9 +76,9 @@ public:
 		horizontal_grid_count_ = horizontal_grid_count;
 	}
 
-	__declspec(property(get = horizontal_grid_count, put = set_horizontal_grid_count)) size_t HorizontalGridCount;
+	__declspec(property(get = get_horizontal_grid_count, put = set_horizontal_grid_count)) size_t HorizontalGridCount;
 
-	size_t vertical_grid_count() const
+	size_t get_vertical_grid_count() const
 	{
 		return vertical_grid_count_;
 	}
@@ -77,9 +88,9 @@ public:
 		vertical_grid_count_ = vertical_grid_count;
 	}
 
-	__declspec(property(get = vertical_grid_count, put = set_vertical_grid_count)) size_t VerticalGridCount;
+	__declspec(property(get = get_vertical_grid_count, put = set_vertical_grid_count)) size_t VerticalGridCount;
 
-	UCHAR frame() const
+	UCHAR get_frame() const
 	{
 		return frame_;
 	}
@@ -89,9 +100,13 @@ public:
 		frame_ = frame;
 	}
 
-	__declspec(property(get = frame, put = set_frame)) UCHAR Frame;
+	__declspec(property(get = get_frame, put = set_frame)) UCHAR Frame;
+
 #pragma endregion
-public :
+
+public:
+	std::vector<UCHAR> shortCutKeyList;
+	
 	static GameOptionManager * GetInstance()
 	{
 		static GameOptionManager ins;

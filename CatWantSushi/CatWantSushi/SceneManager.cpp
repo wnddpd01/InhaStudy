@@ -41,6 +41,11 @@ void SceneManager::scene_change(WPARAM next_scene)
 	}
 }
 
+void SceneManager::keyboard_input_handle(UCHAR key)
+{
+	cur_scene_->keyInputHandle(key);
+}
+
 void SceneManager::mouse_event_handle(WPARAM event_name, POINT& pt)
 {
 	switch (event_name)
@@ -53,6 +58,11 @@ void SceneManager::mouse_event_handle(WPARAM event_name, POINT& pt)
 	default:
 		break;
 	}
+}
+
+void SceneManager::update()
+{
+	cur_scene_->update();
 }
 
 

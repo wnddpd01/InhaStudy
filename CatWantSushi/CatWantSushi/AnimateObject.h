@@ -3,7 +3,7 @@
 class AnimateObject :
 	public Object
 {
-private:
+protected:
 	BOOL is_loop_;
 	UCHAR animation_size_;
 	UCHAR current_frame_;

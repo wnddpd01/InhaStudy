@@ -5,7 +5,7 @@
 
 enum TimerID
 {
-	TimerRender = 0
+	TimerGameLoop = 0
 };
 
 class Window

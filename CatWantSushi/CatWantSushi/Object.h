@@ -13,6 +13,8 @@ enum direction : BOOL
 };
 class Object
 {
+
+protected:
 	UINT object_id_;
 	UINT object_bitmap_id_;
 	POINT_UCHAR object_pos_;
@@ -20,12 +22,14 @@ class Object
 	RECT object_rect_;
 	void set_object_rect()
 	{
-		GameOptionManager  * game_option_manager = GameOptionManager::GetInstance();
+		GameOptionManager* game_option_manager = GameOptionManager::GetInstance();
 		object_rect_.left = game_option_manager->GameCellSize * object_pos_.x;
 		object_rect_.top = game_option_manager->GameCellSize * object_pos_.y;
 		object_rect_.right = game_option_manager->GameCellSize * object_width_height_.x + object_rect_.left;
 		object_rect_.bottom = game_option_manager->GameCellSize * object_width_height_.y + object_rect_.top;
 	}
+	direction direction_;
+public:
 #pragma region GetterAndSetter
 
 public:
@@ -82,16 +86,13 @@ public:
 		return object_rect_;
 	}
 
-	void set_object_rect1(const RECT& object_rect)
+	void set_object_rect(const RECT& object_rect)
 	{
 		object_rect_ = object_rect;
 	}
 
-	__declspec(property(get = object_rect, put = set_object_rect1)) RECT ObjectRect;
+	__declspec(property(get = object_rect, put = set_object_rect)) RECT ObjectRect;
 #pragma endregion
-protected:
-	direction direction_;
-public:
 	Object(UINT object_id, UINT object_bitmap_id, const UCHAR &posX, const UCHAR &posY, const UCHAR &width, const UCHAR &height, direction direction = dir_right)
 		: object_id_(object_id),
 		object_bitmap_id_(object_bitmap_id)
@@ -108,6 +109,7 @@ public:
 	{}
 
 	virtual void render(HDC hdc, HDC backHDC);
+	virtual void update() { };
 };
 
 inline void Object::render(HDC hdc, HDC backHDC)

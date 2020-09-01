@@ -1,6 +1,8 @@
 #pragma once
 #include "Scene.h"
 
+class Player;
+
 enum ingame_scene_ui_id
 {
 	IMAGE_YELLOW_CAT = 0, IMAGE_BLUE_CAT
@@ -20,6 +22,7 @@ enum tile_state : UCHAR
 class InGameScene :
 	public Scene
 {
+	Player* player1;
 protected:
 	void CreateUI() override;
 	void CreateObject() override;
@@ -30,5 +33,7 @@ public:
 	void update() override;
 	void render(HDC hdc, const LPRECT paint_rect) override;
 	void free() override;
+
+	void keyInputHandle(UCHAR key) override;
 };
 

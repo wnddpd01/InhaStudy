@@ -31,10 +31,12 @@ public:
 		return &ins;
 	}
 
+	void keyboard_input_handle(UCHAR key);
+	void mouse_event_handle(WPARAM event_name, POINT& pt);
+	void update();
 	void render(LPPAINTSTRUCT ps);
 	void scene_change(WPARAM next_scene);
 
-	void mouse_event_handle(WPARAM event_name, POINT & pt);
 	
 	~SceneManager();
 };

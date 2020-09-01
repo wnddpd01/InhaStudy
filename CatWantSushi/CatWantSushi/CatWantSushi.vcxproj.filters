@@ -174,5 +174,14 @@
     <Image Include="CWSResource\cat_blue\CAT_BLUE.bmp">
       <Filter>Resource\Bitmap\Player_CatBlue</Filter>
     </Image>
+    <Image Include="CWSResource\cat_blue\CAT_BLUE_WALK_1.bmp">
+      <Filter>Resource\Bitmap\Player_CatBlue</Filter>
+    </Image>
+    <Image Include="CWSResource\cat_blue\CAT_BLUE_WALK_2.bmp">
+      <Filter>Resource\Bitmap\Player_CatBlue</Filter>
+    </Image>
+    <Image Include="CWSResource\cat_blue\CAT_BLUE_WALK_3.bmp">
+      <Filter>Resource\Bitmap\Player_CatBlue</Filter>
+    </Image>
   </ItemGroup>
 </Project>

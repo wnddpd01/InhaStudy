@@ -59,10 +59,8 @@ void InGameScene::CreateObject()
 	
 	LONG playerLeft = 0;
 	LONG playerTop = basePlatFormTop - 7;
-	UCHAR * playerAnimationBitmapIds = new UCHAR;
-	*playerAnimationBitmapIds = BITMAP_CAT_BLUE_IDLE;
-	Player * player = new Player(PLAYER_BLUE, BITMAP_CAT_BLUE_IDLE, playerLeft, playerTop, 7, 7, FALSE, 1, 0, 0, playerAnimationBitmapIds);
-	scene_objects_.push_back(player);
+	player1 = new Player(PLAYER_BLUE, BITMAP_CAT_BLUE_IDLE, playerLeft, playerTop, 7, 7, FALSE, 1, 0, 0, nullptr);
+	scene_objects_.push_back(player1);
 }
 
 InGameScene::InGameScene()
@@ -82,6 +80,10 @@ void InGameScene::init()
 
 void InGameScene::update()
 {
+	for(Object * object : scene_objects_)
+	{
+		object->update();
+	}
 }
 
 void InGameScene::render(HDC hdc, const LPRECT paint_rect)
@@ -94,4 +96,21 @@ void InGameScene::render(HDC hdc, const LPRECT paint_rect)
 
 void InGameScene::free()
 {
+}
+
+void InGameScene::keyInputHandle(UCHAR key)
+{
+	static auto * game_option_manager = GameOptionManager::GetInstance();
+	if(key == game_option_manager->shortCutKeyList[player1_move_left])
+	{
+		player1->PlayerMove(dir_left);
+	}
+	else if(key == game_option_manager->shortCutKeyList[player1_move_right])
+	{
+		player1->PlayerMove(dir_right);
+	}
+	else if(key == game_option_manager->shortCutKeyList[player1_jump])
+	{
+		player1->PlayerJump();
+	}
 }

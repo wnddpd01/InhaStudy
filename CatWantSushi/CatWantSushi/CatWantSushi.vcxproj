@@ -22,7 +22,7 @@
     <ProjectGuid>{8F914D9B-5C03-4484-8A0C-5E73A267D086}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>CatWantSushi</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -41,7 +41,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -169,7 +169,9 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="CatWantSushi.rc" />
+    <ResourceCompile Include="CatWantSushi.rc">
+      <DeploymentContent>false</DeploymentContent>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="CWSResource\background\InGameSceneBackground.bmp">
@@ -178,12 +180,27 @@
     <Image Include="CWSResource\background\StartSceneBackground.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="CWSResource\cat_blue\CAT_BLUE.bmp" />
+    <Image Include="CWSResource\cat_blue\CAT_BLUE.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\cat_blue\CAT_BLUE_WALK_1.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\cat_blue\CAT_BLUE_WALK_2.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\cat_blue\CAT_BLUE_WALK_3.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="CWSResource\Object\Platform.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="CWSResource\Object\Rail1.bmp" />
-    <Image Include="CWSResource\Object\Rail2.bmp" />
+    <Image Include="CWSResource\Object\Rail1.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\Object\Rail2.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="CWSResource\UI\InGameSceneUICatBlue.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>

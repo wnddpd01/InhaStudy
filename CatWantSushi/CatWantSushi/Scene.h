@@ -22,6 +22,7 @@ public:
 	virtual void render(HDC hdc, const LPRECT paint_rect) = 0;
 	virtual void free() = 0;
 
+	virtual void keyInputHandle(UCHAR key) {}
 	virtual void mouse_left_up(POINT & pt){}
 	virtual void mouse_move(POINT & pt){}
 	

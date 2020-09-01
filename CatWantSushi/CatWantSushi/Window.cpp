@@ -6,21 +6,33 @@
 Window* window = NULL;
 
 auto gameOptionManager = GameOptionManager::GetInstance();
+SceneManager& scene_manager = *(SceneManager::getInstance());
+
+void InputHandle()
+{
+	for (UCHAR shortCut : gameOptionManager->shortCutKeyList)
+	{
+		if (GetKeyState(shortCut) & 0x8000)
+		{
+			scene_manager.keyboard_input_handle(shortCut);
+		}
+	}
+}
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	static SceneManager & scene_manager = *(SceneManager::getInstance());
 	PAINTSTRUCT ps;
 	switch (msg)
 	{
 	case WM_CREATE:
 	{
 		window->on_create();
-		SetTimer(hwnd, TimerRender, 1000 / gameOptionManager->Frame, NULL);
+		SetTimer(hwnd, TimerGameLoop, 1000 / gameOptionManager->Frame, NULL);
 		break;
 	}
 	case WM_DESTROY:
 	{
+
 		window->on_destroy();
 		PostQuitMessage(0);
 		break;
@@ -36,8 +48,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (wParam)
 		{
-		case TimerRender:
+		case TimerGameLoop:
 		{
+			InputHandle();
+			scene_manager.update();
 			InvalidateRect(hwnd, NULL, FALSE);
 			break;
 		}
