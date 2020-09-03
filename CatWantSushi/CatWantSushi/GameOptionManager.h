@@ -11,19 +11,19 @@ class GameOptionManager
 {
 	GameOptionManager()
 	{
-		GameWidth = 1600;
-		GameHeight = 900;
+		GameWidth = 1920;
+		GameHeight = 1080;
 		HorizontalGridCount = 64;
 		VerticalGridCount = 36;
 		GameCellSize = GameWidth / HorizontalGridCount;
-		Frame = 60;
+		Frame = 5;
 		shortCutKeyList.push_back(VK_LEFT);
 		shortCutKeyList.push_back(VK_RIGHT);
 		shortCutKeyList.push_back(VK_UP);
 	}
 	UINT game_width_;
 	UINT game_height_;
-	UINT game_cell_size_;
+	LONG game_cell_size_;
 	size_t horizontal_grid_count_;
 	size_t vertical_grid_count_;
 	UCHAR frame_;
@@ -54,7 +54,7 @@ public:
 
 	__declspec(property(get = get_game_height, put = set_game_height)) UINT GameHeight;
 
-	UINT get_game_cell_size() const
+	LONG get_game_cell_size() const
 	{
 		return game_cell_size_;
 	}
@@ -64,7 +64,7 @@ public:
 		game_cell_size_ = game_cell_size;
 	}
 
-	__declspec(property(get = get_game_cell_size, put = set_game_cell_size)) UINT GameCellSize;
+	__declspec(property(get = get_game_cell_size, put = set_game_cell_size)) LONG GameCellSize;
 
 	size_t get_horizontal_grid_count() const
 	{

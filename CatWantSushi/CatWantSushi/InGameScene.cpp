@@ -8,6 +8,7 @@
 #include "Player.h"
 
 extern SceneRenderer scene_renderer_;
+GameOptionManager* game_option_manager = GameOptionManager::GetInstance();
 
 void InGameScene::CreateUI()
 {
@@ -16,7 +17,6 @@ void InGameScene::CreateUI()
 
 void InGameScene::CreateObject()
 {
-	GameOptionManager *game_option_manager = GameOptionManager::GetInstance();
 	//size_t cellSize = game_option_manager->GameHeight / game_option_manager->VerticalGridCount;
 	LONG yellowCatLeft = 0;
 	LONG yellowCatTop = 0;
@@ -61,12 +61,39 @@ void InGameScene::CreateObject()
 	LONG playerTop = basePlatFormTop - 7;
 	player1 = new Player(PLAYER_BLUE, BITMAP_CAT_BLUE_IDLE, playerLeft, playerTop, 7, 7, FALSE, 1, 0, 0, nullptr);
 	scene_objects_.push_back(player1);
+
+}
+
+void InGameScene::SetMap()
+{
+	map_ = new tile_state*[game_option_manager->VerticalGridCount];
+	for (size_t i = 0; i < game_option_manager->VerticalGridCount; i++)
+	{
+		map_[i] = new tile_state[game_option_manager->HorizontalGridCount];
+		memset(map_[i], TILE_NULL, sizeof(tile_state) * game_option_manager->HorizontalGridCount);
+	}
+	for(Object * object : scene_objects_)
+	{
+		if(object->ObjectId == OBJECT_PLATFORM)
+		{
+			for (size_t i = 0; i < object->ObjectWidthHeight.y; i++)
+			{
+				for (size_t j = 0; j < object->ObjectWidthHeight.x; j++)
+				{
+					map_[object->ObjectPos.y + i][object->ObjectPos.x + j] = TILE_PLATFORM;
+				}
+			}
+		}
+	}
+	
 }
 
 InGameScene::InGameScene()
 {
 	CreateUI();
 	CreateObject();
+	SetMap();
+	player1->LoadMap(map_);
 }
 
 
@@ -91,7 +118,7 @@ void InGameScene::render(HDC hdc, const LPRECT paint_rect)
 	scene_renderer_.DrawSceneBackground(hdc, paint_rect, BITMAP_INGAME_SCENE_BACKGROUND);
 	scene_renderer_.DrawSceneUI(hdc, paint_rect, scene_uis_);
 	scene_renderer_.DrawSceneObeject(hdc, paint_rect, scene_objects_);
-	//scene_renderer_.DrawGrid(hdc, paint_rect);
+	scene_renderer_.DrawGrid(hdc, paint_rect);
 }
 
 void InGameScene::free()

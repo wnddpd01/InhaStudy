@@ -17,9 +17,11 @@ class Object
 protected:
 	UINT object_id_;
 	UINT object_bitmap_id_;
-	POINT_UCHAR object_pos_;
+	POINT object_pos_;
 	POINT_UCHAR object_width_height_;
 	RECT object_rect_;
+	direction direction_;
+	
 	void set_object_rect()
 	{
 		GameOptionManager* game_option_manager = GameOptionManager::GetInstance();
@@ -28,7 +30,13 @@ protected:
 		object_rect_.right = game_option_manager->GameCellSize * object_width_height_.x + object_rect_.left;
 		object_rect_.bottom = game_option_manager->GameCellSize * object_width_height_.y + object_rect_.top;
 	}
-	direction direction_;
+
+	void set_object_pos()
+	{
+		GameOptionManager* game_option_manager = GameOptionManager::GetInstance();
+		object_pos_.x = LONG(object_rect_.left / game_option_manager->GameCellSize);
+		object_pos_.y = LONG(object_rect_.top / game_option_manager->GameCellSize);
+	}
 public:
 #pragma region GetterAndSetter
 
@@ -57,17 +65,17 @@ public:
 
 	__declspec(property(get = object_bitmap_id, put = set_object_bitmap_id)) UINT ObjectBitmapId;
 
-	POINT_UCHAR object_pos() const
+	POINT object_pos() const
 	{
 		return object_pos_;
 	}
 
-	void set_object_pos(const POINT_UCHAR& object_pos)
+	void set_object_pos(const POINT& object_pos)
 	{
 		object_pos_ = object_pos;
 	}
 
-	__declspec(property(get = object_pos, put = set_object_pos)) POINT_UCHAR ObjectPos;
+	__declspec(property(get = object_pos, put = set_object_pos)) POINT ObjectPos;
 
 	POINT_UCHAR object_width_height() const
 	{

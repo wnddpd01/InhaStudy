@@ -23,9 +23,11 @@ class InGameScene :
 	public Scene
 {
 	Player* player1;
+	tile_state **map_;
 protected:
 	void CreateUI() override;
 	void CreateObject() override;
+	void SetMap();
 public:
 	InGameScene();
 	~InGameScene();

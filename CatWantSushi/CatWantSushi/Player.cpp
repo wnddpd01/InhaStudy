@@ -1,5 +1,5 @@
 #include "Player.h"
-
+#include "InGameScene.h"
 
 void Player::LoadPlayerBitmap(player_type player_type)
 {
@@ -26,24 +26,25 @@ void Player::PlayerMove(UCHAR dir)
 	{
 		set_animation(player_walk);
 	}
-	direction_ = direction(dir);
+	if(dir != direction_)
+		direction_ = direction(dir);
 	if(dir == dir_left)
 	{
-		if (x_fos_ > -max_x_fos)
+		if (x_fos_ > -max_x_fos_)
 		{
-			x_fos_ -= 2;
+			x_fos_ -= x_spd_;
 		}
 		else
-			x_fos_ = -max_x_fos;
+			x_fos_ = -max_x_fos_;
 	}
 	else if(dir == dir_right)
 	{
-		if (x_fos_ < max_x_fos)
+		if (x_fos_ < max_x_fos_)
 		{
-			x_fos_ += 2;
+			x_fos_ += x_spd_;
 		}
 		else
-			x_fos_ = max_x_fos;
+			x_fos_ = max_x_fos_;
 	}
 	
 }
@@ -52,7 +53,13 @@ void Player::PlayerJump()
 {
 	if (isOnLand() == TRUE)
 	{
-		y_fos_ = 10;
+		y_fos_ = jump_power_;
+		player_rect_.top -= y_fos_;
+		player_rect_.bottom -= y_fos_;
+		object_rect_.top = player_rect_.top;
+		object_rect_.bottom = player_rect_.bottom;
+		y_fos_ -= gravity_;
+		set_object_pos();
 	}
 }
 
@@ -67,21 +74,61 @@ void Player::update()
 
 	if(x_fos_ != 0)
 	{
-		object_rect_.left += x_fos_;
-		object_rect_.right += x_fos_;
+		player_rect_.left += x_fos_;
+		player_rect_.right += x_fos_;
+		object_rect_.left = player_rect_.left;
+		object_rect_.right = player_rect_.right;
 	}
 
+	set_object_pos();
 	if(isOnLand() == FALSE)
 	{
-		object_rect_.top -= y_fos_;
-		object_rect_.bottom -= y_fos_;
-		y_fos_--;
+		UINT dis = getDistanceToLand();
+		if (dis < y_fos_ * -1)
+		{
+			player_rect_.top += LONG(dis);
+			player_rect_.bottom += LONG(dis);
+		}
+		else
+		{
+			player_rect_.top -= y_fos_;
+			player_rect_.bottom -= y_fos_;
+			y_fos_ -= gravity_;
+		}
+		object_rect_.top = player_rect_.top;
+		object_rect_.bottom = player_rect_.bottom;
 	}
+
+	set_object_pos();
+	
+	if(isOnLand() == TRUE)
+	{
+		y_fos_ = 0;
+	}
+}
+
+void Player::LoadMap(tile_state** map)
+{
+	map_ = map;
 }
 
 BOOL Player::isOnLand()
 {
-	return TRUE;
+	if (ObjectPos.y < 0)
+		return FALSE;
+	if (map_[ObjectPos.y + ObjectWidthHeight.y][ObjectPos.x + 4] != TILE_NULL || map_[ObjectPos.y + ObjectWidthHeight.y][ObjectPos.x + 3] != TILE_NULL)
+		return TRUE;
+	return FALSE;
+}
+
+UINT Player::getDistanceToLand()
+{
+	GameOptionManager* game_option_manager = GameOptionManager::GetInstance();
+	LONG search_idx = ObjectPos.y + ObjectWidthHeight.y + 1;
+	LONG cnt = 0;
+	while ((map_[search_idx + cnt][ObjectPos.x + 4] == TILE_NULL && map_[search_idx + cnt][ObjectPos.x + 3] == TILE_NULL) && search_idx + cnt < game_option_manager->VerticalGridCount)
+		cnt++;
+	return cnt * game_option_manager->GameCellSize + game_option_manager->GameCellSize - ObjectRect.bottom % game_option_manager->GameCellSize;
 }
 
 void Player::set_animation(animation_state animation_state)
