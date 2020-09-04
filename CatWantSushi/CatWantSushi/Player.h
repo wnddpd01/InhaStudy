@@ -33,6 +33,9 @@ private:
 	UCHAR animation_walk_size;
 	UCHAR animation_walk_change_frame;
 	UCHAR* animation_walk_bitmap_ids;
+	UCHAR animation_jump_size;
+	UCHAR animation_jump_change_frame;
+	UCHAR* animation_jump_bitmap_ids;
 	const CHAR max_x_fos_ = GameOptionManager::GetInstance()->GameCellSize / 2;
 	FLOAT x_fos_;
 	FLOAT y_fos_;
@@ -57,7 +60,7 @@ public:
 		x_fos_ = y_fos_ = 0;
 		x_spd_ = GameOptionManager::GetInstance()->GameCellSize / 20.0;
 		gravity_ = GameOptionManager::GetInstance()->GameCellSize / 10.0;
-		jump_power_ = GameOptionManager::GetInstance()->GameCellSize * 1.35;
+		jump_power_ = GameOptionManager::GetInstance()->GameCellSize * 1.45;
 		player_rect_.left = object_rect_.left;
 		player_rect_.right = object_rect_.right;
 		player_rect_.top = object_rect_.top;

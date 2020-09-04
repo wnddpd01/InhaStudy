@@ -11,12 +11,12 @@ class GameOptionManager
 {
 	GameOptionManager()
 	{
-		GameWidth = 1920;
-		GameHeight = 1080;
+		GameWidth = 1280;
+		GameHeight = 720;
 		HorizontalGridCount = 64;
 		VerticalGridCount = 36;
 		GameCellSize = GameWidth / HorizontalGridCount;
-		Frame = 5;
+		Frame = 60;
 		shortCutKeyList.push_back(VK_LEFT);
 		shortCutKeyList.push_back(VK_RIGHT);
 		shortCutKeyList.push_back(VK_UP);

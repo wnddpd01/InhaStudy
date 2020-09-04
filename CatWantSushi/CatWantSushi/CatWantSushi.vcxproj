@@ -180,7 +180,17 @@
     <Image Include="CWSResource\background\StartSceneBackground.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="CWSResource\cat_blue\cat2_jump1.bmp" />
+    <Image Include="CWSResource\cat_blue\CAT_BLUE_JUMP_1.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="CWSResource\cat_blue\CAT_BLUE.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\cat_blue\CAT_BLUE_JUMP_2.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\cat_blue\CAT_BLUE_JUMP_3.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="CWSResource\cat_blue\CAT_BLUE_WALK_1.bmp">

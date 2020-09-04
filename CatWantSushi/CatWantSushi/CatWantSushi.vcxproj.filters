@@ -183,5 +183,15 @@
     <Image Include="CWSResource\cat_blue\CAT_BLUE_WALK_3.bmp">
       <Filter>Resource\Bitmap\Player_CatBlue</Filter>
     </Image>
+    <Image Include="CWSResource\cat_blue\CAT_BLUE_JUMP_2.bmp">
+      <Filter>Resource\Bitmap\Player_CatBlue</Filter>
+    </Image>
+    <Image Include="CWSResource\cat_blue\CAT_BLUE_JUMP_3.bmp">
+      <Filter>Resource\Bitmap\Player_CatBlue</Filter>
+    </Image>
+    <Image Include="CWSResource\cat_blue\CAT_BLUE_JUMP_1.bmp">
+      <Filter>Resource\Bitmap\Player_CatBlue</Filter>
+    </Image>
+    <Image Include="CWSResource\cat_blue\cat2_jump1.bmp" />
   </ItemGroup>
 </Project>
