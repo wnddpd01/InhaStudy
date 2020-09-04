@@ -138,6 +138,6 @@ void InGameScene::keyInputHandle(UCHAR key)
 	}
 	else if(key == game_option_manager->shortCutKeyList[player1_jump])
 	{
-		player1->PlayerJump();
+		player1->PlayerJumpKeyPressed();
 	}
 }

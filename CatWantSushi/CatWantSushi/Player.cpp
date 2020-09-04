@@ -33,11 +33,6 @@ void Player::LoadPlayerBitmap(player_type player_type)
 
 void Player::PlayerMove(UCHAR dir)
 {
-	is_moved_ = TRUE;
-	if(animation_state_ != player_walk && animation_state_ != player_jump)
-	{
-		set_animation(player_walk);
-	}
 	if(dir != direction_)
 		direction_ = direction(dir);
 	if(dir == dir_left)
@@ -61,27 +56,43 @@ void Player::PlayerMove(UCHAR dir)
 	
 }
 
-void Player::PlayerJump()
+void Player::PlayerJumpKeyPressed()
 {
-	if (isOnLand() == TRUE)
+	if (isOnLand() == TRUE && y_fos_ == 0)
 	{
-		y_fos_ = jump_power_;
-		player_rect_.top -= y_fos_;
-		player_rect_.bottom -= y_fos_;
-		object_rect_.top = player_rect_.top;
-		object_rect_.bottom = player_rect_.bottom;
-		y_fos_ -= gravity_;
-		is_moved_ = TRUE;
-		set_animation(player_jump);
-		set_object_pos();
+		jump_key_pressed_ = TRUE;
+		jump_key_count_++;
 	}
+}
+
+void Player::PlayerJump(FLOAT jump_strength)
+{
+	
+	y_fos_ = jump_power_ * jump_strength;
+	set_animation(player_jump);
 }
 
 void Player::update()
 {
-	if (isOnLand() == TRUE)
+	static DOUBLE max_jump_key_count = GameOptionManager::GetInstance()->Frame * 0.15;
+	if((jump_key_pressed_ == FALSE && jump_key_count_ > 0) || jump_key_count_ == max_jump_key_count)
 	{
-		if (is_moved_ == FALSE)
+		DOUBLE jump_strength = (DOUBLE)jump_key_count_ / max_jump_key_count;
+		if (jump_strength < 0.4)
+			jump_strength = 0.55;
+		else if (jump_strength < 0.65)
+			jump_strength = 0.8;
+		else
+			jump_strength = 1;
+		PlayerJump(jump_strength);
+		jump_key_count_ = 0;
+	}
+	if(jump_key_pressed_ == TRUE)
+		jump_key_pressed_ = FALSE;
+	
+	if (isOnLand() == TRUE && !(y_fos_ > 0))
+	{
+		if (INT(x_fos_) == 0)
 		{
 			x_fos_ = 0;
 			set_animation(player_idle);
@@ -91,11 +102,12 @@ void Player::update()
 	{
 		if (animation_state_ != player_jump)
 			set_animation(player_jump);
-		UINT dis = getDistanceToLand();
-		if (dis < y_fos_ * -1)
+		INT dis = getDistanceToLand();
+		if (abs(dis) < abs(y_fos_))
 		{
-			player_rect_.top += LONG(dis);
-			player_rect_.bottom += LONG(dis);
+			player_rect_.top += dis;
+			player_rect_.bottom += dis;
+			y_fos_ = 0;
 		}
 		else
 		{
@@ -106,7 +118,6 @@ void Player::update()
 		object_rect_.top = player_rect_.top;
 		object_rect_.bottom = player_rect_.bottom;
 		set_object_pos();
-		is_moved_ = TRUE;
 		if (isOnLand() == TRUE)
 		{
 			y_fos_ = 0;
@@ -114,20 +125,20 @@ void Player::update()
 		}
 	}
 
-	
-	is_moved_ = FALSE;
-
 	if(x_fos_ != 0)
 	{
+		if (animation_state_ != player_walk && animation_state_ != player_jump)
+		{
+			set_animation(player_walk);
+		}
 		player_rect_.left += x_fos_;
 		player_rect_.right += x_fos_;
 		object_rect_.left = player_rect_.left;
 		object_rect_.right = player_rect_.right;
+		x_fos_ -= x_fos_ * 0.1;
 	}
 
 	set_object_pos();
-
-	
 }
 
 void Player::LoadMap(tile_state** map)
@@ -144,14 +155,33 @@ BOOL Player::isOnLand()
 	return FALSE;
 }
 
-UINT Player::getDistanceToLand()
+INT Player::getDistanceToLand()
 {
 	GameOptionManager* game_option_manager = GameOptionManager::GetInstance();
-	LONG search_idx = ObjectPos.y + ObjectWidthHeight.y + 1;
+	LONG search_idx = 0;
+	CHAR dir = 0;
+	INT cell_rest_ = 0;
+	if (y_fos_ < 0)
+	{
+		cell_rest_ = game_option_manager->GameCellSize - ObjectRect.bottom % game_option_manager->GameCellSize;
+		search_idx = ObjectPos.y + ObjectWidthHeight.y + 1;
+		dir = 1;
+	}
+	else
+	{
+		cell_rest_ = game_option_manager->GameCellSize - ObjectRect.top % game_option_manager->GameCellSize;
+		search_idx = ObjectPos.y;
+		dir = -1;
+	}
 	LONG cnt = 0;
-	while ((map_[search_idx + cnt][ObjectPos.x + 4] == TILE_NULL && map_[search_idx + cnt][ObjectPos.x + 3] == TILE_NULL) && search_idx + cnt < game_option_manager->VerticalGridCount)
+	while (search_idx + cnt * dir < game_option_manager->VerticalGridCount && search_idx + cnt * dir > -1
+		&&(map_[search_idx + cnt * dir][ObjectPos.x + 4] == TILE_NULL && map_[search_idx + cnt * dir][ObjectPos.x + 3] == TILE_NULL) )
 		cnt++;
-	return cnt * game_option_manager->GameCellSize + game_option_manager->GameCellSize - ObjectRect.bottom % game_option_manager->GameCellSize;
+
+	if (search_idx + cnt * dir == -1)
+		return INT_MAX;
+	
+	return (cnt * game_option_manager->GameCellSize + cell_rest_) * dir;
 }
 
 void Player::set_animation(animation_state animation_state)
