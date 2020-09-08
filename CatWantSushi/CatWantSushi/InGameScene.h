@@ -18,9 +18,16 @@ enum tile_state : UCHAR
 	TILE_NULL = 0, TILE_PLATFORM
 };
 
+struct tile
+{
+	tile_state tile_state;
+	Object* tile_object;
+};
+
 class InGameScene :
 	public Scene
 {
+<<<<<<< HEAD
 	Player* player_blue_;
 	Player* player_yellow_;
 	tile_state **map_;
@@ -28,6 +35,10 @@ class InGameScene :
 	void (InGameScene::* inGameScene_update)();
 	void update_game_ready();
 	void update_game_start();
+=======
+	Player* player1;
+	tile **map_;
+>>>>>>> origin/master
 protected:
 	void CreateUI() override;
 	void CreateObject() override;
