@@ -2,7 +2,7 @@
 #include "AnimateObject.h"
 #include "GameOptionManager.h"
 
-enum tile_state : unsigned char;
+struct tile;
 enum animation_state
 {
 	player_idle = 0, player_walk, player_jump, player_guard
@@ -43,7 +43,7 @@ private:
 	UCHAR jump_key_count_;
 	FLOAT jump_power_;
 	FLOAT gravity_;
-	tile_state** map_;
+	tile** map_;
 	RECT_FLOAT player_rect_;
 public:
 	Player(UINT object_id, UINT object_bitmap_id, const UCHAR& posX, const UCHAR& posY, const UCHAR& width,
@@ -78,7 +78,7 @@ public:
 	void PlayerJump(FLOAT jump_strength = 1);
 	void set_animation(animation_state animation_state);
 	void update() override;
-	void LoadMap(tile_state** map);
+	void LoadMap(tile** map);
 
 	BOOL isOnLand();
 	INT getDistanceToLand();

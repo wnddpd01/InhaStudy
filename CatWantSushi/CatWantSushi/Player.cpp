@@ -127,7 +127,7 @@ void Player::update()
 
 	if(x_fos_ != 0)
 	{
-		if (animation_state_ != player_walk && animation_state_ != player_jump)
+		if (animation_state_ != player_walk && y_fos_ == 0)
 		{
 			set_animation(player_walk);
 		}
@@ -141,7 +141,7 @@ void Player::update()
 	set_object_pos();
 }
 
-void Player::LoadMap(tile_state** map)
+void Player::LoadMap(tile** map)
 {
 	map_ = map;
 }
@@ -150,7 +150,7 @@ BOOL Player::isOnLand()
 {
 	if (ObjectPos.y < 0)
 		return FALSE;
-	if (map_[ObjectPos.y + ObjectWidthHeight.y][ObjectPos.x + 4] != TILE_NULL || map_[ObjectPos.y + ObjectWidthHeight.y][ObjectPos.x + 3] != TILE_NULL)
+	if (map_[ObjectPos.y + ObjectWidthHeight.y][ObjectPos.x + 4].tile_state != TILE_NULL || map_[ObjectPos.y + ObjectWidthHeight.y][ObjectPos.x + 3].tile_state != TILE_NULL)
 		return TRUE;
 	return FALSE;
 }
@@ -175,7 +175,7 @@ INT Player::getDistanceToLand()
 	}
 	LONG cnt = 0;
 	while (search_idx + cnt * dir < game_option_manager->VerticalGridCount && search_idx + cnt * dir > -1
-		&&(map_[search_idx + cnt * dir][ObjectPos.x + 4] == TILE_NULL && map_[search_idx + cnt * dir][ObjectPos.x + 3] == TILE_NULL) )
+		&&(map_[search_idx + cnt * dir][ObjectPos.x + 4].tile_state == TILE_NULL && map_[search_idx + cnt * dir][ObjectPos.x + 3].tile_state == TILE_NULL) )
 		cnt++;
 
 	if (search_idx + cnt * dir == -1)

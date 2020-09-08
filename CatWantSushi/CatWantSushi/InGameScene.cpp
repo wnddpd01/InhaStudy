@@ -66,11 +66,15 @@ void InGameScene::CreateObject()
 
 void InGameScene::SetMap()
 {
-	map_ = new tile_state*[game_option_manager->VerticalGridCount];
+	map_ = new tile*[game_option_manager->VerticalGridCount];
 	for (size_t i = 0; i < game_option_manager->VerticalGridCount; i++)
 	{
-		map_[i] = new tile_state[game_option_manager->HorizontalGridCount];
-		memset(map_[i], TILE_NULL, sizeof(tile_state) * game_option_manager->HorizontalGridCount);
+		map_[i] = new tile[game_option_manager->HorizontalGridCount];
+		for (size_t j = 0; j < game_option_manager->HorizontalGridCount; j++)
+		{
+			map_[i][j].tile_state = TILE_NULL;
+			map_[i][j].tile_object = nullptr;
+		}
 	}
 	for(Object * object : scene_objects_)
 	{
@@ -80,7 +84,8 @@ void InGameScene::SetMap()
 			{
 				for (size_t j = 0; j < object->ObjectWidthHeight.x; j++)
 				{
-					map_[object->ObjectPos.y + i][object->ObjectPos.x + j] = TILE_PLATFORM;
+					map_[object->ObjectPos.y + i][object->ObjectPos.x + j].tile_state = TILE_PLATFORM;
+					map_[object->ObjectPos.y + i][object->ObjectPos.x + j].tile_object = object;
 				}
 			}
 		}
