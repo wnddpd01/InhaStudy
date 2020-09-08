@@ -4,12 +4,15 @@ class AnimateObject :
 	public Object
 {
 protected:
+	void animateRender(HDC hdc, HDC backHDC);
 	BOOL is_loop_;
 	UCHAR animation_size_;
 	UCHAR current_frame_;
 	UCHAR current_animation_idx_;
 	UCHAR animation_change_frame_count_;
 	UCHAR * animation_bitmap_ids_;
+
+
 public:
 	AnimateObject(UINT object_id, UINT object_bitmap_id, const UCHAR& posX, const UCHAR& posY, const UCHAR& width,
 		const UCHAR& height, BOOL is_loop, UCHAR animation_size, UCHAR current_animation_idx,
@@ -22,11 +25,11 @@ public:
 		  animation_bitmap_ids_(animation_bitmap_ids)
 	{
 		current_frame_ = 0;
+		render = static_cast<void( Object::*)(HDC hdc, HDC backHDC)>(&AnimateObject::animateRender);
 	}
 
 	AnimateObject();
 	~AnimateObject();
 	
-	void render(HDC hdc, HDC backHDC) override;
 };
 

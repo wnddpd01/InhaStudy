@@ -180,7 +180,6 @@
     <Image Include="CWSResource\background\StartSceneBackground.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="CWSResource\cat_blue\cat2_jump1.bmp" />
     <Image Include="CWSResource\cat_blue\CAT_BLUE_JUMP_1.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
@@ -202,6 +201,30 @@
     <Image Include="CWSResource\cat_blue\CAT_BLUE_WALK_3.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_GUARD.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_IDLE.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_JUMP_1.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_JUMP_2.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_JUMP_3.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_WALK_1.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_WALK_2.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_WALK_3.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="CWSResource\Object\Platform.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
@@ -211,13 +234,25 @@
     <Image Include="CWSResource\Object\Rail2.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="CWSResource\UI\InGameSceneUICatBlue.bmp">
+    <Image Include="CWSResource\UI\TEXT_1.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="CWSResource\UI\InGameSceneUICatYellow.bmp">
+    <Image Include="CWSResource\UI\TEXT_2.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="CWSResource\UI\StartBtn.bmp">
+    <Image Include="CWSResource\UI\TEXT_3.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\UI\UICatBlue.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\UI\UICatYellow.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\UI\BtnStart.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\UI\UITimer.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
   </ItemGroup>

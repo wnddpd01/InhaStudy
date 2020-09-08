@@ -1,13 +1,16 @@
 #include "Player.h"
+
+#include <iostream>
+
 #include "InGameScene.h"
 
 
 
-void Player::LoadPlayerBitmap(player_type player_type)
+void Player::LoadPlayerBitmap(UINT player_type)
 {
 	GameOptionManager &game_option_manager = *GameOptionManager::GetInstance();
 	animation_idle_size = 1;
-	animation_idle_change_frame = 0;
+	animation_idle_change_frame = 100;
 	animation_idle_bitmap_ids = new UCHAR[animation_idle_size];
 
 	animation_walk_size = 3;
@@ -17,7 +20,7 @@ void Player::LoadPlayerBitmap(player_type player_type)
 	animation_jump_size = 3;
 	animation_jump_bitmap_ids = new UCHAR[animation_jump_size];
 	animation_jump_change_frame = game_option_manager.Frame / 10;
-	if(player_type == cat_blue)
+	if(player_type == PLAYER_BLUE)
 	{
 		animation_idle_bitmap_ids[0] = BITMAP_CAT_BLUE_IDLE;
 
@@ -28,6 +31,18 @@ void Player::LoadPlayerBitmap(player_type player_type)
 		animation_jump_bitmap_ids[0] = BITMAP_CAT_BLUE_JUMP_1;
 		animation_jump_bitmap_ids[1] = BITMAP_CAT_BLUE_JUMP_2;
 		animation_jump_bitmap_ids[2] = BITMAP_CAT_BLUE_JUMP_3;
+	}
+	else if(player_type == PLAYER_YELLOW)
+	{
+		animation_idle_bitmap_ids[0] = BITMAP_CAT_YELLOW_IDLE;
+		
+		animation_walk_bitmap_ids[0] = BITMAP_CAT_YELLOW_WALK_1;
+		animation_walk_bitmap_ids[1] = BITMAP_CAT_YELLOW_WALK_2;
+		animation_walk_bitmap_ids[2] = BITMAP_CAT_YELLOW_WALK_3;
+		
+		animation_jump_bitmap_ids[0] = BITMAP_CAT_YELLOW_JUMP_1;
+		animation_jump_bitmap_ids[1] = BITMAP_CAT_YELLOW_JUMP_2;
+		animation_jump_bitmap_ids[2] = BITMAP_CAT_YELLOW_JUMP_3;
 	}
 }
 
@@ -58,29 +73,28 @@ void Player::PlayerMove(UCHAR dir)
 
 void Player::PlayerJumpKeyPressed()
 {
-	if (isOnLand() == TRUE && y_fos_ == 0)
+	if (isOnLand() == TRUE)
 	{
 		jump_key_pressed_ = TRUE;
-		jump_key_count_++;
+		jump_key_count_+=1;
 	}
 }
 
 void Player::PlayerJump(FLOAT jump_strength)
 {
-	
 	y_fos_ = jump_power_ * jump_strength;
 	set_animation(player_jump);
 }
 
 void Player::update()
 {
-	static DOUBLE max_jump_key_count = GameOptionManager::GetInstance()->Frame * 0.15;
+	static int max_jump_key_count = GameOptionManager::GetInstance()->Frame * 0.08;
 	if((jump_key_pressed_ == FALSE && jump_key_count_ > 0) || jump_key_count_ == max_jump_key_count)
 	{
 		DOUBLE jump_strength = (DOUBLE)jump_key_count_ / max_jump_key_count;
-		if (jump_strength < 0.4)
+		if (jump_strength < 0.5)
 			jump_strength = 0.55;
-		else if (jump_strength < 0.65)
+		else if (jump_strength < 1)
 			jump_strength = 0.8;
 		else
 			jump_strength = 1;
@@ -103,7 +117,7 @@ void Player::update()
 		if (animation_state_ != player_jump)
 			set_animation(player_jump);
 		INT dis = getDistanceToLand();
-		if (abs(dis) < abs(y_fos_))
+		if (FLOAT(abs(dis)) < abs(y_fos_))
 		{
 			player_rect_.top += dis;
 			player_rect_.bottom += dis;
@@ -127,7 +141,7 @@ void Player::update()
 
 	if(x_fos_ != 0)
 	{
-		if (animation_state_ != player_walk && animation_state_ != player_jump)
+		if (animation_state_ != player_walk && isOnLand() == TRUE)
 		{
 			set_animation(player_walk);
 		}
@@ -169,17 +183,16 @@ INT Player::getDistanceToLand()
 	}
 	else
 	{
-		cell_rest_ = game_option_manager->GameCellSize - ObjectRect.top % game_option_manager->GameCellSize;
+		cell_rest_ = ObjectRect.top % game_option_manager->GameCellSize;
 		search_idx = ObjectPos.y;
 		dir = -1;
 	}
 	LONG cnt = 0;
-	while (search_idx + cnt * dir < game_option_manager->VerticalGridCount && search_idx + cnt * dir > -1
-		&&(map_[search_idx + cnt * dir][ObjectPos.x + 4] == TILE_NULL && map_[search_idx + cnt * dir][ObjectPos.x + 3] == TILE_NULL) )
+	while (search_idx + cnt * dir < game_option_manager->VerticalGridCount
+		&& (map_[search_idx + cnt * dir][ObjectPos.x + 4] == TILE_NULL && map_[search_idx + cnt * dir][ObjectPos.x + 3] == TILE_NULL))
+	{
 		cnt++;
-
-	if (search_idx + cnt * dir == -1)
-		return INT_MAX;
+	}
 	
 	return (cnt * game_option_manager->GameCellSize + cell_rest_) * dir;
 }
@@ -194,6 +207,7 @@ void Player::set_animation(animation_state animation_state)
 	{
 		animation_bitmap_ids_ = animation_idle_bitmap_ids;
 		animation_size_ = animation_idle_size;
+		animation_change_frame_count_ = animation_idle_change_frame;
 		break;
 	}
 	case player_walk:

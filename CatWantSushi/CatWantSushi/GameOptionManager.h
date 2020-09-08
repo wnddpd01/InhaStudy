@@ -1,10 +1,11 @@
 #pragma once
-#include <vector>
+#include <map>
 #include <Windows.h>
 
+using namespace std;
 enum shortCut : UCHAR
 {
-	player1_move_left = 0, player1_move_right, player1_jump
+	player1_move_left = 0, player1_move_right, player1_jump, player1_attack, player1_guard, player2_move_left, player2_move_right, player2_jump
 };
 
 class GameOptionManager
@@ -17,9 +18,12 @@ class GameOptionManager
 		VerticalGridCount = 36;
 		GameCellSize = GameWidth / HorizontalGridCount;
 		Frame = 60;
-		shortCutKeyList.push_back(VK_LEFT);
-		shortCutKeyList.push_back(VK_RIGHT);
-		shortCutKeyList.push_back(VK_UP);
+		shortCutKeyList.insert(make_pair(player1_move_left, VK_LEFT));
+		shortCutKeyList.insert(make_pair(player1_move_right, VK_RIGHT));
+		shortCutKeyList.insert(make_pair(player1_jump, VK_UP));
+		shortCutKeyList.insert(make_pair(player2_move_left, 'A'));
+		shortCutKeyList.insert(make_pair(player2_move_right, 'D'));
+		shortCutKeyList.insert(make_pair(player2_jump, 'W'));
 	}
 	UINT game_width_;
 	UINT game_height_;
@@ -105,7 +109,7 @@ public:
 #pragma endregion
 
 public:
-	std::vector<UCHAR> shortCutKeyList;
+	map<shortCut, UCHAR> shortCutKeyList;
 	
 	static GameOptionManager * GetInstance()
 	{

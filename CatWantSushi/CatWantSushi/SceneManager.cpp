@@ -1,4 +1,7 @@
 #include "SceneManager.h"
+
+#include <iostream>
+
 #include "StartScene.h"
 #include "InGameScene.h"
 #include "GlobalValue.h"
@@ -6,6 +9,7 @@
 SceneManager::SceneManager()
 {
 	cur_scene_ = start_scene_ = new StartScene;
+	in_game_scene_ = new InGameScene;
 }
 
 void SceneManager::render(LPPAINTSTRUCT ps)
@@ -14,6 +18,7 @@ void SceneManager::render(LPPAINTSTRUCT ps)
 	HBITMAP backHBit = CreateCompatibleBitmap(ps->hdc, ps->rcPaint.right - ps->rcPaint.left, ps->rcPaint.bottom - ps->rcPaint.top);
 	HBITMAP oldHBit = (HBITMAP)SelectObject(backHDC, backHBit);
 	SetStretchBltMode(backHDC, COLORONCOLOR);
+	SetBkMode(backHDC, TRANSPARENT);
 	cur_scene_->render(backHDC, &ps->rcPaint);
 	BitBlt(ps->hdc, ps->rcPaint.left, ps->rcPaint.top, ps->rcPaint.right - ps->rcPaint.left, ps->rcPaint.bottom - ps->rcPaint.top, backHDC, 0, 0, SRCCOPY);
 	SelectObject(backHDC, oldHBit);
@@ -28,12 +33,12 @@ void SceneManager::scene_change(WPARAM next_scene)
 	{
 	case SCENE_START:
 	{
-		cur_scene_ = new StartScene;
+		cur_scene_ = start_scene_;
 		break;
 	}
 	case SCENE_INGAME:
 	{
-		cur_scene_ = new InGameScene;
+		cur_scene_ = in_game_scene_;
 		break;
 	}
 	default:

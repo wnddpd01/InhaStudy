@@ -1,16 +1,12 @@
 #pragma once
 #include "AnimateObject.h"
 #include "GameOptionManager.h"
+#include "InGameScene.h"
 
 enum tile_state : unsigned char;
 enum animation_state
 {
 	player_idle = 0, player_walk, player_jump, player_guard
-};
-
-enum player_type
-{
-	cat_blue = 0, cat_yellow
 };
 
 struct RECT_FLOAT
@@ -46,18 +42,18 @@ private:
 	tile_state** map_;
 	RECT_FLOAT player_rect_;
 public:
-	Player(UINT object_id, UINT object_bitmap_id, const UCHAR& posX, const UCHAR& posY, const UCHAR& width,
-		const UCHAR& height, BOOL is_loop, UCHAR animation_size, UCHAR current_animation_frame,
-		UCHAR animation_change_frame_count, UCHAR* animation_bitmap_ids)
+	Player(UINT object_id,const UCHAR& posX, const UCHAR& posY)
 		: AnimateObject(
-			object_id, object_bitmap_id, posX, posY, width, height, is_loop, animation_size, current_animation_frame,
-			animation_change_frame_count, animation_bitmap_ids)
+			object_id, NULL, posX, posY, 7, 7, FALSE, 0, 0,
+			0, nullptr)
 	{
 		if (posX < GameOptionManager::GetInstance()->HorizontalGridCount * 0.5)
 			direction_ = dir_right;
 		else
 			direction_ = dir_left;
-		
+
+		LoadPlayerBitmap(object_id);
+		set_animation(player_idle);
 		x_fos_ = y_fos_ = 0;
 		x_spd_ = GameOptionManager::GetInstance()->GameCellSize * 0.2;
 		gravity_ = GameOptionManager::GetInstance()->GameCellSize * 0.1;
@@ -68,11 +64,9 @@ public:
 		player_rect_.bottom = object_rect_.bottom;
 		jump_key_pressed_ = FALSE;
 		jump_key_count_ = 0;
-		LoadPlayerBitmap(cat_blue);
-		set_animation(player_idle);
 	}
 
-	void LoadPlayerBitmap(player_type player_type);
+	void LoadPlayerBitmap(UINT player_type);
 	void PlayerMove(UCHAR dir);
 	void PlayerJumpKeyPressed();
 	void PlayerJump(FLOAT jump_strength = 1);

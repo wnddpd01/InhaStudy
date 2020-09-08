@@ -3,11 +3,12 @@
 
 class Scene;
 class StartScene;
-
+class InGameScene;
 class SceneManager
 {
 	SceneManager();
 	StartScene * start_scene_;
+	InGameScene* in_game_scene_;
 	Scene * cur_scene_;
 public:
 #pragma region GetterAndSetter

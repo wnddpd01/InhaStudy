@@ -37,6 +37,9 @@ protected:
 		object_pos_.x = LONG(object_rect_.left / game_option_manager->GameCellSize);
 		object_pos_.y = LONG(object_rect_.top / game_option_manager->GameCellSize);
 	}
+
+
+	void basicRender(HDC hdc, HDC backHDC);
 public:
 #pragma region GetterAndSetter
 
@@ -111,16 +114,18 @@ public:
 		object_width_height_.y = height;
 		direction_ = direction;
 		set_object_rect();
+		render = &Object::basicRender;
 	}
 	Object() = default;
 	virtual ~Object()
 	{}
 
-	virtual void render(HDC hdc, HDC backHDC);
+	//virtual void render(HDC hdc, HDC backHDC);
+	void (Object::*render)(HDC hdc, HDC backHDC);
 	virtual void update() { };
 };
 
-inline void Object::render(HDC hdc, HDC backHDC)
+inline void Object::basicRender(HDC hdc, HDC backHDC)
 {
 	static BITMAP object_bitmap;
 	static auto bitmap_manager = BitmapManager::GetInstance();
@@ -143,7 +148,5 @@ inline void Object::render(HDC hdc, HDC backHDC)
 		DeleteDC(reverseHDC);
 		DeleteObject(backHBIT);
 	}
-
-
 }
 

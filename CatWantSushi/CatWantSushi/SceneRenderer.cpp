@@ -33,7 +33,7 @@ void SceneRenderer::DrawSceneUI(HDC hdc, const LPRECT paint_rect, std::vector<UI
 	HDC backHDC = CreateCompatibleDC(hdc);
 	for (UI * ui : scene_uis)
 	{
-		ui->render(hdc, backHDC);
+		(ui->*ui->render)(hdc, backHDC);
 	}
 	DeleteDC(backHDC);
 }
@@ -44,7 +44,7 @@ void SceneRenderer::DrawSceneObeject(HDC hdc, const LPRECT paint_rect, std::vect
 	HDC backHDC = CreateCompatibleDC(hdc);
 	for(Object * object : scene_objects)
 	{
-		object->render(hdc, backHDC);
+		(object->*object->render)(hdc, backHDC);
 	}
 	DeleteDC(backHDC);
 }

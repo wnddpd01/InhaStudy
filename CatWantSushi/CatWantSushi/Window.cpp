@@ -1,4 +1,7 @@
 #include "Window.h"
+
+#include <iostream>
+
 #include "SceneManager.h"
 #include "StartScene.h"
 #include "GameOptionManager.h"
@@ -7,27 +10,28 @@ Window* window = NULL;
 
 auto gameOptionManager = GameOptionManager::GetInstance();
 SceneManager& scene_manager = *(SceneManager::getInstance());
-
+UINT game_loop_start = 0;
 void InputHandle()
 {
-	for (UCHAR shortCut : gameOptionManager->shortCutKeyList)
+	for (pair<shortCut, UCHAR> short_cut : gameOptionManager->shortCutKeyList)
 	{
-		if (GetKeyState(shortCut) & 0x8000)
+		if (GetKeyState(short_cut.second) & 0x8000)
 		{
-			scene_manager.keyboard_input_handle(shortCut);
+			scene_manager.keyboard_input_handle(short_cut.second);
 		}
 	}
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	static UINT loop_start = 0;
 	PAINTSTRUCT ps;
 	switch (msg)
 	{
 	case WM_CREATE:
 	{
 		window->on_create();
-		SetTimer(hwnd, TimerGameLoop, 1000 / gameOptionManager->Frame, NULL);
+		SetTimer(hwnd, TimerGameLoop, 16, NULL);
 		break;
 	}
 	case WM_DESTROY:
@@ -42,6 +46,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		BeginPaint(hwnd, &ps);
 		scene_manager.render(&ps);
 		EndPaint(hwnd, &ps);
+		cout << "time : " << GetTickCount() - loop_start << '\n';
+		loop_start = GetTickCount();
 		break;
 	}
 	case WM_TIMER:
@@ -50,9 +56,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		{
 		case TimerGameLoop:
 		{
+			loop_start = GetTickCount();
 			InputHandle();
 			scene_manager.update();
 			InvalidateRect(hwnd, NULL, FALSE);
+			UpdateWindow(hwnd);
 			break;
 		}
 		default:
@@ -78,7 +86,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	return NULL;
 }
 
-void Window::init_wndclassex(WNDCLASSEX & wc)
+void Window::init_wndclassex(WNDCLASSEX& wc)
 {
 	wc.cbClsExtra = NULL;
 	wc.cbSize = sizeof(WNDCLASSEX);
@@ -114,11 +122,10 @@ bool Window::init()
 		return false;
 
 
-#ifdef DEBUG
+#ifdef DEBUG__
 	m_console_hwnd_ = GetConsoleWindow();
-	ShowWindow(m_console_hwnd_, SW_HIDE);
-#endif // DEBUG
-
+	ShowWindow(m_console_hwnd_, SW_SHOW);
+#endif
 	ShowWindow(m_window_hwnd_, SW_SHOW);
 	UpdateWindow(m_window_hwnd_);
 
@@ -134,9 +141,7 @@ bool Window::broadcast()
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
-
 	window->on_update();
-	Sleep(0);
 	return true;
 }
 
@@ -158,6 +163,11 @@ void Window::on_create()
 
 void Window::on_update()
 {
+	//static UINT lastUpdateTime = GetTickCount();
+	//if (GetTickCount() - lastUpdateTime < 16)
+	//	return;
+	//lastUpdateTime = GetTickCount();
+
 }
 
 

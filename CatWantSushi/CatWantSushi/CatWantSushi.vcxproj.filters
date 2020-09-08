@@ -64,8 +64,14 @@
     <Filter Include="Object\Player">
       <UniqueIdentifier>{2684f9da-d3ba-4e30-bf82-221538c0d359}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource\Bitmap\Player_CatYellow">
+      <UniqueIdentifier>{ea99d7ed-a427-4248-b635-bba37674a1e8}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Resource\Bitmap\Player_CatBlue">
       <UniqueIdentifier>{f9ed4718-a0ce-4319-b491-0c99ee66fc22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Bitmap\UI\Letter">
+      <UniqueIdentifier>{da9ef4eb-28b7-434d-92a1-a62f7cad28b5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -147,20 +153,11 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="CWSResource\UI\StartBtn.bmp">
-      <Filter>Resource\Bitmap\UI\Button</Filter>
-    </Image>
     <Image Include="CWSResource\background\StartSceneBackground.bmp">
       <Filter>Resource\Bitmap\Background</Filter>
     </Image>
     <Image Include="CWSResource\background\InGameSceneBackground.bmp">
       <Filter>Resource\Bitmap\Background</Filter>
-    </Image>
-    <Image Include="CWSResource\UI\InGameSceneUICatBlue.bmp">
-      <Filter>Resource\Bitmap\UI\Image</Filter>
-    </Image>
-    <Image Include="CWSResource\UI\InGameSceneUICatYellow.bmp">
-      <Filter>Resource\Bitmap\UI\Image</Filter>
     </Image>
     <Image Include="CWSResource\Object\Platform.bmp">
       <Filter>Resource\Bitmap\Object</Filter>
@@ -192,6 +189,50 @@
     <Image Include="CWSResource\cat_blue\CAT_BLUE_JUMP_1.bmp">
       <Filter>Resource\Bitmap\Player_CatBlue</Filter>
     </Image>
-    <Image Include="CWSResource\cat_blue\cat2_jump1.bmp" />
+    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_WALK_3.bmp">
+      <Filter>Resource\Bitmap\Player_CatYellow</Filter>
+    </Image>
+    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_GUARD.bmp">
+      <Filter>Resource\Bitmap\Player_CatYellow</Filter>
+    </Image>
+    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_IDLE.bmp">
+      <Filter>Resource\Bitmap\Player_CatYellow</Filter>
+    </Image>
+    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_JUMP_1.bmp">
+      <Filter>Resource\Bitmap\Player_CatYellow</Filter>
+    </Image>
+    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_JUMP_2.bmp">
+      <Filter>Resource\Bitmap\Player_CatYellow</Filter>
+    </Image>
+    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_JUMP_3.bmp">
+      <Filter>Resource\Bitmap\Player_CatYellow</Filter>
+    </Image>
+    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_WALK_1.bmp">
+      <Filter>Resource\Bitmap\Player_CatYellow</Filter>
+    </Image>
+    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_WALK_2.bmp">
+      <Filter>Resource\Bitmap\Player_CatYellow</Filter>
+    </Image>
+    <Image Include="CWSResource\UI\UICatBlue.bmp">
+      <Filter>Resource\Bitmap\UI\Image</Filter>
+    </Image>
+    <Image Include="CWSResource\UI\UICatYellow.bmp">
+      <Filter>Resource\Bitmap\UI\Image</Filter>
+    </Image>
+    <Image Include="CWSResource\UI\BtnStart.bmp">
+      <Filter>Resource\Bitmap\UI\Button</Filter>
+    </Image>
+    <Image Include="CWSResource\UI\UITimer.bmp">
+      <Filter>Resource\Bitmap\UI\Image</Filter>
+    </Image>
+    <Image Include="CWSResource\UI\TEXT_1.bmp">
+      <Filter>Resource\Bitmap\UI\Letter</Filter>
+    </Image>
+    <Image Include="CWSResource\UI\TEXT_2.bmp">
+      <Filter>Resource\Bitmap\UI\Letter</Filter>
+    </Image>
+    <Image Include="CWSResource\UI\TEXT_3.bmp">
+      <Filter>Resource\Bitmap\UI\Letter</Filter>
+    </Image>
   </ItemGroup>
 </Project>

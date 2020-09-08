@@ -19,12 +19,26 @@
 #define BITMAP_CAT_BLUE_JUMP_3          118
 #define IDB_BITMAP2                     124
 #define BITMAP_CAT_BLUE_JUMP_1          124
+#define BITMAP_CAT_YELLOW_GUARD         125
+#define BITMAP_CAT_YELLOW_IDLE          126
+#define BITMAP_CAT_YELLOW_JUMP_1        127
+#define BITMAP_CAT_YELLOW_JUMP_2        128
+#define BITMAP_CAT_YELLOW_JUMP_3        129
+#define BITMAP_CAT_YELLOW_WAKL_1        130
+#define BITMAP_CAT_YELLOW_WALK_1        130
+#define BITMAP_CAT_YELLOW_WALK_2        131
+#define BITMAP_CAT_YELLOW_WALK_3        132
+#define BITMAP_UI_TIMER                 133
+#define BITMAP_TEXT_1                   134
+#define BITMAP_TEXT_2                   135
+#define IDB_BITMAP5                     136
+#define BITMAP_TEXT_3                   136
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        125
+#define _APS_NEXT_RESOURCE_VALUE        137
 #define _APS_NEXT_COMMAND_VALUE         40002
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           101
