@@ -8,20 +8,20 @@
 #include "Player.h"
 
 extern SceneRenderer scene_renderer_;
-GameOptionManager* game_option_manager = GameOptionManager::GetInstance();
+extern GameOptionManager* game_option_manager;
 
 void InGameScene::update_game_ready()
 {
 	static UINT lastTime;
 	if (lastTime == 0)
 	{
-		LONG cntLeft = game_option_manager->HorizontalGridCount / 2 - 5;
+		LONG cntLeft = game_option_manager->HorizontalGridCount / 2 - 3;
 		LONG cntTop = game_option_manager->VerticalGridCount / 2 - 5;
 		UCHAR* cntAnimationBitmapIds = new UCHAR[3];
 		cntAnimationBitmapIds[0] = BITMAP_TEXT_3;
 		cntAnimationBitmapIds[1] = BITMAP_TEXT_2;
 		cntAnimationBitmapIds[2] = BITMAP_TEXT_1;
-		AnimateObject* cnt = new AnimateObject(NULL, BITMAP_TEXT_3, cntLeft, cntTop, 10, 10, FALSE, 3, 0, game_option_manager->Frame, cntAnimationBitmapIds);
+		AnimateObject* cnt = new AnimateObject(NULL, BITMAP_TEXT_3, cntLeft, cntTop, 6, 10, FALSE, 3, 0, game_option_manager->Frame, cntAnimationBitmapIds);
 		scene_objects_.push_back(cnt);
 		lastTime = GetTickCount();
 	}
@@ -44,16 +44,14 @@ void InGameScene::update_game_start()
 
 void InGameScene::CreateUI()
 {
-	//size_t cellSize = game_option_manager->GameHeight / game_option_manager->VerticalGridCount;
-	LONG yellowCatLeft = game_option_manager->HorizontalGridCount - 5;
+	LONG yellowCatLeft = 0;
 	LONG yellowCatTop = 0;
-	//RECT startBtnRect = { startBtnLeft, startBtnTop, startBtnLeft + cellSize * 4, startBtnTop + cellSize * 2 };
 	UI* yellowCat = new UI(IMAGE_YELLOW_CAT, BITMAP_INGAME_SCENE_UI_CAT_YELLOW, yellowCatLeft, yellowCatTop, 4, 4, dir_right);
 	scene_objects_.push_back(yellowCat);
 
-	LONG blueCatLeft = 0;
+	LONG blueCatLeft = game_option_manager->HorizontalGridCount - 5;
 	LONG blueCatTop = 0;
-	UI* blueCat = new UI(IMAGE_BLUE_CAT, BITMAP_INGAME_SCENE_UI_CAT_BLUE, blueCatLeft, blueCatTop, 4, 4);
+	UI* blueCat = new UI(IMAGE_BLUE_CAT, BITMAP_INGAME_SCENE_UI_CAT_BLUE, blueCatLeft, blueCatTop, 4, 4, dir_left);
 	scene_objects_.push_back(blueCat);
 
 	LONG timerLeft = game_option_manager->HorizontalGridCount / 2 - 3;
@@ -65,13 +63,13 @@ void InGameScene::CreateUI()
 
 void InGameScene::CreateObject()
 {
-	/*LONG railLeft = 0;
+	LONG railLeft = 0;
 	LONG railTop = game_option_manager->VerticalGridCount / 2 + 2;
 	UCHAR * railAnimationBitmapIds = new UCHAR[2];
 	railAnimationBitmapIds[0] = BITMAP_OBJECT_RAIL_1;
 	railAnimationBitmapIds[1] = BITMAP_OBJECT_RAIL_2;
 	AnimateObject * rail = new AnimateObject(ANIMATED_OBJECT_RAIL, BITMAP_OBJECT_RAIL_1, railLeft, railTop, game_option_manager->HorizontalGridCount, 7, TRUE ,2 , 0, game_option_manager->Frame / 6, railAnimationBitmapIds);
-	scene_objects_.push_back(rail);*/
+	scene_objects_.push_back(rail);
 
 	LONG basePlatFormLeft = 0;
 	LONG basePlatFormTop = game_option_manager->VerticalGridCount - 3;
@@ -96,11 +94,11 @@ void InGameScene::CreateObject()
 	LONG playerLeft = game_option_manager->HorizontalGridCount - 1 - 7;
 	LONG playerTop = basePlatFormTop - 7;
 	player_blue_ = new Player(PLAYER_BLUE, playerLeft, playerTop);
-	//scene_objects_.push_back(player_blue_);
+	scene_objects_.push_back(player_blue_);
 
 	playerLeft = 0;
 	player_yellow_ = new Player(PLAYER_YELLOW, playerLeft, playerTop);
-	//scene_objects_.push_back(player_yellow_);
+	scene_objects_.push_back(player_yellow_);
 }
 
 void InGameScene::SetMap()
@@ -150,7 +148,6 @@ void InGameScene::init()
 	SetMap();
 	player_blue_->LoadMap(map_);
 	player_yellow_->LoadMap(map_);
-	Sleep(1);
 	inGameScene_update = &InGameScene::update_game_ready;
 }
 

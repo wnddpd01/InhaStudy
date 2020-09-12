@@ -14,10 +14,10 @@ class GameOptionManager
 	{
 		GameWidth = 1920;
 		GameHeight = 1080;
+		Frame = 60;
 		HorizontalGridCount = 64;
 		VerticalGridCount = 36;
 		GameCellSize = GameWidth / HorizontalGridCount;
-		Frame = 60;
 		shortCutKeyList.insert(make_pair(player1_move_left, VK_LEFT));
 		shortCutKeyList.insert(make_pair(player1_move_right, VK_RIGHT));
 		shortCutKeyList.insert(make_pair(player1_jump, VK_UP));

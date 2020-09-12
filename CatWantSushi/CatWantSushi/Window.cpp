@@ -6,78 +6,62 @@
 #include "StartScene.h"
 #include "GameOptionManager.h"
 #include "GlobalValue.h"
+
 Window* window = NULL;
 
-auto gameOptionManager = GameOptionManager::GetInstance();
-SceneManager& scene_manager = *(SceneManager::getInstance());
-UINT game_loop_start = 0;
+extern GameOptionManager * game_option_manager;
+extern SceneManager* scene_manager;
+
 void InputHandle()
 {
-	for (pair<shortCut, UCHAR> short_cut : gameOptionManager->shortCutKeyList)
+	for (pair<shortCut, UCHAR> short_cut : game_option_manager->shortCutKeyList)
 	{
 		if (GetKeyState(short_cut.second) & 0x8000)
 		{
-			scene_manager.keyboard_input_handle(short_cut.second);
+			scene_manager->keyboard_input_handle(short_cut.second);
 		}
 	}
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	static UINT loop_start = 0;
 	PAINTSTRUCT ps;
 	switch (msg)
 	{
 	case WM_CREATE:
 	{
 		window->on_create();
-		SetTimer(hwnd, TimerGameLoop, 16, NULL);
+		//SetTimer(hwnd, TimerGameLoop, 1000/gameOptionManager->Frame, NULL);
 		break;
 	}
 	case WM_DESTROY:
 	{
-
 		window->on_destroy();
 		PostQuitMessage(0);
 		break;
 	}
 	case WM_PAINT:
 	{
-		BeginPaint(hwnd, &ps);
-		scene_manager.render(&ps);
-		EndPaint(hwnd, &ps);
-		cout << "time : " << GetTickCount() - loop_start << '\n';
-		loop_start = GetTickCount();
-		break;
-	}
-	case WM_TIMER:
-	{
-		switch (wParam)
+		if (window->DrawCalled == TRUE)
 		{
-		case TimerGameLoop:
-		{
-			loop_start = GetTickCount();
-			InputHandle();
-			scene_manager.update();
-			InvalidateRect(hwnd, NULL, FALSE);
-			UpdateWindow(hwnd);
-			break;
-		}
-		default:
-			break;
+			BeginPaint(hwnd, &ps);
+			scene_manager->render(&ps);
+			EndPaint(hwnd, &ps);
+			window->DrawCalled = FALSE;
 		}
 		break;
 	}
+	
 	case WM_SCENE_CHANGE:
 	{
-		scene_manager.scene_change(wParam);
+		scene_manager->scene_change(wParam);
 		break;
 	}
 	case WM_LBUTTONUP:
 	case WM_MOUSEMOVE:
 	{
 		POINT pt = { LOWORD(lParam), HIWORD(lParam) };
-		scene_manager.mouse_event_handle(msg, pt);
+		scene_manager->mouse_event_handle(msg, pt);
 		break;
 	}
 	default:
@@ -116,7 +100,7 @@ bool Window::init()
 	if (!window)
 		window = this;
 
-	m_window_hwnd_ = CreateWindowEx(WS_EX_APPWINDOW, L"CWSWindowClass", L"CatWantSushi", WS_POPUP, GetSystemMetrics(SM_CXSCREEN) / 2 - gameOptionManager->GameWidth / 2, GetSystemMetrics(SM_CYSCREEN) / 2 - gameOptionManager->GameHeight / 2, gameOptionManager->GameWidth, gameOptionManager->GameHeight, NULL, NULL, NULL, NULL);
+	m_window_hwnd_ = CreateWindowEx(WS_EX_APPWINDOW, L"CWSWindowClass", L"CatWantSushi", WS_POPUP, GetSystemMetrics(SM_CXSCREEN) / 2 - game_option_manager->GameWidth / 2, GetSystemMetrics(SM_CYSCREEN) / 2 - game_option_manager->GameHeight / 2, game_option_manager->GameWidth, game_option_manager->GameHeight, NULL, NULL, NULL, NULL);
 
 	if (!m_window_hwnd_)
 		return false;
@@ -141,7 +125,7 @@ bool Window::broadcast()
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
-	window->on_update();
+	Sleep(1);
 	return true;
 }
 
@@ -159,6 +143,7 @@ bool Window::is_run()
 
 void Window::on_create()
 {
+
 }
 
 void Window::on_update()
@@ -167,7 +152,33 @@ void Window::on_update()
 	//if (GetTickCount() - lastUpdateTime < 16)
 	//	return;
 	//lastUpdateTime = GetTickCount();
-
+	float dwElapsedTicks = 0;
+	DWORD dwLastTicks = 0;
+	DWORD dwInterval = 1000 / game_option_manager->Frame;
+	UINT frameCnt = 0;
+	dwLastTicks = GetTickCount();
+	PAINTSTRUCT ps;
+	while (m_is_run_)
+	{
+		InputHandle();
+		scene_manager->update();
+		InvalidateRect(m_window_hwnd_, NULL, FALSE);
+		UpdateWindow(m_window_hwnd_);
+		draw_called = TRUE;
+		while (draw_called == TRUE)
+			Sleep(1);
+		dwElapsedTicks += (GetTickCount() - dwLastTicks);
+		if (dwElapsedTicks < dwInterval)
+		{
+			Sleep(dwInterval - dwElapsedTicks);
+			dwElapsedTicks = 0;
+		}
+		else 
+		{
+			dwElapsedTicks -= dwInterval;
+		}
+		dwLastTicks = GetTickCount();
+	}
 }
 
 

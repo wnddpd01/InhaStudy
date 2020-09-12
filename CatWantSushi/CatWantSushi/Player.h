@@ -31,7 +31,7 @@ private:
 	UCHAR animation_jump_size;
 	UCHAR animation_jump_change_frame;
 	UCHAR* animation_jump_bitmap_ids;
-	const CHAR max_x_fos_ = GameOptionManager::GetInstance()->GameCellSize / 2;
+	const CHAR max_x_fos_ = GameOptionManager::GetInstance()->GameCellSize * 0.4;
 	FLOAT x_fos_;
 	FLOAT y_fos_;
 	FLOAT x_spd_;
@@ -48,16 +48,16 @@ public:
 			0, nullptr)
 	{
 		if (posX < GameOptionManager::GetInstance()->HorizontalGridCount * 0.5)
-			direction_ = dir_right;
+			direction_ = dir_left;
 		else
 			direction_ = dir_left;
 
 		LoadPlayerBitmap(object_id);
 		set_animation(player_idle);
 		x_fos_ = y_fos_ = 0;
-		x_spd_ = GameOptionManager::GetInstance()->GameCellSize * 0.2;
-		gravity_ = GameOptionManager::GetInstance()->GameCellSize * 0.1;
-		jump_power_ = GameOptionManager::GetInstance()->GameCellSize * 1.45;
+		x_spd_ = GameOptionManager::GetInstance()->GameCellSize * 0.1;
+		gravity_ = GameOptionManager::GetInstance()->GameCellSize * 0.05;
+		jump_power_ = GameOptionManager::GetInstance()->GameCellSize * 1.0;
 		player_rect_.left = object_rect_.left;
 		player_rect_.right = object_rect_.right;
 		player_rect_.top = object_rect_.top;

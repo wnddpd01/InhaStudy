@@ -4,6 +4,7 @@
 #include "GameOptionManager.h"
 #include "Object.h"
 #include <string>
+#include <atlstr.h>
 class UI : public Object
 {
 

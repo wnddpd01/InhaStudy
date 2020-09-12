@@ -27,18 +27,13 @@ struct tile
 class InGameScene :
 	public Scene
 {
-<<<<<<< HEAD
 	Player* player_blue_;
 	Player* player_yellow_;
-	tile_state **map_;
+	tile** map_;
 	UINT game_time_;
 	void (InGameScene::* inGameScene_update)();
 	void update_game_ready();
 	void update_game_start();
-=======
-	Player* player1;
-	tile **map_;
->>>>>>> origin/master
 protected:
 	void CreateUI() override;
 	void CreateObject() override;

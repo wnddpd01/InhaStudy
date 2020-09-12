@@ -3,8 +3,7 @@
 #include "resource.h"
 #include "UI.h"
 
-
-BitmapManager * bitmap_manager = BitmapManager::GetInstance();
+extern BitmapManager * bitmap_manager;
 
 SceneRenderer::SceneRenderer()
 {

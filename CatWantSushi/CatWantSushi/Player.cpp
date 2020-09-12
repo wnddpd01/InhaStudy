@@ -15,7 +15,7 @@ void Player::LoadPlayerBitmap(UINT player_type)
 
 	animation_walk_size = 3;
 	animation_walk_bitmap_ids = new UCHAR[animation_walk_size];
-	animation_walk_change_frame = 5;
+	animation_walk_change_frame = game_option_manager.Frame / 10;
 
 	animation_jump_size = 3;
 	animation_jump_bitmap_ids = new UCHAR[animation_jump_size];
@@ -88,11 +88,11 @@ void Player::PlayerJump(FLOAT jump_strength)
 
 void Player::update()
 {
-	static int max_jump_key_count = GameOptionManager::GetInstance()->Frame * 0.08;
+	const static int max_jump_key_count = GameOptionManager::GetInstance()->Frame * 0.1;
 	if((jump_key_pressed_ == FALSE && jump_key_count_ > 0) || jump_key_count_ == max_jump_key_count)
 	{
 		DOUBLE jump_strength = (DOUBLE)jump_key_count_ / max_jump_key_count;
-		if (jump_strength < 0.5)
+		if (jump_strength < 0.6)
 			jump_strength = 0.55;
 		else if (jump_strength < 1)
 			jump_strength = 0.8;
@@ -103,9 +103,10 @@ void Player::update()
 	}
 	if(jump_key_pressed_ == TRUE)
 		jump_key_pressed_ = FALSE;
-	
+
 	if (isOnLand() == TRUE && !(y_fos_ > 0))
 	{
+		y_fos_ = 0;
 		if (INT(x_fos_) == 0)
 		{
 			x_fos_ = 0;
@@ -132,20 +133,11 @@ void Player::update()
 		object_rect_.top = player_rect_.top;
 		object_rect_.bottom = player_rect_.bottom;
 		set_object_pos();
-		if (isOnLand() == TRUE)
-		{
-			y_fos_ = 0;
-			set_animation(player_idle);
-		}
 	}
 
 	if(x_fos_ != 0)
 	{
-<<<<<<< .merge_file_a03872
 		if (animation_state_ != player_walk && isOnLand() == TRUE)
-=======
-		if (animation_state_ != player_walk && y_fos_ == 0)
->>>>>>> .merge_file_a02352
 		{
 			set_animation(player_walk);
 		}
@@ -157,6 +149,7 @@ void Player::update()
 	}
 
 	set_object_pos();
+
 }
 
 void Player::LoadMap(tile** map)
@@ -168,8 +161,16 @@ BOOL Player::isOnLand()
 {
 	if (ObjectPos.y < 0)
 		return FALSE;
-	if (map_[ObjectPos.y + ObjectWidthHeight.y][ObjectPos.x + 4].tile_state != TILE_NULL || map_[ObjectPos.y + ObjectWidthHeight.y][ObjectPos.x + 3].tile_state != TILE_NULL)
-		return TRUE;
+	if (direction_ == dir_left)
+	{
+		if (map_[ObjectPos.y + ObjectWidthHeight.y][ObjectPos.x + 3].tile_state != TILE_NULL || map_[ObjectPos.y + ObjectWidthHeight.y][ObjectPos.x + 3].tile_state != TILE_NULL)
+			return TRUE;
+	}
+	else
+	{
+		if (map_[ObjectPos.y + ObjectWidthHeight.y][ObjectPos.x + 3].tile_state != TILE_NULL || map_[ObjectPos.y + ObjectWidthHeight.y][ObjectPos.x + 3].tile_state != TILE_NULL)
+			return TRUE;
+	}
 	return FALSE;
 }
 
@@ -192,14 +193,24 @@ INT Player::getDistanceToLand()
 		dir = -1;
 	}
 	LONG cnt = 0;
-<<<<<<< .merge_file_a03872
-	while (search_idx + cnt * dir < game_option_manager->VerticalGridCount
-		&& (map_[search_idx + cnt * dir][ObjectPos.x + 4] == TILE_NULL && map_[search_idx + cnt * dir][ObjectPos.x + 3] == TILE_NULL))
+
+	USHORT footPosition[2];
+	
+	if(direction_ == dir_left)
 	{
-=======
+		footPosition[0] = 3;
+		footPosition[1] = 3;
+	}
+	else
+	{
+		footPosition[0] = 3;
+		footPosition[1] = 3;
+	}
+
+	
 	while (search_idx + cnt * dir < game_option_manager->VerticalGridCount && search_idx + cnt * dir > -1
-		&&(map_[search_idx + cnt * dir][ObjectPos.x + 4].tile_state == TILE_NULL && map_[search_idx + cnt * dir][ObjectPos.x + 3].tile_state == TILE_NULL) )
->>>>>>> .merge_file_a02352
+		&&(map_[search_idx + cnt * dir][ObjectPos.x + footPosition[0]].tile_state == TILE_NULL && map_[search_idx + cnt * dir][ObjectPos.x + footPosition[1]].tile_state == TILE_NULL) )
+	{
 		cnt++;
 	}
 	
@@ -236,7 +247,8 @@ void Player::set_animation(animation_state animation_state)
 		break;
 	}
 	}
-	current_frame_ = animation_change_frame_count_ - 1;
+	object_bitmap_id_ = animation_bitmap_ids_[0];
+	current_frame_ = 0;
 }
 
 Player::Player()

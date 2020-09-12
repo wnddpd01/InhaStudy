@@ -34,10 +34,12 @@ protected:
 	void set_object_pos()
 	{
 		GameOptionManager* game_option_manager = GameOptionManager::GetInstance();
-		object_pos_.x = LONG(object_rect_.left / game_option_manager->GameCellSize);
+		if(direction_ == dir_left)
+			object_pos_.x = LONG(object_rect_.left / game_option_manager->GameCellSize);
+		else
+			object_pos_.x = LONG(object_rect_.right / game_option_manager->GameCellSize - object_width_height_.x + 1);
 		object_pos_.y = LONG(object_rect_.top / game_option_manager->GameCellSize);
 	}
-
 
 	void basicRender(HDC hdc, HDC backHDC);
 public:
@@ -147,6 +149,12 @@ inline void Object::basicRender(HDC hdc, HDC backHDC)
 		TransparentBlt(hdc, ObjectRect.left, ObjectRect.top, ObjectRect.right - ObjectRect.left, ObjectRect.bottom - ObjectRect.top, backHDC, 0, 0, object_bitmap.bmWidth, object_bitmap.bmHeight, RGB(255, 0, 255));
 		DeleteDC(reverseHDC);
 		DeleteObject(backHBIT);
+	}
+	if(object_id_ == 3)
+	{
+		int object_left = (object_pos_.x + 3) * GameOptionManager::GetInstance()->GameCellSize;
+		int object_top = (object_pos_.y +object_width_height_.y) * GameOptionManager::GetInstance()->GameCellSize;
+		Rectangle(hdc, object_left, object_top, object_left + GameOptionManager::GetInstance()->GameCellSize, object_top + GameOptionManager::GetInstance()->GameCellSize);
 	}
 }
 
