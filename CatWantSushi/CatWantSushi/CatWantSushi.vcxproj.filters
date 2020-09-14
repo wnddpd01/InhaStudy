@@ -73,6 +73,18 @@
     <Filter Include="Resource\Bitmap\UI\Letter">
       <UniqueIdentifier>{da9ef4eb-28b7-434d-92a1-a62f7cad28b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\InGameScene\SushiGenerator">
+      <UniqueIdentifier>{bad3f2fc-0e55-40f6-9d58-604c973a4708}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Bitmap\Object\Sushi">
+      <UniqueIdentifier>{a22ae085-a3f3-4691-8057-a686d58aeff9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\BasicObject">
+      <UniqueIdentifier>{ef333b41-262c-4028-a994-e23583f05ebf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Sushi">
+      <UniqueIdentifier>{05facc6b-6b51-4f0e-8c16-6279a7741372}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -101,6 +113,15 @@
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Object\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="SushiGenerator.cpp">
+      <Filter>Scene\InGameScene\SushiGenerator</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Object\BasicObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Sushi.cpp">
+      <Filter>Object\Sushi</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -137,14 +158,20 @@
     <ClInclude Include="Scene.h">
       <Filter>Scene\BaseScene</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>Object</Filter>
-    </ClInclude>
     <ClInclude Include="AnimateObject.h">
       <Filter>Object\AnimateObject</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Object\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="SushiGenerator.h">
+      <Filter>Scene\InGameScene\SushiGenerator</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Object\BasicObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Sushi.h">
+      <Filter>Object\Sushi</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -233,6 +260,27 @@
     </Image>
     <Image Include="CWSResource\UI\TEXT_3.bmp">
       <Filter>Resource\Bitmap\UI\Letter</Filter>
+    </Image>
+    <Image Include="CWSResource\score_object\SUSHI_EGG.bmp">
+      <Filter>Resource\Bitmap\Object\Sushi</Filter>
+    </Image>
+    <Image Include="CWSResource\score_object\SUSHI_SHRIMP.bmp">
+      <Filter>Resource\Bitmap\Object\Sushi</Filter>
+    </Image>
+    <Image Include="CWSResource\score_object\SUSHI_TUNA.bmp">
+      <Filter>Resource\Bitmap\Object\Sushi</Filter>
+    </Image>
+    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_ATTACK.bmp">
+      <Filter>Resource\Bitmap\Player_CatYellow</Filter>
+    </Image>
+    <Image Include="CWSResource\cat_blue\CAT_BLUE_ATTACK.bmp">
+      <Filter>Resource\Bitmap\Player_CatBlue</Filter>
+    </Image>
+    <Image Include="CWSResource\UI\UIScorePlayer1.bmp">
+      <Filter>Resource\Bitmap\UI\Image</Filter>
+    </Image>
+    <Image Include="CWSResource\UI\UIScorePlayer2.bmp">
+      <Filter>Resource\Bitmap\UI\Image</Filter>
     </Image>
   </ItemGroup>
 </Project>

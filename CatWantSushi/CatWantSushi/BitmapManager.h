@@ -12,6 +12,8 @@ class BitmapManager
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_START_BTN, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_START_BTN))));
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_INGAME_SCENE_BACKGROUND, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_INGAME_SCENE_BACKGROUND))));
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_UI_TIMER, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_UI_TIMER))));
+		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_UI_SCORE_PLAYER2, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_UI_SCORE_PLAYER2))));
+		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_UI_SCORE_PLAYER1, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_UI_SCORE_PLAYER1))));
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_INGAME_SCENE_UI_CAT_YELLOW, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_INGAME_SCENE_UI_CAT_YELLOW))));
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_INGAME_SCENE_UI_CAT_BLUE, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_INGAME_SCENE_UI_CAT_BLUE))));
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_OBJECT_PLATFORM, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_OBJECT_PLATFORM))));
@@ -28,6 +30,7 @@ class BitmapManager
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_CAT_BLUE_JUMP_1, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_CAT_BLUE_JUMP_1))));
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_CAT_BLUE_JUMP_2, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_CAT_BLUE_JUMP_2))));
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_CAT_BLUE_JUMP_3, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_CAT_BLUE_JUMP_3))));
+		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_CAT_BLUE_ATTACK, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_CAT_BLUE_ATTACK))));
 
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_CAT_YELLOW_IDLE, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_CAT_YELLOW_IDLE))));
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_CAT_YELLOW_WALK_1, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_CAT_YELLOW_WALK_1))));
@@ -36,6 +39,11 @@ class BitmapManager
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_CAT_YELLOW_JUMP_1, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_CAT_YELLOW_JUMP_1))));
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_CAT_YELLOW_JUMP_2, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_CAT_YELLOW_JUMP_2))));
 		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_CAT_YELLOW_JUMP_3, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_CAT_YELLOW_JUMP_3))));
+		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_CAT_YELLOW_ATTACK, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_CAT_YELLOW_ATTACK))));
+
+		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_SUSHI_EGG, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_SUSHI_EGG))));
+		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_SUSHI_SHRIMP, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_SUSHI_SHRIMP))));
+		imageMap.insert(std::pair<UINT, HBITMAP>(BITMAP_SUSHI_TUNA, LoadBitmap(hInstance, MAKEINTRESOURCE(BITMAP_SUSHI_TUNA))));
 		
 	}
 public:

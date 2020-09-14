@@ -1,6 +1,8 @@
 #include "Window.h"
 
 #include <iostream>
+#include <thread>
+
 
 #include "SceneManager.h"
 #include "StartScene.h"
@@ -42,13 +44,13 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	}
 	case WM_PAINT:
 	{
-		if (window->DrawCalled == TRUE)
+		/*if (window->DrawCalled == TRUE)
 		{
 			BeginPaint(hwnd, &ps);
 			scene_manager->render(&ps);
 			EndPaint(hwnd, &ps);
 			window->DrawCalled = FALSE;
-		}
+		}*/
 		break;
 	}
 	
@@ -122,10 +124,10 @@ bool Window::broadcast()
 	MSG msg;
 	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0)
 	{
-		TranslateMessage(&msg);
+		//TranslateMessage(&msg);
 		DispatchMessage(&msg);
+		std::this_thread::yield();
 	}
-	Sleep(1);
 	return true;
 }
 
@@ -152,25 +154,30 @@ void Window::on_update()
 	//if (GetTickCount() - lastUpdateTime < 16)
 	//	return;
 	//lastUpdateTime = GetTickCount();
-	float dwElapsedTicks = 0;
+	DWORD dwElapsedTicks = 0;
 	DWORD dwLastTicks = 0;
 	DWORD dwInterval = 1000 / game_option_manager->Frame;
 	UINT frameCnt = 0;
 	dwLastTicks = GetTickCount();
 	PAINTSTRUCT ps;
+	ps.hdc = GetDC(m_window_hwnd_);
+	ps.fErase = FALSE;
+	GetClientRect(m_window_hwnd_, &ps.rcPaint);
 	while (m_is_run_)
 	{
 		InputHandle();
 		scene_manager->update();
-		InvalidateRect(m_window_hwnd_, NULL, FALSE);
+		scene_manager->render(&ps);
+		/*InvalidateRect(m_window_hwnd_, NULL, FALSE);
 		UpdateWindow(m_window_hwnd_);
 		draw_called = TRUE;
 		while (draw_called == TRUE)
-			Sleep(1);
+			Sleep(1);*/
 		dwElapsedTicks += (GetTickCount() - dwLastTicks);
 		if (dwElapsedTicks < dwInterval)
 		{
-			Sleep(dwInterval - dwElapsedTicks);
+			//Sleep(dwInterval - dwElapsedTicks);
+			std::this_thread::sleep_for(std::chrono::milliseconds(dwInterval - dwElapsedTicks));
 			dwElapsedTicks = 0;
 		}
 		else 
@@ -179,6 +186,7 @@ void Window::on_update()
 		}
 		dwLastTicks = GetTickCount();
 	}
+	ReleaseDC(m_window_hwnd_, ps.hdc);
 }
 
 

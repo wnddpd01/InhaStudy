@@ -48,6 +48,17 @@ void SceneRenderer::DrawSceneObeject(HDC hdc, const LPRECT paint_rect, std::vect
 	DeleteDC(backHDC);
 }
 
+void SceneRenderer::DrawSceneObeject(HDC hdc, const LPRECT paint_rect, std::list<Object*> scene_objects)
+{
+	BitmapManager* bitmap_manager = BitmapManager::GetInstance();
+	HDC backHDC = CreateCompatibleDC(hdc);
+	for (Object* object : scene_objects)
+	{
+		(object->*object->render)(hdc, backHDC);
+	}
+	DeleteDC(backHDC);
+}
+
 void SceneRenderer::DrawGrid(HDC hdc, const LPRECT paint_rect)
 {
 	GameOptionManager * game_option_manager = GameOptionManager::GetInstance();

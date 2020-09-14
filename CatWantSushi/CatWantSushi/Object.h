@@ -1,4 +1,6 @@
 #pragma once
+#include <iostream>
+
 #include "GameOptionManager.h"
 #include "BitmapManager.h"
 struct POINT_UCHAR
@@ -7,9 +9,9 @@ struct POINT_UCHAR
 	UCHAR y;
 };
 
-enum direction : BOOL
+enum direction : CHAR
 {
-	dir_left = 0, dir_right
+	dir_left = -1, dir_right = 1
 };
 class Object
 {
@@ -21,7 +23,20 @@ protected:
 	POINT_UCHAR object_width_height_;
 	RECT object_rect_;
 	direction direction_;
-	
+public:
+	direction get_direction() const
+	{
+		return direction_;
+	}
+
+	void set_direction(direction direction)
+	{
+		direction_ = direction;
+	}
+
+	__declspec(property(get = get_direction, put = set_direction)) direction Direction;
+
+protected:
 	void set_object_rect()
 	{
 		GameOptionManager* game_option_manager = GameOptionManager::GetInstance();
@@ -41,7 +56,6 @@ protected:
 		object_pos_.y = LONG(object_rect_.top / game_option_manager->GameCellSize);
 	}
 
-	void basicRender(HDC hdc, HDC backHDC);
 public:
 #pragma region GetterAndSetter
 
@@ -124,37 +138,7 @@ public:
 
 	//virtual void render(HDC hdc, HDC backHDC);
 	void (Object::*render)(HDC hdc, HDC backHDC);
+	void basicRender(HDC hdc, HDC backHDC);
+	void moveUpdownRender(HDC hdc, HDC backHDC);
 	virtual void update() { };
 };
-
-inline void Object::basicRender(HDC hdc, HDC backHDC)
-{
-	static BITMAP object_bitmap;
-	static auto bitmap_manager = BitmapManager::GetInstance();
-	GetObject(bitmap_manager->imageMap.find(ObjectBitmapId)->second, sizeof(BITMAP), &object_bitmap);
-	if (direction_ == dir_right)
-	{
-		SelectObject(backHDC, bitmap_manager->imageMap.find(ObjectBitmapId)->second);
-		TransparentBlt(hdc, ObjectRect.left, ObjectRect.top, ObjectRect.right - ObjectRect.left, ObjectRect.bottom - ObjectRect.top, backHDC, 0, 0, object_bitmap.bmWidth, object_bitmap.bmHeight, RGB(255, 0, 255));
-	}
-	else
-	{
-		HDC reverseHDC = CreateCompatibleDC(backHDC);
-		SelectObject(reverseHDC, bitmap_manager->imageMap.find(ObjectBitmapId)->second);
-		
-		HBITMAP backHBIT = CreateCompatibleBitmap(hdc, object_bitmap.bmWidth, object_bitmap.bmHeight);
-		SelectObject(backHDC, backHBIT);
-		
-		StretchBlt(backHDC, object_bitmap.bmWidth - 1, 0, -object_bitmap.bmWidth, object_bitmap.bmHeight, reverseHDC, 0, 0, object_bitmap.bmWidth, object_bitmap.bmHeight, SRCCOPY);
-		TransparentBlt(hdc, ObjectRect.left, ObjectRect.top, ObjectRect.right - ObjectRect.left, ObjectRect.bottom - ObjectRect.top, backHDC, 0, 0, object_bitmap.bmWidth, object_bitmap.bmHeight, RGB(255, 0, 255));
-		DeleteDC(reverseHDC);
-		DeleteObject(backHBIT);
-	}
-	if(object_id_ == 3)
-	{
-		int object_left = (object_pos_.x + 3) * GameOptionManager::GetInstance()->GameCellSize;
-		int object_top = (object_pos_.y +object_width_height_.y) * GameOptionManager::GetInstance()->GameCellSize;
-		Rectangle(hdc, object_left, object_top, object_left + GameOptionManager::GetInstance()->GameCellSize, object_top + GameOptionManager::GetInstance()->GameCellSize);
-	}
-}
-

@@ -5,15 +5,15 @@
 using namespace std;
 enum shortCut : UCHAR
 {
-	player1_move_left = 0, player1_move_right, player1_jump, player1_attack, player1_guard, player2_move_left, player2_move_right, player2_jump
+	player1_attack = 0, player1_guard, player1_move_left, player1_move_right, player1_jump, player2_attack, player2_guard, player2_move_left, player2_move_right, player2_jump
 };
 
 class GameOptionManager
 {
 	GameOptionManager()
 	{
-		GameWidth = 1920;
-		GameHeight = 1080;
+		GameWidth = 1280;
+		GameHeight = 720;
 		Frame = 60;
 		HorizontalGridCount = 64;
 		VerticalGridCount = 36;
@@ -21,9 +21,13 @@ class GameOptionManager
 		shortCutKeyList.insert(make_pair(player1_move_left, VK_LEFT));
 		shortCutKeyList.insert(make_pair(player1_move_right, VK_RIGHT));
 		shortCutKeyList.insert(make_pair(player1_jump, VK_UP));
+		shortCutKeyList.insert(make_pair(player1_guard, VK_OEM_2));
+		shortCutKeyList.insert(make_pair(player1_attack, VK_OEM_PERIOD));
 		shortCutKeyList.insert(make_pair(player2_move_left, 'A'));
 		shortCutKeyList.insert(make_pair(player2_move_right, 'D'));
 		shortCutKeyList.insert(make_pair(player2_jump, 'W'));
+		shortCutKeyList.insert(make_pair(player2_attack, 'G'));
+		shortCutKeyList.insert(make_pair(player2_guard, 'H'));
 	}
 	UINT game_width_;
 	UINT game_height_;

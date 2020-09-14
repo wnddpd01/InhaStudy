@@ -7,7 +7,7 @@ void AnimateObject::animateRender(HDC hdc, HDC backHDC)
 {
 	if(current_animation_idx_ < animation_size_)
 		current_frame_++;
-	if (current_frame_ == animation_change_frame_count_)
+	if (current_frame_ > animation_change_frame_count_)
 	{
 		++current_animation_idx_;
 		if (!(current_animation_idx_ < animation_size_))
@@ -16,6 +16,7 @@ void AnimateObject::animateRender(HDC hdc, HDC backHDC)
 				current_animation_idx_ = 0;
 			else
 			{
+				current_frame_ = 0;
 				Object::basicRender(hdc, backHDC);
 				return;
 			}

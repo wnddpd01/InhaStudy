@@ -31,14 +31,21 @@
 #define BITMAP_UI_TIMER                 133
 #define BITMAP_TEXT_1                   134
 #define BITMAP_TEXT_2                   135
-#define IDB_BITMAP5                     136
 #define BITMAP_TEXT_3                   136
+#define BITMAP_SUSHI_EGG                137
+#define BITMAP_SUSHI_SHRIMP             138
+#define BITMAP_SUSHI_TUNA               139
+#define BITMAP_CAT_YELLOW_ATTACK        140
+#define BITMAP_CAT_BLUE_ATTACK          141
+#define BITMAP_UI_SCORE_PLAYER1         142
+#define IDB_BITMAP4                     143
+#define BITMAP_UI_SCORE_PLAYER2         143
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        137
+#define _APS_NEXT_RESOURCE_VALUE        144
 #define _APS_NEXT_COMMAND_VALUE         40002
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           101

@@ -10,8 +10,20 @@ protected:
 	UCHAR current_frame_;
 	UCHAR current_animation_idx_;
 	UCHAR animation_change_frame_count_;
-	UCHAR * animation_bitmap_ids_;
+	UCHAR* animation_bitmap_ids_;
+public:
+	UCHAR get_animation_change_frame_count() const
+	{
+		return animation_change_frame_count_;
+	}
 
+	void set_animation_change_frame_count(UCHAR animation_change_frame_count)
+	{
+		animation_change_frame_count_ = animation_change_frame_count;
+	}
+
+	__declspec(property(get = get_animation_change_frame_count, put = set_animation_change_frame_count)) UCHAR
+	AnimationChangeFrameCount;
 
 public:
 	AnimateObject(UINT object_id, UINT object_bitmap_id, const UCHAR& posX, const UCHAR& posY, const UCHAR& width,

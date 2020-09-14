@@ -145,11 +145,14 @@
     <ClCompile Include="AnimateObject.cpp" />
     <ClCompile Include="InGameScene.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneRenderer.cpp" />
     <ClCompile Include="StartScene.cpp" />
+    <ClCompile Include="Sushi.cpp" />
+    <ClCompile Include="SushiGenerator.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +168,8 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneRenderer.h" />
     <ClInclude Include="StartScene.h" />
+    <ClInclude Include="Sushi.h" />
+    <ClInclude Include="SushiGenerator.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
@@ -178,6 +183,9 @@
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="CWSResource\background\StartSceneBackground.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\cat_blue\CAT_BLUE_ATTACK.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="CWSResource\cat_blue\CAT_BLUE_JUMP_1.bmp">
@@ -201,6 +209,7 @@
     <Image Include="CWSResource\cat_blue\CAT_BLUE_WALK_3.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_ATTACK.bmp" />
     <Image Include="CWSResource\cat_yellow\CAT_YELLOW_GUARD.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
@@ -234,6 +243,15 @@
     <Image Include="CWSResource\Object\Rail2.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="CWSResource\score_object\SUSHI_EGG.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\score_object\SUSHI_SHRIMP.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\score_object\SUSHI_TUNA.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="CWSResource\UI\TEXT_1.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
@@ -250,6 +268,12 @@
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="CWSResource\UI\BtnStart.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\UI\UIScorePlayer1.bmp">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="CWSResource\UI\UIScorePlayer2.bmp">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="CWSResource\UI\UITimer.bmp">
