@@ -260,7 +260,8 @@ BOOL Player::isOnLand()
 		return FALSE;
 	if (map_[ObjectPos.y + ObjectWidthHeight.y][ObjectPos.x + 3].tile_state != TILE_NULL)
 		return TRUE;
-	if(enemy_->collide_rect_.top == collide_rect_.bottom)
+	RECT retRect;
+	if(enemy_->collide_rect_.top == collide_rect_.bottom && enemy_->collide_rect_.right > collide_rect_.left && enemy_->collide_rect_.left < collide_rect_.right)
 		return TRUE;
 	return FALSE;
 }
@@ -271,6 +272,7 @@ INT Player::getVerticalDistanceToLand()
 	LONG search_idx = 0;
 	CHAR dir = 0;
 	INT cell_rest_ = 0;
+	//INT player_distance = 0;
 	if (y_fos_ < 0)
 	{
 		cell_rest_ = game_option_manager->GameCellSize - ObjectRect.bottom % game_option_manager->GameCellSize;
@@ -292,7 +294,7 @@ INT Player::getVerticalDistanceToLand()
 		cnt++;
 	}
 
-	INT dis = (cnt * game_option_manager->GameCellSize + cell_rest_) * dir;
+	INT dis = (cnt * game_option_manager->GameCellSize + cell_rest_);
 
 	RECT tempRect = collide_rect_;
 	tempRect.top = enemy_->collide_rect_.top;
@@ -301,11 +303,13 @@ INT Player::getVerticalDistanceToLand()
 	if(IntersectRect(&temp, &tempRect, &enemy_->collide_rect_))
 	{
 		INT player_dis = enemy_->collide_rect_.top - collide_rect_.bottom;
-		if (player_dis < 0 && player_dis > dis)
+		if (y_fos_ > 0)
+			player_dis = collide_rect_.top - enemy_->collide_rect_.bottom;
+		if (player_dis >= 0 && player_dis < dis)
 			dis = player_dis;
 	}
 	
-	return dis;
+	return dis  * dir;
 }
 
 INT Player::getHorizontalDistanceToLand()
