@@ -258,7 +258,7 @@ void InGameScene::render(HDC hdc, const LPRECT paint_rect)
 	scene_renderer_.DrawSceneObeject(hdc, paint_rect, sushi_list_);
 	scene_renderer_.DrawSceneObeject(hdc, paint_rect, player_yellow_->player_object);
 	scene_renderer_.DrawSceneObeject(hdc, paint_rect, player_blue_->player_object);
-	scene_renderer_.DrawGrid(hdc, paint_rect);
+	//scene_renderer_.DrawGrid(hdc, paint_rect);
 }
 
 void InGameScene::free()

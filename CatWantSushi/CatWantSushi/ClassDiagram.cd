@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Window" Collapsed="true">
+    <Position X="11.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>GACAAIAACAAAAAAAAAAAAAAkAQAgQAIAAIAADMAAgAA=</HashCode>
+      <FileName>Window.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SceneManager" Collapsed="true">
+    <Position X="11.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACABAAEAAEAAAAAACACAAAQYQAAAAAAAUAAQ=</HashCode>
+      <FileName>SceneManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BitmapManager" Collapsed="true">
+    <Position X="8" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAQAAAAAAAAAAJAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BitmapManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameOptionManager" Collapsed="true">
+    <Position X="9.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QCEQAAIEQkAABBBAAQQAEAAAFABAEQBAAUAAAQgAgAE=</HashCode>
+      <FileName>GameOptionManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StartScene" Collapsed="true">
+    <Position X="8.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAhAAAhAAAABAAQAAAAAAAAAAAAKAAAAEBAAUCAA=</HashCode>
+      <FileName>StartScene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InGameScene" Collapsed="true">
+    <Position X="5.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAgCAABAAAACAQAABABEAAAAAAgMAAJAAIACcAAA=</HashCode>
+      <FileName>InGameScene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SushiGenerator" Collapsed="true">
+    <Position X="9.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>SushiGenerator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SceneRenderer" Collapsed="true">
+    <Position X="8" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAkAAAAACAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>SceneRenderer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Scene" Collapsed="true">
+    <Position X="6.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAhAABBAAAAAAgAAAAAAAQAAAAgIAARAAAAAUCBA=</HashCode>
+      <FileName>Scene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UI" Collapsed="true">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAACAAAAAAAAAAACAAAIGAAAAAAEAAAAAAAAEAA=</HashCode>
+      <FileName>UI.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AnimateObject" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAEIAACAAAAAAAAAACAAAABCAAACAAAAICABAAAA=</HashCode>
+      <FileName>AnimateObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Player" Collapsed="true">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQFBAAoIAAsAwQwIAEAIQJFJAAAAIAAApCAggQBcABM=</HashCode>
+      <FileName>Player.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Object" Collapsed="true">
+    <Position X="2.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAKBggCAAQBAAEAggSBAAAAQBgCEAAAgGEiAAEAUAAA=</HashCode>
+      <FileName>Object.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sushi" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKAAAAAA=</HashCode>
+      <FileName>Sushi.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="tile" Collapsed="true">
+    <Position X="11.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAIAAAA=</HashCode>
+      <FileName>InGameScene.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="RECT_FLOAT" Collapsed="true">
+    <Position X="9.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAgAAAAIAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Player.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="POINT_UCHAR" Collapsed="true">
+    <Position X="8" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAAAAA=</HashCode>
+      <FileName>Object.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="SCENE_STATE" Collapsed="true">
+    <Position X="9.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAQA=</HashCode>
+      <FileName>GlobalValue.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TimerID" Collapsed="true">
+    <Position X="11.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Window.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="shortCut" Collapsed="true">
+    <Position X="11.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>kACAAAAAAAAAAAAMIAAAAAAAAAASAABAAAAABAAAAAA=</HashCode>
+      <FileName>GameOptionManager.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="start_scene_ui_id" Collapsed="true">
+    <Position X="8" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>StartScene.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ingame_scene_ui_id" Collapsed="true">
+    <Position X="8" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAEAAIAAAIEAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>InGameScene.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ingame_object_id" Collapsed="true">
+    <Position X="11.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAABAAAAAAAAAAIAgCAAAAAAAAIAAAAAAAAAg=</HashCode>
+      <FileName>InGameScene.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="tile_state" Collapsed="true">
+    <Position X="9.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>InGameScene.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="animation_state" Collapsed="true">
+    <Position X="8" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAAAAAAAAAACAABIAAIAAAAAAAAA=</HashCode>
+      <FileName>Player.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="direction" Collapsed="true">
+    <Position X="9.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Object.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Malgun Gothic" Size="9" />
+</ClassDiagram>

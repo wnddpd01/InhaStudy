@@ -24,16 +24,4 @@ void Object::basicRender(HDC hdc, HDC backHDC)
 		DeleteDC(reverseHDC);
 		DeleteObject(backHBIT);
 	}
-	if (object_id_ == 3)
-	{
-		int object_left = (object_pos_.x + 3) * GameOptionManager::GetInstance()->GameCellSize;
-		int object_top = (object_pos_.y + object_width_height_.y) * GameOptionManager::GetInstance()->GameCellSize;
-		Rectangle(hdc, object_left, object_top, object_left + GameOptionManager::GetInstance()->GameCellSize, object_top + GameOptionManager::GetInstance()->GameCellSize);
-	}
 }
-
-void Object::moveUpdownRender(HDC hdc, HDC backHDC)
-{
-	basicRender(hdc, backHDC);
-}
-

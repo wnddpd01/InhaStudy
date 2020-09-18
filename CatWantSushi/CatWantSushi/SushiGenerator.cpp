@@ -24,7 +24,7 @@ Object* SushiGenerator::sushi_generation()
 	static std::uniform_int_distribution<int> vertical_dist(3, INT(game_option_manager->VerticalGridCount) - sushi_length - 3);
 	UCHAR sushi_type = sushi_type_dist(rd);
 	Sushi* sushi = new Sushi(OBJECT_SUSHI_EGG + sushi_type, horizontal_dist(gen), vertical_dist(rd));
-	
-	sushi->render = &Object::moveUpdownRender;
+
+	sushi->render = &Object::move_updown_render;
 	return sushi;
 }

@@ -1,6 +1,8 @@
 #pragma once
 #include <map>
 #include <Windows.h>
+#include <fstream>
+#include <string>
 
 using namespace std;
 enum shortCut : UCHAR
@@ -12,8 +14,7 @@ class GameOptionManager
 {
 	GameOptionManager()
 	{
-		GameWidth = 1280;
-		GameHeight = 720;
+		read_option_from_file();
 		Frame = 60;
 		HorizontalGridCount = 64;
 		VerticalGridCount = 36;
@@ -36,6 +37,32 @@ class GameOptionManager
 	size_t vertical_grid_count_;
 	UCHAR frame_;
 
+	void read_option_from_file()
+	{
+		static char file_name[32] = "game_option.txt";
+		static fstream option_file;
+		option_file.open(file_name);
+		string line;
+		if(option_file.is_open() == true)
+		{
+			getline(option_file, line);
+			GameWidth = stoi(line);
+			getline(option_file, line);
+			GameHeight = stoi(line);
+			option_file.close();
+		}
+		else
+		{
+			GameWidth = 1280;
+			GameHeight = 720;
+			option_file.open(file_name, ios_base::out);
+			line = to_string(GameWidth) +'\n';
+			option_file.write(line.c_str(), line.size());
+			line = to_string(GameHeight) + '\n';
+			option_file.write(line.c_str(), line.size());
+			option_file.close();
+		}
+	}
 #pragma region GetterAndSetter
 public:
 	UINT get_game_width() const

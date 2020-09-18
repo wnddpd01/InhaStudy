@@ -110,7 +110,7 @@ bool Window::init()
 
 #ifdef DEBUG__
 	m_console_hwnd_ = GetConsoleWindow();
-	ShowWindow(m_console_hwnd_, SW_SHOW);
+	ShowWindow(m_console_hwnd_, SW_HIDE);
 #endif
 	ShowWindow(m_window_hwnd_, SW_SHOW);
 	UpdateWindow(m_window_hwnd_);
@@ -165,6 +165,7 @@ void Window::on_update()
 	GetClientRect(m_window_hwnd_, &ps.rcPaint);
 	while (m_is_run_)
 	{
+		dwLastTicks = GetTickCount();
 		InputHandle();
 		scene_manager->update();
 		scene_manager->render(&ps);
@@ -184,7 +185,6 @@ void Window::on_update()
 		{
 			dwElapsedTicks -= dwInterval;
 		}
-		dwLastTicks = GetTickCount();
 	}
 	ReleaseDC(m_window_hwnd_, ps.hdc);
 }

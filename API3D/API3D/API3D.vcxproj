@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8F914D9B-5C03-4484-8A0C-5E73A267D086}</ProjectGuid>
+    <ProjectGuid>{FFCBF9FF-7B93-424E-9D70-81BDB9865D96}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>CatWantSushi</RootNamespace>
+    <RootNamespace>API3D</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -83,42 +83,39 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -127,161 +124,47 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AnimateObject.cpp" />
-    <ClCompile Include="InGameScene.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Object.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="SceneRenderer.cpp" />
-    <ClCompile Include="StartScene.cpp" />
-    <ClCompile Include="Sushi.cpp" />
-    <ClCompile Include="SushiGenerator.cpp" />
-    <ClCompile Include="Window.cpp" />
+    <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AnimateObject.h" />
-    <ClInclude Include="BitmapManager.h" />
-    <ClInclude Include="GameOptionManager.h" />
-    <ClInclude Include="GlobalValue.h" />
-    <ClInclude Include="InGameScene.h" />
-    <ClInclude Include="Object.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="SceneRenderer.h" />
-    <ClInclude Include="StartScene.h" />
-    <ClInclude Include="Sushi.h" />
-    <ClInclude Include="SushiGenerator.h" />
-    <ClInclude Include="UI.h" />
-    <ClInclude Include="Window.h" />
+    <ClInclude Include="API3D.h" />
+    <ClInclude Include="cMatrix.h" />
+    <ClInclude Include="cVector3.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="CatWantSushi.rc">
-      <DeploymentContent>false</DeploymentContent>
-    </ResourceCompile>
+    <ClCompile Include="API3D.cpp" />
+    <ClCompile Include="cMatrix.cpp" />
+    <ClCompile Include="cVector3.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="CWSResource\background\InGameSceneBackground.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\background\StartSceneBackground.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\cat_blue\CAT_BLUE_ATTACK.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\cat_blue\CAT_BLUE_JUMP_1.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\cat_blue\CAT_BLUE.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\cat_blue\CAT_BLUE_JUMP_2.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\cat_blue\CAT_BLUE_JUMP_3.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\cat_blue\CAT_BLUE_WALK_1.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\cat_blue\CAT_BLUE_WALK_2.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\cat_blue\CAT_BLUE_WALK_3.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_ATTACK.bmp" />
-    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_GUARD.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_IDLE.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_JUMP_1.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_JUMP_2.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_JUMP_3.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_WALK_1.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_WALK_2.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\cat_yellow\CAT_YELLOW_WALK_3.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\Object\Platform.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\Object\Rail1.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\Object\Rail2.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\score_object\SUSHI_EGG.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\score_object\SUSHI_SHRIMP.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\score_object\SUSHI_TUNA.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\UI\TEXT_1.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\UI\TEXT_2.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\UI\TEXT_3.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\UI\UICatBlue.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\UI\UICatYellow.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\UI\BtnStart.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\UI\UIScorePlayer1.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\UI\UIScorePlayer2.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="CWSResource\UI\UITimer.bmp">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
+    <ResourceCompile Include="API3D.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
+    <Image Include="API3D.ico" />
+    <Image Include="small.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

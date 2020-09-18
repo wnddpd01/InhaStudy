@@ -241,7 +241,6 @@ void Player::update()
 	}
 
 	set_object_pos();
-
 }
 
 void Player::LoadMap(tile** map)

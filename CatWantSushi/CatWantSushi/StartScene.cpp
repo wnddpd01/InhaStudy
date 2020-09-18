@@ -63,7 +63,7 @@ void StartScene::render(HDC hdc, const LPRECT paint_rect)
 {
 	scene_renderer_.DrawSceneBackground(hdc, paint_rect, BITMAP_START_SCENE_BACKGROUND);
 	scene_renderer_.DrawSceneUI(hdc, paint_rect, scene_uis_);
-	scene_renderer_.DrawGrid(hdc, paint_rect);
+	//scene_renderer_.DrawGrid(hdc, paint_rect);
 }
 
 void StartScene::free()

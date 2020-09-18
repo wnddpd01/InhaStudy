@@ -139,6 +139,11 @@ public:
 	//virtual void render(HDC hdc, HDC backHDC);
 	void (Object::*render)(HDC hdc, HDC backHDC);
 	void basicRender(HDC hdc, HDC backHDC);
-	void moveUpdownRender(HDC hdc, HDC backHDC);
+	void move_updown_render(HDC hdc, HDC backHDC);
 	virtual void update() { };
 };
+
+inline void Object::move_updown_render(HDC hdc, HDC backHDC)
+{
+	basicRender(hdc, backHDC);
+}
