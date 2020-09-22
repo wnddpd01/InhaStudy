@@ -194,16 +194,7 @@ void InGameScene::CreateObject()
 
 void InGameScene::SetMap()
 {
-	map_ = new tile*[game_option_manager->VerticalGridCount];
-	for (size_t i = 0; i < game_option_manager->VerticalGridCount; i++)
-	{
-		map_[i] = new tile[game_option_manager->HorizontalGridCount];
-		for (size_t j = 0; j < game_option_manager->HorizontalGridCount; j++)
-		{
-			map_[i][j].tile_state = TILE_NULL;
-			map_[i][j].tile_object = nullptr;
-		}
-	}
+
 	for(Object * object : scene_objects_)
 	{
 		if(object->ObjectId == OBJECT_PLATFORM)
@@ -236,9 +227,19 @@ void InGameScene::init()
 	this->game_time_ = 120;
 	CreateObject();
 	CreateUI();
+	map_ = new tile*[game_option_manager->VerticalGridCount];
+	for (size_t i = 0; i < game_option_manager->VerticalGridCount; i++)
+	{
+		map_[i] = new tile[game_option_manager->HorizontalGridCount];
+		for (size_t j = 0; j < game_option_manager->HorizontalGridCount; j++)
+		{
+			map_[i][j].tile_state = TILE_NULL;
+			map_[i][j].tile_object = nullptr;
+		}
+	}
 	SetMap();
-	player_blue_->LoadMap(map_);
-	player_yellow_->LoadMap(map_);
+	player_blue_->LoadMap(&map_);
+	player_yellow_->LoadMap(&map_);
 	player_blue_->LoadEnemy(player_yellow_);
 	player_yellow_->LoadEnemy(player_blue_);
 	inGameScene_update = &InGameScene::update_game_ready;

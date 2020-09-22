@@ -32,7 +32,6 @@ class InGameScene :
 {
 	Player* player_blue_;
 	Player* player_yellow_;
-	tile** map_;
 	UINT game_time_;
 	std::list<Object*> sushi_list_;
 	SushiGenerator* sushi_generator_;
@@ -48,6 +47,7 @@ protected:
 	void CreateObject() override;
 	void SetMap();
 public:
+	tile** map_;
 	InGameScene();
 	~InGameScene();
 	void init() override;

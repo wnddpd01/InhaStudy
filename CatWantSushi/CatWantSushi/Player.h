@@ -49,7 +49,7 @@ private:
 	UCHAR jump_key_count_;
 	FLOAT jump_power_;
 	FLOAT gravity_;
-	tile** map_;
+	tile* map_;
 	RECT_FLOAT player_rect_;
 	Object* attackObject;
 	Player* enemy_;
@@ -98,7 +98,7 @@ public:
 	void set_animation(animation_state animation_state);
 	void set_collider_rect();
 	void update() override;
-	void LoadMap(tile** map);
+	void LoadMap(tile*** map);
 	void LoadEnemy(Player* enemy);
 
 	BOOL isOnLand();

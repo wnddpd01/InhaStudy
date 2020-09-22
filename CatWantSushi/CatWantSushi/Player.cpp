@@ -243,9 +243,9 @@ void Player::update()
 	set_object_pos();
 }
 
-void Player::LoadMap(tile** map)
+void Player::LoadMap(tile*** map)
 {
-	map_ = map;
+	*map_ = *map;
 }
 
 void Player::LoadEnemy(Player* enemy)
@@ -257,7 +257,7 @@ BOOL Player::isOnLand()
 {
 	if (ObjectPos.y < 0)
 		return FALSE;
-	if (map_[ObjectPos.y + ObjectWidthHeight.y][ObjectPos.x + 3].tile_state != TILE_NULL)
+	if ((*map_[ObjectPos.y + ObjectWidthHeight.y][ObjectPos.x + 3]).tile_state != TILE_NULL)
 		return TRUE;
 	RECT retRect;
 	if(enemy_->collide_rect_.top == collide_rect_.bottom && enemy_->collide_rect_.right > collide_rect_.left && enemy_->collide_rect_.left < collide_rect_.right)
@@ -288,7 +288,7 @@ INT Player::getVerticalDistanceToLand()
 
 
 	while (search_idx + cnt * dir < game_option_manager->VerticalGridCount && search_idx + cnt * dir > -1
-		&& map_[search_idx + cnt * dir][ObjectPos.x + 3].tile_state == TILE_NULL)
+		&& (*map_[search_idx + cnt * dir][ObjectPos.x + 3]).tile_state == TILE_NULL)
 	{
 		cnt++;
 	}
@@ -335,7 +335,7 @@ INT Player::getHorizontalDistanceToLand()
 		search_idx = object_pos_.x + 3 + dir;
 		UINT tempDistance = cell_rest;
 		while (search_idx < game_option_manager->HorizontalGridCount && search_idx > -1
-			&& map_[object_pos_.y + object_width_height_.y][search_idx].tile_state == TILE_NULL)
+			&& (*map_[object_pos_.y + object_width_height_.y][search_idx]).tile_state == TILE_NULL)
 		{
 			tempDistance += game_option_manager->GameCellSize;
 			if (tempDistance > distance)
@@ -351,7 +351,7 @@ INT Player::getHorizontalDistanceToLand()
 		search_idx = object_pos_.x + 3 + dir;
 		UINT tempDistance = cell_rest;
 		while (search_idx < game_option_manager->HorizontalGridCount && search_idx > -1
-			&& map_[object_pos_.y + i][search_idx].tile_state == TILE_NULL)
+			&& (*map_[object_pos_.y + i][search_idx]).tile_state == TILE_NULL)
 		{
 			tempDistance += game_option_manager->GameCellSize;
 			if (tempDistance > distance)
@@ -415,6 +415,7 @@ void Player::set_collider_rect()
 
 Player::Player()
 {
+	map_ = new tile**;
 }
 
 
