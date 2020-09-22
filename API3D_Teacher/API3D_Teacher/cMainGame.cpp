@@ -108,7 +108,7 @@ void cMainGame::SetUp()
 	}
 	m_vLookat = cVector3(0, 0, 0, 1);
 	m_vEye = cVector3(0, 5.0f, -15.0f, 1);
-	m_vFront = cVector3(0, 0, -1, 1);
+	m_vFront = cVector3(0, 0, 1, 1);
 }
 
 void cMainGame::Update()
@@ -189,19 +189,19 @@ void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		for (int i = 0; i < m_vecVertex.size(); ++i)
 		{
-			m_vecVertex[i] = m_vecVertex[i] - m_vFront * 0.2f;
+			m_vecVertex[i] = m_vecVertex[i] + m_vFront * 0.2f;
 		}
-		m_vEye = m_vEye - m_vFront * 0.2f;
-		m_vLookat = m_vLookat - m_vFront * 0.2f;
+		m_vEye = m_vEye +m_vFront * 0.2f;
+		m_vLookat = m_vLookat + m_vFront * 0.2f;
 	}
 	if (GetKeyState(VK_DOWN) & 0x8000)
 	{
 		for (int i = 0; i < m_vecVertex.size(); ++i)
 		{
-			m_vecVertex[i] = m_vecVertex[i] + m_vFront * 0.2f;
+			m_vecVertex[i] = m_vecVertex[i] - m_vFront * 0.2f;
 		}
-		m_vEye = m_vEye + m_vFront * 0.2f;
-		m_vLookat = m_vLookat + m_vFront * 0.2f;
+		m_vEye = m_vEye - m_vFront * 0.2f;
+		m_vLookat = m_vLookat - m_vFront * 0.2f;
 	}
 	if (GetKeyState('A') & 0x8000)
 	{
@@ -237,18 +237,35 @@ void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			static int oldX = LOWORD(lParam);
 			int newX = LOWORD(lParam);
 			int newY = HIWORD(lParam);
-			cVector3 vRight = cVector3::Cross(m_vUp, m_vLookat - m_vEye).Normalize() * 0.1f;
-			cVector3 vUp = cVector3::Cross(m_vLookat - m_vEye, vRight).Normalize() * 0.1f;
-			if(newX - oldX != 0)
+			cVector3 vRight = cVector3::Cross(m_vUp, m_vLookat - m_vEye).Normalize();
+			cVector3 vUp = cVector3::Cross(m_vLookat - m_vEye, vRight).Normalize();
+			int diffX = oldX - newX;
+			int diffY = oldY - newY;
+			if(abs(diffX) > 5)
 			{
-				m_vEye = m_vEye + vRight;
+				if(diffX < 0)
+				{
+					m_vEye = m_vEye + vRight;
+				}
+				else
+				{
+					m_vEye = m_vEye - vRight;
+				}
+				oldX = newX;
 			}
-			if(newY - oldY != 0)
+	
+			if (abs(diffY) > 5)
 			{
-				m_vEye = m_vEye + vUp;
+				if (diffY < 0)
+				{
+					m_vEye = m_vEye - vUp;
+				}
+				else
+				{
+					m_vEye = m_vEye + vUp;
+				}
+				oldY = newY;
 			}
-			oldY = newX;
-			oldX = newY;
 		}
 		break;
 		}
